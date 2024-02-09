@@ -1,3 +1,16 @@
-.test {
-    color: magenta;
+.container {
+    border-radius: 100;
+    display: flex;
+    align-items: center;
 }
+
+.english {
+    color: rgb(93, 195, 230);
+    margin: auto;
+}
+
+.kanji {
+    color: rgb(239, 120, 120);
+    margin: auto;
+}
+
