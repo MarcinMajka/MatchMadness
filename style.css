@@ -1,16 +1,40 @@
 .container {
-    border-radius: 100;
-    display: flex;
-    align-items: center;
+  border-radius: 100;
+  display: flex;
+  align-items: center;
+  margin-top: 3rem;
 }
 
 .english {
-    color: rgb(93, 195, 230);
-    margin: auto;
+  color: rgb(93, 195, 230);
+  margin: auto;
 }
 
 .kanji {
-    color: rgb(239, 120, 120);
-    margin: auto;
+  color: rgb(239, 120, 120);
+  margin: auto;
 }
 
+.box {
+  /* first value is Y axis, second is X axis */
+  padding: 0.5rem 1rem;
+  margin: 0.2rem 0.4rem;
+  border: 1px solid gray;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+/* this will define the styles when hovering over the box */
+.box:hover {
+  background-color: #f4f4f4;
+}
+
+.box.selected {
+  background-color: #92fd72;
+}
+
+/* notice that the .box.wrong class is defined after .box.selected so it will override the background-color property  */
+.box.wrong {
+  background-color: #ff6b6b;
+  color: white;
+}
