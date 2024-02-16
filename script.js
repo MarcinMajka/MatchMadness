@@ -29,6 +29,9 @@ const shuffleArray = (array) => {
 // -------------------
 // Lets try to keep the global variables to a minimum.
 
+// some constants:
+const ANIMATION_DURATION = 200;
+
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
 let firstClicked = null;
 let secondClicked = null;
@@ -84,6 +87,18 @@ const setupRound = (wordPairs, nPairs) => {
   kanjis.forEach((kanji) => containerKanjis.appendChild(kanji));
 };
 
+/**
+ * Highlight the elements for a short period of time by adding a class to them and then removing it after a timeout.
+ * @param elements - an array of DOM elements
+ * @param className - the class to add and then remove
+ */
+function highlightElements(elements, className) {
+  elements.forEach((element) => element.classList.add(className));
+  setTimeout(() => {
+    elements.forEach((element) => element.classList.remove(className));
+  }, ANIMATION_DURATION);
+}
+
 const checkIfMatch = (event) => {
   const clickedElement = event.target;
 
@@ -114,37 +129,36 @@ const checkIfMatch = (event) => {
 
     const expectedValue = DATA[firstValue];
     if (secondValue === expectedValue) {
-      // TODO: move the logic for removing the elements to a separate function
-      firstClicked.remove();
-      secondClicked.remove();
-      firstClicked = null;
-      secondClicked = null;
-      foundPairs++;
+      highlightElements([firstClicked, secondClicked], "correct");
 
-      // TODO: move the logic for checking if the game is won / setting up the next round to a separate function
-      // TODO: what if the number 5 is arbitrary?
-      const isWin = foundPairs === wordPairs.length;
-      const shouldSetupNextRound =
-        foundPairs % 5 === 0 && foundPairs !== 0 && !isWin;
-      if (shouldSetupNextRound) {
-        setupRound(wordPairs, lastUsedPairIndex + 5);
-      }
-      if (isWin) {
-        alert("You won!");
-      }
+      // Remove the elements after a short delay.
+      // TODO: what if user clicks on the elements while they are being removed?
+      setTimeout(() => {
+        // TODO: move the logic for removing the elements to a separate function.
+        firstClicked.remove();
+        secondClicked.remove();
+        firstClicked = null;
+        secondClicked = null;
+        foundPairs++;
+
+        // TODO: move the logic for checking if the game is won / setting up the next round to a separate function
+        // TODO: how to make the number 5 is arbitrary?
+        const isWin = foundPairs === wordPairs.length;
+        const shouldSetupNextRound =
+          foundPairs % 5 === 0 && foundPairs !== 0 && !isWin;
+        if (shouldSetupNextRound) {
+          setupRound(wordPairs, lastUsedPairIndex + 5);
+        }
+        if (isWin) {
+          // TODO: display the time it took to win the game
+          alert("You won!");
+        }
+      }, ANIMATION_DURATION);
     } else {
       console.log("not a match");
-      firstClicked.classList.add("wrong");
-      secondClicked.classList.add("wrong");
+      highlightElements([firstClicked, secondClicked], "wrong");
 
-      // NOTE: we are going to remove the "wrong" class from the elements after a short delay, so we need to store the references to the elements in new variables! We can't just use firstClicked and secondClicked, because they will be reset before the timeout is executed. This is tricky!
-      const firstWrongElement = firstClicked;
-      const secondWrongElement = secondClicked;
-      setTimeout(() => {
-        firstWrongElement.classList.remove("wrong");
-        secondWrongElement.classList.remove("wrong");
-      }, 200);
-
+      // TODO: move the logic for resetting the values to a separate function (maybe reuse the delete function?)
       // Reset the "selected" styles on the unmached elements...
       firstClicked.classList.remove("selected");
       secondClicked.classList.remove("selected");
@@ -159,6 +173,5 @@ window.addEventListener("load", () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet)
   // Create the initial state of the game - generate the divs with words and kanjis in HTML.
   setupRound(wordPairs, 5);
-
   // TODO: add a function to start the timer here.
 });
