@@ -17,6 +17,7 @@ const shuffleArray = (array) => {
 
 // some constants:
 const ANIMATION_DURATION = 200;
+const pairCount = 2;
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
 let firstClicked = null;
@@ -128,12 +129,11 @@ const checkIfMatch = (event) => {
         foundPairs++;
 
         // TODO: move the logic for checking if the game is won / setting up the next round to a separate function
-        // TODO: how to make the number 5 is arbitrary?
         const isWin = foundPairs === wordPairs.length;
         const shouldSetupNextRound =
-          foundPairs % 5 === 0 && foundPairs !== 0 && !isWin;
+          foundPairs % pairCount === 0 && foundPairs !== 0 && !isWin;
         if (shouldSetupNextRound) {
-          setupRound(wordPairs, lastUsedPairIndex + 5);
+          setupRound(wordPairs, lastUsedPairIndex + pairCount);
         }
         if (isWin) {
           // TODO: display the time it took to win the game
@@ -158,6 +158,6 @@ const checkIfMatch = (event) => {
 window.addEventListener("load", () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet)
   // Create the initial state of the game - generate the divs with words and kanjis in HTML.
-  setupRound(wordPairs, 5);
+  setupRound(wordPairs, pairCount);
   // TODO: add a function to start the timer here.
 });
