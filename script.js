@@ -128,17 +128,7 @@ const checkIfMatch = (event) => {
         secondClicked = null;
         foundPairs++;
 
-        // TODO: move the logic for checking if the game is won / setting up the next round to a separate function
-        const isWin = foundPairs === wordPairs.length;
-        const shouldSetupNextRound =
-          foundPairs % pairCount === 0 && foundPairs !== 0 && !isWin;
-        if (shouldSetupNextRound) {
-          setupRound(wordPairs, lastUsedPairIndex + pairCount);
-        }
-        if (isWin) {
-          // TODO: display the time it took to win the game
-          alert("You won!");
-        }
+        checkIfWon();
       }, ANIMATION_DURATION);
     } else {
       console.log("not a match");
@@ -154,6 +144,19 @@ const checkIfMatch = (event) => {
     }
   }
 };
+
+const checkIfWon = () => {
+    const isWin = foundPairs === wordPairs.length;
+    const shouldSetupNextRound =
+      foundPairs % pairCount === 0 && foundPairs !== 0 && !isWin;
+    if (shouldSetupNextRound) {
+      setupRound(wordPairs, lastUsedPairIndex + pairCount);
+    }
+    if (isWin) {
+      // TODO: display the time it took to win the game
+      alert("You won!");
+    }
+}
 
 window.addEventListener("load", () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet)
