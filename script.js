@@ -41,9 +41,9 @@ let foundPairs = 0;
 /**
  * Dynamically create the divs for words and kanjis and append them to the HTML.
  * @param  wordPairs - an array of pairs of words and kanjis, like [['word1', 'translation1'] ...
- * @param  nPairs - the number of pairs to create
+ * @param  pairRenderLimitIndex - index of the last pair to render + 1, incremented by pairCount in checkIfWon()
  */
-const setupRound = (wordPairs, nPairs) => {
+const setupRound = (wordPairs, pairRenderLimitIndex) => {
   // Find the containers for words and kanjis
   const containerWords = document.querySelector(".english");
   const containerKanjis = document.querySelector(".kanji");
@@ -51,7 +51,7 @@ const setupRound = (wordPairs, nPairs) => {
   let kanjis = [];
 
   // create the divs for the words
-  while (lastUsedPairIndex < nPairs) {
+  while (lastUsedPairIndex < pairRenderLimitIndex) {
     const word = document.createElement("div");
     const wordValue = wordPairs[lastUsedPairIndex][0];
 
