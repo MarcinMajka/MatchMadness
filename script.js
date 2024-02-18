@@ -17,7 +17,8 @@ const shuffleArray = (array) => {
 
 // some constants:
 const ANIMATION_DURATION = 200;
-const pairCount = 2;
+// pairCount shouldn't be bigger than the number of Object.keys(DATA).length, otherwise only words will be rendered
+let pairCount = 3;
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
 let firstClicked = null;
@@ -25,6 +26,10 @@ let secondClicked = null;
 
 // Get the list of english words from the dictionary and shuffle them (we want each game to be different)
 const shuffledKeys = shuffleArray(Object.keys(DATA));
+// safety check - if desired pairCount >= shuffledKeys.length -> pairCount = shuffledKeys.length - 1
+if (pairCount >= shuffledKeys.length) {
+    pairCount = shuffledKeys.length;
+}
 // Create the pairs of words and kanjis
 const wordPairs = shuffledKeys.map((word) => [word, DATA[word]]);
 // keep track of the last used pair
@@ -46,7 +51,6 @@ const setupRound = (wordPairs, nPairs) => {
   let kanjis = [];
 
   // create the divs for the words
-  // TODO: what if the lastUsedPairIndex is greater than the length of the wordPairs array?
   while (lastUsedPairIndex < nPairs) {
     const word = document.createElement("div");
     const wordValue = wordPairs[lastUsedPairIndex][0];
@@ -149,7 +153,11 @@ const checkIfWon = () => {
     const isWin = foundPairs === wordPairs.length;
     const shouldSetupNextRound =
       foundPairs % pairCount === 0 && foundPairs !== 0 && !isWin;
+    const lastSetOfPairsNumber = wordPairs.length % pairCount;
     if (shouldSetupNextRound) {
+      if (lastUsedPairIndex + pairCount > wordPairs.length) {
+        setupRound(wordPairs, lastUsedPairIndex + lastSetOfPairsNumber);
+      }
       setupRound(wordPairs, lastUsedPairIndex + pairCount);
     }
     if (isWin) {
