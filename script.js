@@ -41,7 +41,7 @@ let foundPairs = 0;
 /**
  * Dynamically create the divs for words and kanjis and append them to the HTML.
  * @param  wordPairs - an array of pairs of words and kanjis, like [['word1', 'translation1'] ...
- * @param  pairRenderLimitIndex - index of the last pair to render + 1, incremented by pairCount in checkIfWon()
+ * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
 const setupRound = (wordPairs, pairRenderLimitIndex) => {
   // Find the containers for words and kanjis
@@ -89,6 +89,11 @@ function highlightElements(elements, className) {
     elements.forEach((element) => element.classList.remove(className));
   }, ANIMATION_DURATION);
 }
+
+/**
+ * 
+ * @param {target} event - check if selected word and translation match.
+ */
 
 const checkIfMatch = (event) => {
   const clickedElement = event.target;
@@ -149,17 +154,25 @@ const checkIfMatch = (event) => {
   }
 };
 
+/**
+ * Check if next round should be set up or if the game has been won.
+ */
+
 const checkIfWon = () => {
     const isWin = foundPairs === wordPairs.length;
-    const shouldSetupNextRound =
-      foundPairs % pairCount === 0 && foundPairs !== 0 && !isWin;
-    const lastSetOfPairsNumber = wordPairs.length % pairCount;
+    const isCurrentRoundOver = foundPairs % pairCount === 0;
+    const pairsWereFound = foundPairs !== 0;
+    const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
+
     if (shouldSetupNextRound) {
+      const lastSetOfPairsNumber = wordPairs.length % pairCount;
       if (lastUsedPairIndex + pairCount > wordPairs.length) {
         setupRound(wordPairs, lastUsedPairIndex + lastSetOfPairsNumber);
+      } else {
+        setupRound(wordPairs, lastUsedPairIndex + pairCount);
       }
-      setupRound(wordPairs, lastUsedPairIndex + pairCount);
     }
+
     if (isWin) {
       // TODO: display the time it took to win the game
       alert("You won!");
