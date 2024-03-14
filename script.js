@@ -1,17 +1,3 @@
-// TODO: move the dictionary to a separate file.
-const DATA = {
-  word1: "translation1",
-  word2: "translation2",
-  word3: "translation3",
-  word4: "translation4",
-  word5: "translation5",
-  word6: "translation6",
-  word7: "translation7",
-  word8: "translation8",
-  word9: "translation9",
-  word0: "translation0",
-};
-
 /**
  * Shuffle (randomize the order of) an array of words.
  * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
@@ -31,6 +17,8 @@ const shuffleArray = (array) => {
 
 // some constants:
 const ANIMATION_DURATION = 200;
+// pairCount shouldn't be bigger than the number of Object.keys(DATA).length, otherwise only words will be rendered
+let pairCount = 3;
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
 let firstClicked = null;
@@ -38,6 +26,10 @@ let secondClicked = null;
 
 // Get the list of english words from the dictionary and shuffle them (we want each game to be different)
 const shuffledKeys = shuffleArray(Object.keys(DATA));
+// safety check - if desired pairCount >= shuffledKeys.length -> pairCount = shuffledKeys.length - 1
+if (pairCount >= shuffledKeys.length) {
+    pairCount = shuffledKeys.length;
+}
 // Create the pairs of words and kanjis
 const wordPairs = shuffledKeys.map((word) => [word, DATA[word]]);
 // keep track of the last used pair
@@ -49,9 +41,9 @@ let foundPairs = 0;
 /**
  * Dynamically create the divs for words and kanjis and append them to the HTML.
  * @param  wordPairs - an array of pairs of words and kanjis, like [['word1', 'translation1'] ...
- * @param  nPairs - the number of pairs to create
+ * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
-const setupRound = (wordPairs, nPairs) => {
+const setupRound = (wordPairs, pairRenderLimitIndex) => {
   // Find the containers for words and kanjis
   const containerWords = document.querySelector(".english");
   const containerKanjis = document.querySelector(".kanji");
@@ -59,8 +51,7 @@ const setupRound = (wordPairs, nPairs) => {
   let kanjis = [];
 
   // create the divs for the words
-  // TODO: what if the lastUsedPairIndex is greater than the length of the wordPairs array?
-  while (lastUsedPairIndex < nPairs) {
+  while (lastUsedPairIndex < pairRenderLimitIndex) {
     const word = document.createElement("div");
     const wordValue = wordPairs[lastUsedPairIndex][0];
 
@@ -98,6 +89,11 @@ function highlightElements(elements, className) {
     elements.forEach((element) => element.classList.remove(className));
   }, ANIMATION_DURATION);
 }
+
+/**
+ * 
+ * @param {target} event - check if selected word and translation match.
+ */
 
 const checkIfMatch = (event) => {
   const clickedElement = event.target;
@@ -141,18 +137,7 @@ const checkIfMatch = (event) => {
         secondClicked = null;
         foundPairs++;
 
-        // TODO: move the logic for checking if the game is won / setting up the next round to a separate function
-        // TODO: how to make the number 5 is arbitrary?
-        const isWin = foundPairs === wordPairs.length;
-        const shouldSetupNextRound =
-          foundPairs % 5 === 0 && foundPairs !== 0 && !isWin;
-        if (shouldSetupNextRound) {
-          setupRound(wordPairs, lastUsedPairIndex + 5);
-        }
-        if (isWin) {
-          // TODO: display the time it took to win the game
-          alert("You won!");
-        }
+        checkIfWon();
       }, ANIMATION_DURATION);
     } else {
       console.log("not a match");
@@ -169,9 +154,34 @@ const checkIfMatch = (event) => {
   }
 };
 
+/**
+ * Check if next round should be set up or if the game has been won.
+ */
+
+const checkIfWon = () => {
+    const isWin = foundPairs === wordPairs.length;
+    const isCurrentRoundOver = foundPairs % pairCount === 0;
+    const pairsWereFound = foundPairs !== 0;
+    const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
+
+    if (shouldSetupNextRound) {
+      const lastSetOfPairsNumber = wordPairs.length % pairCount;
+      if (lastUsedPairIndex + pairCount > wordPairs.length) {
+        setupRound(wordPairs, lastUsedPairIndex + lastSetOfPairsNumber);
+      } else {
+        setupRound(wordPairs, lastUsedPairIndex + pairCount);
+      }
+    }
+
+    if (isWin) {
+      // TODO: display the time it took to win the game
+      alert("You won!");
+    }
+}
+
 window.addEventListener("load", () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet)
   // Create the initial state of the game - generate the divs with words and kanjis in HTML.
-  setupRound(wordPairs, 5);
+  setupRound(wordPairs, pairCount);
   // TODO: add a function to start the timer here.
 });
