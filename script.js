@@ -16,27 +16,37 @@ const shuffleArray = (array) => {
 // Lets try to keep the global variables to a minimum.
 
 // some constants:
-const ANIMATION_DURATION = 200;
-// pairCount shouldn't be bigger than the number of Object.keys(DATA).length, otherwise only words will be rendered
-let pairCount = 3;
+const ANIMATION_DURATION = 250;
+
+const totalWordsInSessionCount = 8;
+// pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only words will be rendered
+let pairsToRenderCount = 3;
+// safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
+if (pairsToRenderCount > totalWordsInSessionCount) {
+    pairsToRenderCount = totalWordsInSessionCount;
+}
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
-let firstClicked = null;
-let secondClicked = null;
+let kanjiClicked = null;
+let hiraganaClicked = null;
 
-// Get the list of english words from the dictionary and shuffle them (we want each game to be different)
-const shuffledKeys = shuffleArray(Object.keys(DATA));
-// safety check - if desired pairCount >= shuffledKeys.length -> pairCount = shuffledKeys.length - 1
-if (pairCount >= shuffledKeys.length) {
-    pairCount = shuffledKeys.length;
-}
-// Create the pairs of words and kanjis
-const wordPairs = shuffledKeys.map((word) => [word, DATA[word]]);
 // keep track of the last used pair
 let lastUsedPairIndex = 0;
-// kep track of the number of found pairs
+// keep track of the number of found pairs
 let foundPairs = 0;
+// variables for starting the timer and incrementing the time
+let gameStart;
+let timerInterval;
 // -------------------
+
+const kanjiHiraganaGlossary = [];
+for(let i = 0; i < totalWordsInSessionCount; i++) {
+  const kanji = JM[i].kanji;
+  const hiragana = JM[i]['hiragana/katakana'];
+  const glossary = JM[i].glossary;
+  kanjiHiraganaGlossary.push([kanji, hiragana, glossary]);
+}
+const shuffledKanjiHiraganaGlossaries = shuffleArray(kanjiHiraganaGlossary);
 
 /**
  * Dynamically create the divs for words and kanjis and append them to the HTML.
@@ -52,22 +62,22 @@ const setupRound = (wordPairs, pairRenderLimitIndex) => {
 
   // create the divs for the words
   while (lastUsedPairIndex < pairRenderLimitIndex) {
-    const word = document.createElement("div");
+    const kanji = document.createElement("div");
     const wordValue = wordPairs[lastUsedPairIndex][0];
 
-    word.classList.add(`box`);
-    word.innerHTML = wordValue;
+    kanji.classList.add(`box`);
+    kanji.innerHTML = wordValue;
     // NOTE: we are adding the same function as the event listener to both the word and the kanji. This function will
     // accept the event object as an argument, so we can access the clicked element from it.
-    word.addEventListener("click", checkIfMatch);
-    containerWords.appendChild(word);
-
-    const kanji = document.createElement("div");
-    const kanjiValue = wordPairs[lastUsedPairIndex][1];
-    kanji.classList.add(`box`);
-    kanji.innerHTML = kanjiValue;
     kanji.addEventListener("click", checkIfMatch);
-    kanjis.push(kanji);
+    containerWords.appendChild(kanji);
+
+    const hiragana = document.createElement("div");
+    const hiraganaValue = wordPairs[lastUsedPairIndex][1];
+    hiragana.classList.add(`box`);
+    hiragana.innerHTML = hiraganaValue;
+    hiragana.addEventListener("click", checkIfMatch);
+    kanjis.push(hiragana);
     // NOTE: do not add the kanji to the container here, we will shuffle them later
 
     lastUsedPairIndex++;
@@ -97,61 +107,90 @@ function highlightElements(elements, className) {
 
 const checkIfMatch = (event) => {
   const clickedElement = event.target;
-
-  // if first is null, assign the clicked element to first, then if second is null, assign the clicked element to second.
-  // Subsequent click will reset second value and set first to the clicked element. So the first value will always be filled, until the end of the game.
-  if (firstClicked === null) {
-    firstClicked = clickedElement;
-    firstClicked.classList.add("selected");
-  } else if (secondClicked === null) {
-    secondClicked = clickedElement;
-    secondClicked.classList.add("selected");
+  // english or kanji 
+  const clickedElementsParentElementsClass = clickedElement.parentElement.getAttribute('class');
+  // true if word was selected, false if kanji was selected
+  const isWordColumnSelected = clickedElementsParentElementsClass === "english";
+  if (isWordColumnSelected) {
+    if (kanjiClicked === null) {
+      kanjiClicked = clickedElement;
+      kanjiClicked.classList.add("selected");
+    } else {
+      kanjiClicked.classList.remove("selected");
+      kanjiClicked = clickedElement;
+      kanjiClicked.classList.add("selected");
+    }
   } else {
-    // Reset the styles on the old elements...
-    firstClicked.classList.remove("selected");
-    secondClicked.classList.remove("selected");
-    // ... and reset the values
-    firstClicked = clickedElement;
-    secondClicked = null;
+    if (hiraganaClicked === null) {
+      hiraganaClicked = clickedElement;
+      hiraganaClicked.classList.add("selected");
+    } else {
+      hiraganaClicked.classList.remove("selected");
+      hiraganaClicked = clickedElement;
+      hiraganaClicked.classList.add("selected");
+    }
   }
+  // if both values are filled
+  if (kanjiClicked !== null && hiraganaClicked !== null) {
+    const kanji = kanjiClicked.innerHTML;
+    const hiragana = hiraganaClicked.innerHTML;
+    console.log("kanji: " + kanji + " hiragana: " + hiragana)
+    let expectedHiragana = null;
+    // Index of the shuffledKanjiHiraganaGlossaries triple, to take the glossary from
+    let glossaryIndex = null;
+    for (let i = lastUsedPairIndex - pairsToRenderCount; i < lastUsedPairIndex; i++) {
+      console.log("i: ", i)
+      console.log("hiragana: " + hiragana + " shuffledKanjiHiraganaGlossaries[i][1]: " + shuffledKanjiHiraganaGlossaries[i][1])
+      if (kanji === shuffledKanjiHiraganaGlossaries[i][0] && hiragana === shuffledKanjiHiraganaGlossaries[i][1]) {
+        expectedHiragana = shuffledKanjiHiraganaGlossaries[i][1];
+        glossaryIndex = i;
+        break;
+      }
+    }
 
-  const valuesAreFilled = firstClicked !== null && secondClicked !== null;
-
-  if (valuesAreFilled) {
-    const firstValue = firstClicked.innerHTML;
-    const secondValue = secondClicked.innerHTML;
-    // TODO: what if I click the same element twice?
-    // TODO: what if the first clicked element is kanji?
-
-    const expectedValue = DATA[firstValue];
-    if (secondValue === expectedValue) {
-      highlightElements([firstClicked, secondClicked], "correct");
-
+    if (hiragana === expectedHiragana) {
+      highlightElements([kanjiClicked, hiraganaClicked], "correct");
+      const kanjiAndHiragana = document.getElementById("kanjiAndHiragana");
+      const glossary = document.getElementById("glossary");
+      kanjiAndHiragana.innerHTML = `${kanji} - ${hiragana}:`
+      glossary.innerHTML = shuffledKanjiHiraganaGlossaries[glossaryIndex][2];
+      // assigning kanjiClicked and hiraganaClicked to different values, so that the User can select other divs during the animation
+      const kanjiToRemove = kanjiClicked;
+      const hiraganaToRemove = hiraganaClicked;
+      kanjiClicked = null;
+      hiraganaClicked = null;
       // Remove the elements after a short delay.
-      // TODO: what if user clicks on the elements while they are being removed?
       setTimeout(() => {
-        // TODO: move the logic for removing the elements to a separate function.
-        firstClicked.remove();
-        secondClicked.remove();
-        firstClicked = null;
-        secondClicked = null;
+        removeElements([kanjiToRemove, hiraganaToRemove], "correct");
+
         foundPairs++;
 
         checkIfWon();
       }, ANIMATION_DURATION);
     } else {
-      console.log("not a match");
-      highlightElements([firstClicked, secondClicked], "wrong");
-
-      // TODO: move the logic for resetting the values to a separate function (maybe reuse the delete function?)
-      // Reset the "selected" styles on the unmached elements...
-      firstClicked.classList.remove("selected");
-      secondClicked.classList.remove("selected");
-      // And reset the references
-      firstClicked = null;
-      secondClicked = null;
-    }
+        console.log("not a match");
+        highlightElements([kanjiClicked, hiraganaClicked], "wrong");
+        // Reset the "selected" styles on the unmached elements...
+        removeElements([kanjiClicked, hiraganaClicked], "wrong");
+        // And reset the references
+        kanjiClicked = null;
+        hiraganaClicked = null;
+      }
   }
+};
+
+/**
+ * 
+ * @param elements - array of elements to remove, or to remove the "selected" class
+ * @param correctOrWrong - string of the class name of the element to remove -> "correct" or "wrong"
+ */
+
+const removeElements = (elements, correctOrWrong) => {
+    if (correctOrWrong === "correct") {
+      elements.forEach(element => element.remove());
+    } else {
+      elements.forEach(element => element.classList.remove("selected"));
+    }
 };
 
 /**
@@ -159,29 +198,64 @@ const checkIfMatch = (event) => {
  */
 
 const checkIfWon = () => {
-    const isWin = foundPairs === wordPairs.length;
-    const isCurrentRoundOver = foundPairs % pairCount === 0;
+    const isWin = foundPairs === totalWordsInSessionCount;
+    const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0;
     const pairsWereFound = foundPairs !== 0;
     const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
 
     if (shouldSetupNextRound) {
-      const lastSetOfPairsNumber = wordPairs.length % pairCount;
-      if (lastUsedPairIndex + pairCount > wordPairs.length) {
-        setupRound(wordPairs, lastUsedPairIndex + lastSetOfPairsNumber);
+      const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
+      if (lastUsedPairIndex + pairsToRenderCount > totalWordsInSessionCount) {
+        setupRound(shuffledKanjiHiraganaGlossaries, lastUsedPairIndex + lastSetOfPairsNumber);
       } else {
-        setupRound(wordPairs, lastUsedPairIndex + pairCount);
+        setupRound(shuffledKanjiHiraganaGlossaries, lastUsedPairIndex + pairsToRenderCount);
       }
     }
 
     if (isWin) {
-      // TODO: display the time it took to win the game
-      alert("You won!");
+      stopTimer();
     }
+};
+
+/**
+ * Timer functions
+ */
+
+const starTimer = () => {
+    gameStart = Date.now();
+    // Update timer every second
+    timerInterval = setInterval(updateTimer, 1000);
+};
+
+const stopTimer = () => {
+    // Stop the timer
+    clearInterval(timerInterval);
+    const gameEnd = Date.now();
+    // Convert to seconds
+    const gameDuration = (gameEnd - gameStart) / 1000;
+    alert(`Game duration: ${Math.floor(gameDuration)} seconds`);
+};
+
+const updateTimer = () => {
+    const currentTime = Date.now();
+    const elapsedTime = currentTime - gameStart;
+    const minutes = Math.floor(elapsedTime / 60000);
+    const seconds = Math.floor((elapsedTime % 60000) / 1000);
+    document.getElementById('timer').innerText = `${formatTime(minutes)}:${formatTime(seconds)}`;
+}
+/**
+ * 
+ * @param time - minutes or seconds as ints.
+ * @returns string formatted in mm:ss format.
+ */
+const formatTime = (time) => {
+    // If time is smaller than 10, add 0 in front, eg. 00:03, instead of 0:3.
+    return time < 10 ? `0${time}` : time;
 }
 
 window.addEventListener("load", () => {
-  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet)
-  // Create the initial state of the game - generate the divs with words and kanjis in HTML.
-  setupRound(wordPairs, pairCount);
-  // TODO: add a function to start the timer here.
+  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
+  // Create the initial state of the game - generate the divs with kanji and hiragana/katakana in HTML.
+  setupRound(shuffledKanjiHiraganaGlossaries, pairsToRenderCount);
+  starTimer();
 });
