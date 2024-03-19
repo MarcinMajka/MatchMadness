@@ -1,3 +1,5 @@
+"""This module is used to parse and create XML data."""
+
 import xml.etree.ElementTree as ET
 import json
 import re
