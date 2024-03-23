@@ -19,8 +19,8 @@ body {
   margin-bottom: 0;
 }
 
-.kanji,
-.english {
+.leftColumn,
+.rightColumn {
   margin: 0 100px 25px 100px;
 }
 

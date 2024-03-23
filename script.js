@@ -1,7 +1,7 @@
 // const { JM } = require("./dic");
 
 /**
- * Shuffle (randomize the order of) an array of words.
+ * Shuffle (randomize the order of) an array of leftColumnValues.
  * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
  * @param array - an array of strings
  * @returns  a new array with the same strings, but in a random order
@@ -21,7 +21,7 @@ const shuffleArray = (array) => {
 const ANIMATION_DURATION = 250;
 
 const totalWordsInSessionCount = 3;
-// pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only words will be rendered
+// pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only leftColumnValues will be rendered
 let pairsToRenderCount = 3;
 // safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
 if (pairsToRenderCount > totalWordsInSessionCount) {
@@ -29,8 +29,8 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
 }
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
-let kanjiClicked = null;
-let hiraganaClicked = null;
+let leftColumnElementValueClicked = null;
+let rightColumnElementValueClicked = null;
 
 // keep track of the last used pair
 let lastUsedPairIndex = 0;
@@ -42,68 +42,78 @@ let timerInterval;
 // -------------------
 
 /**
- * Shuffle (randomize the order of) an array of words.
- * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
- * @param totalWordsInSession - number of total words in one game
- * @param dataObject - array of objects
- * @returns  a new array with [word, reading/translation, glossary/explanation] from each object as elements
+ * Create an array of [leftColumnValue, rightColumnValue, glossary] triplets from dataObject
+ * @param totalWordsInSession - number of total leftColumnValues in one game
+ * @param dataObject - array of arrays
+ * @returns  a new array with with these triplets
  */
-const createWordReadingGlossaryTriplets = (totalWordsInSession, dataObject) => {
-  const wordReadingGlossaryTriplets = [];
+const createLeftColValRightColValGlossaryTriplets = (
+  totalWordsInSession,
+  dataObject
+) => {
+  const leftColValRightColValGlossaryTriplets = [];
   for (let i = 0; i < totalWordsInSession; i++) {
-    if (i === dataObject.length) return wordReadingGlossaryTriplets;
-    const word = dataObject[i].kanji;
-    const reading = dataObject[i]["hiragana/katakana"];
+    if (i === dataObject.length) return leftColValRightColValGlossaryTriplets;
+    const leftValue = dataObject[i].kanji;
+    const rightValue = dataObject[i]["hiragana/katakana"];
     const glossary = dataObject[i].glossary;
-    wordReadingGlossaryTriplets.push([word, reading, glossary]);
+    leftColValRightColValGlossaryTriplets.push([
+      leftValue,
+      rightValue,
+      glossary,
+    ]);
   }
-  return wordReadingGlossaryTriplets;
+  return leftColValRightColValGlossaryTriplets;
 };
 
-const kanjiHiraganaGlossary = createWordReadingGlossaryTriplets(
+const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
   totalWordsInSessionCount,
   JM
 );
-const shuffledKanjiHiraganaGlossaries = shuffleArray(kanjiHiraganaGlossary);
+const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary);
 
 /**
- * Dynamically create the divs for words and kanjis and append them to the HTML.
- * @param  wordPairs - an array of pairs of words and kanjis, like [['word1', 'translation1'] ...
+ * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
+ * @param  leftColValRightColValPairs - an array of pairs of leftColumnValues and rightColumnValues, like [['word1', 'translation1'] ...
  * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
-const setupRound = (wordPairs, pairRenderLimitIndex) => {
-  // Find the containers for words and kanjis
-  const containerWords = document.querySelector(".english");
-  const containerKanjis = document.querySelector(".kanji");
+const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
+  // Find the containers for leftColumnValues and rightColumnValues
+  const containerLeftColumnValues = document.querySelector(".leftColumn");
+  const containerRightColumnValues = document.querySelector(".rightColumn");
 
-  let kanjis = [];
+  let rightColumnValues = [];
 
-  // create the divs for the words
+  // create the divs for the leftColumnValues
   while (lastUsedPairIndex < pairRenderLimitIndex) {
-    const kanji = document.createElement("div");
-    const wordValue = wordPairs[lastUsedPairIndex][0];
+    const leftColumnElement = document.createElement("div");
+    const leftColumnElementValue =
+      leftColValRightColValPairs[lastUsedPairIndex][0];
 
-    kanji.classList.add(`box`);
-    kanji.innerHTML = wordValue;
-    // NOTE: we are adding the same function as the event listener to both the word and the kanji. This function will
+    leftColumnElement.classList.add(`box`);
+    leftColumnElement.innerHTML = leftColumnElementValue;
+    // NOTE: we are adding the same function as the event listener to both the word and the leftColumnElement. This function will
     // accept the event object as an argument, so we can access the clicked element from it.
-    kanji.addEventListener("click", checkIfMatch);
-    containerWords.appendChild(kanji);
+    leftColumnElement.addEventListener("click", checkIfMatch);
+    containerLeftColumnValues.appendChild(leftColumnElement);
 
-    const hiragana = document.createElement("div");
-    const hiraganaValue = wordPairs[lastUsedPairIndex][1];
-    hiragana.classList.add(`box`);
-    hiragana.innerHTML = hiraganaValue;
-    hiragana.addEventListener("click", checkIfMatch);
-    kanjis.push(hiragana);
-    // NOTE: do not add the kanji to the container here, we will shuffle them later
+    const rightColumnElement = document.createElement("div");
+    const rightColumnElementValue =
+      leftColValRightColValPairs[lastUsedPairIndex][1];
+    rightColumnElement.classList.add(`box`);
+    rightColumnElement.innerHTML = rightColumnElementValue;
+    rightColumnElement.addEventListener("click", checkIfMatch);
+    rightColumnValues.push(rightColumnElement);
+    // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
 
     lastUsedPairIndex++;
   }
 
-  // now shuffle the kanjis and append them to the container
-  kanjis = shuffleArray(kanjis);
-  kanjis.forEach((kanji) => containerKanjis.appendChild(kanji));
+  // now shuffle the rightColumnValues and append them to the container
+  rightColumnValues = shuffleArray(rightColumnValues);
+  rightColumnValues.forEach((leftColumnElement) =>
+    containerRightColumnValues.appendChild(leftColumnElement)
+  );
 };
 
 /**
@@ -125,85 +135,93 @@ function highlightElements(elements, className) {
 
 const checkIfMatch = (event) => {
   const clickedElement = event.target;
-  // english or kanji
+  // left or right column
   const clickedElementsParentElementsClass =
     clickedElement.parentElement.getAttribute("class");
-  // true if word was selected, false if kanji was selected
-  const isWordColumnSelected = clickedElementsParentElementsClass === "english";
-  if (isWordColumnSelected) {
-    if (kanjiClicked === null) {
-      kanjiClicked = clickedElement;
-      kanjiClicked.classList.add("selected");
+  // true if left column was selected, false if right column was selected
+  const elementFromLeftColumnIsSelected =
+    clickedElementsParentElementsClass === "leftColumn";
+  if (elementFromLeftColumnIsSelected) {
+    if (leftColumnElementValueClicked === null) {
+      leftColumnElementValueClicked = clickedElement;
+      leftColumnElementValueClicked.classList.add("selected");
     } else {
-      kanjiClicked.classList.remove("selected");
-      kanjiClicked = clickedElement;
-      kanjiClicked.classList.add("selected");
+      leftColumnElementValueClicked.classList.remove("selected");
+      leftColumnElementValueClicked = clickedElement;
+      leftColumnElementValueClicked.classList.add("selected");
     }
   } else {
-    if (hiraganaClicked === null) {
-      hiraganaClicked = clickedElement;
-      hiraganaClicked.classList.add("selected");
+    if (rightColumnElementValueClicked === null) {
+      rightColumnElementValueClicked = clickedElement;
+      rightColumnElementValueClicked.classList.add("selected");
     } else {
-      hiraganaClicked.classList.remove("selected");
-      hiraganaClicked = clickedElement;
-      hiraganaClicked.classList.add("selected");
+      rightColumnElementValueClicked.classList.remove("selected");
+      rightColumnElementValueClicked = clickedElement;
+      rightColumnElementValueClicked.classList.add("selected");
     }
   }
   // if both values are filled
-  if (kanjiClicked !== null && hiraganaClicked !== null) {
-    const kanji = kanjiClicked.innerHTML;
-    const hiragana = hiraganaClicked.innerHTML;
-    let expectedHiragana = null;
-    // Index of the shuffledKanjiHiraganaGlossaries triple, to take the glossary from
+  if (
+    leftColumnElementValueClicked !== null &&
+    rightColumnElementValueClicked !== null
+  ) {
+    const leftColumnElementValue = leftColumnElementValueClicked.innerHTML;
+    const rightColumnElementValue = rightColumnElementValueClicked.innerHTML;
+    let expectedRightColumnValue = null;
+    // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
     let glossaryIndex = null;
     for (
       let i = lastUsedPairIndex - pairsToRenderCount;
       i < lastUsedPairIndex;
       i++
     ) {
-      console.log("i: ", i);
-      console.log(
-        "hiragana: " +
-          hiragana +
-          " shuffledKanjiHiraganaGlossaries[i][1]: " +
-          shuffledKanjiHiraganaGlossaries[i][1]
-      );
       if (
-        kanji === shuffledKanjiHiraganaGlossaries[i][0] &&
-        hiragana === shuffledKanjiHiraganaGlossaries[i][1]
+        leftColumnElementValue === shuffledLeftValRightValGlossary[i][0] &&
+        rightColumnElementValue === shuffledLeftValRightValGlossary[i][1]
       ) {
-        expectedHiragana = shuffledKanjiHiraganaGlossaries[i][1];
+        expectedRightColumnValue = shuffledLeftValRightValGlossary[i][1];
         glossaryIndex = i;
         break;
       }
     }
 
-    if (hiragana === expectedHiragana) {
-      highlightElements([kanjiClicked, hiraganaClicked], "correct");
-      const kanjiAndHiragana = document.getElementById("kanjiAndHiragana");
+    if (rightColumnElementValue === expectedRightColumnValue) {
+      highlightElements(
+        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        "correct"
+      );
+      const leftValueRightValue = document.getElementById(
+        "leftValueRightValue"
+      );
       const glossary = document.getElementById("glossary");
-      kanjiAndHiragana.innerHTML = `${kanji} - ${hiragana}:`;
-      glossary.innerHTML = shuffledKanjiHiraganaGlossaries[glossaryIndex][2];
-      // assigning kanjiClicked and hiraganaClicked to different values, so that the User can select other divs during the animation
-      const kanjiToRemove = kanjiClicked;
-      const hiraganaToRemove = hiraganaClicked;
-      kanjiClicked = null;
-      hiraganaClicked = null;
+      leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
+      glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
+      // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
+      const leftElementToRemove = leftColumnElementValueClicked;
+      const rightElementToRemove = rightColumnElementValueClicked;
+      leftColumnElementValueClicked = null;
+      rightColumnElementValueClicked = null;
       // Remove the elements after a short delay.
       setTimeout(() => {
-        removeElements([kanjiToRemove, hiraganaToRemove], "correct");
+        removeElements([leftElementToRemove, rightElementToRemove], "correct");
 
         foundPairs++;
 
         checkIfWon();
       }, ANIMATION_DURATION);
     } else {
-      highlightElements([kanjiClicked, hiraganaClicked], "wrong");
+      highlightElements(
+        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        "wrong"
+      );
       // Reset the "selected" styles on the unmached elements...
-      removeElements([kanjiClicked, hiraganaClicked], "wrong");
+      removeElements(
+        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        "wrong"
+      );
       // And reset the references
-      kanjiClicked = null;
-      hiraganaClicked = null;
+      leftColumnElementValueClicked = null;
+      rightColumnElementValueClicked = null;
     }
   }
 };
@@ -236,12 +254,12 @@ const checkIfWon = () => {
     const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
     if (lastUsedPairIndex + pairsToRenderCount > totalWordsInSessionCount) {
       setupRound(
-        shuffledKanjiHiraganaGlossaries,
+        shuffledLeftValRightValGlossary,
         lastUsedPairIndex + lastSetOfPairsNumber
       );
     } else {
       setupRound(
-        shuffledKanjiHiraganaGlossaries,
+        shuffledLeftValRightValGlossary,
         lastUsedPairIndex + pairsToRenderCount
       );
     }
@@ -251,7 +269,6 @@ const checkIfWon = () => {
     // Make buttons visible and actionable
     const buttons = document.querySelector(".buttonContainer");
     buttons.style.visibility = "visible";
-    // menu.addEventListener;
     stopTimer();
   }
 };
@@ -298,13 +315,13 @@ const formatTime = (time) => {
 
 window.addEventListener("load", () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
-  // Create the initial state of the game - generate the divs with kanji and hiragana/katakana in HTML.
-  setupRound(shuffledKanjiHiraganaGlossaries, pairsToRenderCount);
+  // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
+  setupRound(shuffledLeftValRightValGlossary, pairsToRenderCount);
   starTimer();
 });
 
 // module.exports = {
 //   shuffleArray,
-//   createWordReadingGlossaryTriplets,
+//   createLeftColValRightColValGlossaryTriplets,
 //   formatTime,
 // };
