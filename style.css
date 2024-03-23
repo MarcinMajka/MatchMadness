@@ -1,8 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-}
-
 body {
   background-color: #141b21;
 }
@@ -13,7 +8,6 @@ body {
     align-items: end;
     color: wheat;
     font-size: 100px;
-
     margin-bottom: 0;
 }
 
@@ -85,15 +79,48 @@ body {
   overflow: auto;
 }
 
+a {
+  text-decoration: none;
+}
+
 .container.license {
-  margin-top: 150px;
+  margin-top: 130px;
   padding: 10px 15px;
 }
 
 .license {
-  text-decoration: none;
   background-color: #1d282d;
   color: antiquewhite;
   font-size: 20px;
+  border-radius: 25px;
+}
+
+.buttonAndLicenseContainer {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  visibility: hidden;
+}
+
+.button {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 25px;
+  background-color: antiquewhite;
+  color: #1d282d;
+}
+
+.menuButtonContainer {
+  margin: 5px;
+  padding: 10px;
   border-radius: 25px;
 }

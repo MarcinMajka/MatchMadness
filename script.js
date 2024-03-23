@@ -1,4 +1,4 @@
-const { JM } = require("./dic");
+// const { JM } = require("./dic");
 
 /**
  * Shuffle (randomize the order of) an array of words.
@@ -20,7 +20,7 @@ const shuffleArray = (array) => {
 // some constants:
 const ANIMATION_DURATION = 250;
 
-const totalWordsInSessionCount = 8;
+const totalWordsInSessionCount = 3;
 // pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only words will be rendered
 let pairsToRenderCount = 3;
 // safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
@@ -41,6 +41,13 @@ let gameStart;
 let timerInterval;
 // -------------------
 
+/**
+ * Shuffle (randomize the order of) an array of words.
+ * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
+ * @param totalWordsInSession - number of total words in one game
+ * @param dataObject - array of objects
+ * @returns  a new array with [word, reading/translation, glossary/explanation] from each object as elements
+ */
 const createWordReadingGlossaryTriplets = (totalWordsInSession, dataObject) => {
   const wordReadingGlossaryTriplets = [];
   for (let i = 0; i < totalWordsInSession; i++) {
@@ -146,7 +153,6 @@ const checkIfMatch = (event) => {
   if (kanjiClicked !== null && hiraganaClicked !== null) {
     const kanji = kanjiClicked.innerHTML;
     const hiragana = hiraganaClicked.innerHTML;
-    console.log("kanji: " + kanji + " hiragana: " + hiragana);
     let expectedHiragana = null;
     // Index of the shuffledKanjiHiraganaGlossaries triple, to take the glossary from
     let glossaryIndex = null;
@@ -192,7 +198,6 @@ const checkIfMatch = (event) => {
         checkIfWon();
       }, ANIMATION_DURATION);
     } else {
-      console.log("not a match");
       highlightElements([kanjiClicked, hiraganaClicked], "wrong");
       // Reset the "selected" styles on the unmached elements...
       removeElements([kanjiClicked, hiraganaClicked], "wrong");
@@ -243,6 +248,10 @@ const checkIfWon = () => {
   }
 
   if (isWin) {
+    // Make buttons visible and actionable
+    const buttons = document.querySelector(".buttonContainer");
+    buttons.style.visibility = "visible";
+    // menu.addEventListener;
     stopTimer();
   }
 };
@@ -263,7 +272,9 @@ const stopTimer = () => {
   const gameEnd = Date.now();
   // Convert to seconds
   const gameDuration = (gameEnd - gameStart) / 1000;
-  alert(`Game duration: ${Math.floor(gameDuration)} seconds`);
+  document.getElementById("timer").innerText = `Game duration: ${Math.floor(
+    gameDuration
+  )} seconds`;
 };
 
 const updateTimer = () => {
@@ -285,15 +296,15 @@ const formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
-// window.addEventListener("load", () => {
-//   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
-//   // Create the initial state of the game - generate the divs with kanji and hiragana/katakana in HTML.
-//   setupRound(shuffledKanjiHiraganaGlossaries, pairsToRenderCount);
-//   starTimer();
-// });
+window.addEventListener("load", () => {
+  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
+  // Create the initial state of the game - generate the divs with kanji and hiragana/katakana in HTML.
+  setupRound(shuffledKanjiHiraganaGlossaries, pairsToRenderCount);
+  starTimer();
+});
 
-module.exports = {
-  shuffleArray,
-  createWordReadingGlossaryTriplets,
-  formatTime,
-};
+// module.exports = {
+//   shuffleArray,
+//   createWordReadingGlossaryTriplets,
+//   formatTime,
+// };
