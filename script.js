@@ -1,3 +1,5 @@
+const { JM } = require("./dic");
+
 /**
  * Shuffle (randomize the order of) an array of words.
  * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
@@ -23,7 +25,7 @@ const totalWordsInSessionCount = 8;
 let pairsToRenderCount = 3;
 // safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
 if (pairsToRenderCount > totalWordsInSessionCount) {
-    pairsToRenderCount = totalWordsInSessionCount;
+  pairsToRenderCount = totalWordsInSessionCount;
 }
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
@@ -39,13 +41,22 @@ let gameStart;
 let timerInterval;
 // -------------------
 
-const kanjiHiraganaGlossary = [];
-for(let i = 0; i < totalWordsInSessionCount; i++) {
-  const kanji = JM[i].kanji;
-  const hiragana = JM[i]['hiragana/katakana'];
-  const glossary = JM[i].glossary;
-  kanjiHiraganaGlossary.push([kanji, hiragana, glossary]);
-}
+const createWordReadingGlossaryTriplets = (totalWordsInSession, dataObject) => {
+  const wordReadingGlossaryTriplets = [];
+  for (let i = 0; i < totalWordsInSession; i++) {
+    if (i === dataObject.length) return wordReadingGlossaryTriplets;
+    const word = dataObject[i].kanji;
+    const reading = dataObject[i]["hiragana/katakana"];
+    const glossary = dataObject[i].glossary;
+    wordReadingGlossaryTriplets.push([word, reading, glossary]);
+  }
+  return wordReadingGlossaryTriplets;
+};
+
+const kanjiHiraganaGlossary = createWordReadingGlossaryTriplets(
+  totalWordsInSessionCount,
+  JM
+);
 const shuffledKanjiHiraganaGlossaries = shuffleArray(kanjiHiraganaGlossary);
 
 /**
@@ -101,14 +112,15 @@ function highlightElements(elements, className) {
 }
 
 /**
- * 
+ *
  * @param {target} event - check if selected word and translation match.
  */
 
 const checkIfMatch = (event) => {
   const clickedElement = event.target;
-  // english or kanji 
-  const clickedElementsParentElementsClass = clickedElement.parentElement.getAttribute('class');
+  // english or kanji
+  const clickedElementsParentElementsClass =
+    clickedElement.parentElement.getAttribute("class");
   // true if word was selected, false if kanji was selected
   const isWordColumnSelected = clickedElementsParentElementsClass === "english";
   if (isWordColumnSelected) {
@@ -134,14 +146,26 @@ const checkIfMatch = (event) => {
   if (kanjiClicked !== null && hiraganaClicked !== null) {
     const kanji = kanjiClicked.innerHTML;
     const hiragana = hiraganaClicked.innerHTML;
-    console.log("kanji: " + kanji + " hiragana: " + hiragana)
+    console.log("kanji: " + kanji + " hiragana: " + hiragana);
     let expectedHiragana = null;
     // Index of the shuffledKanjiHiraganaGlossaries triple, to take the glossary from
     let glossaryIndex = null;
-    for (let i = lastUsedPairIndex - pairsToRenderCount; i < lastUsedPairIndex; i++) {
-      console.log("i: ", i)
-      console.log("hiragana: " + hiragana + " shuffledKanjiHiraganaGlossaries[i][1]: " + shuffledKanjiHiraganaGlossaries[i][1])
-      if (kanji === shuffledKanjiHiraganaGlossaries[i][0] && hiragana === shuffledKanjiHiraganaGlossaries[i][1]) {
+    for (
+      let i = lastUsedPairIndex - pairsToRenderCount;
+      i < lastUsedPairIndex;
+      i++
+    ) {
+      console.log("i: ", i);
+      console.log(
+        "hiragana: " +
+          hiragana +
+          " shuffledKanjiHiraganaGlossaries[i][1]: " +
+          shuffledKanjiHiraganaGlossaries[i][1]
+      );
+      if (
+        kanji === shuffledKanjiHiraganaGlossaries[i][0] &&
+        hiragana === shuffledKanjiHiraganaGlossaries[i][1]
+      ) {
         expectedHiragana = shuffledKanjiHiraganaGlossaries[i][1];
         glossaryIndex = i;
         break;
@@ -152,7 +176,7 @@ const checkIfMatch = (event) => {
       highlightElements([kanjiClicked, hiraganaClicked], "correct");
       const kanjiAndHiragana = document.getElementById("kanjiAndHiragana");
       const glossary = document.getElementById("glossary");
-      kanjiAndHiragana.innerHTML = `${kanji} - ${hiragana}:`
+      kanjiAndHiragana.innerHTML = `${kanji} - ${hiragana}:`;
       glossary.innerHTML = shuffledKanjiHiraganaGlossaries[glossaryIndex][2];
       // assigning kanjiClicked and hiraganaClicked to different values, so that the User can select other divs during the animation
       const kanjiToRemove = kanjiClicked;
@@ -168,29 +192,29 @@ const checkIfMatch = (event) => {
         checkIfWon();
       }, ANIMATION_DURATION);
     } else {
-        console.log("not a match");
-        highlightElements([kanjiClicked, hiraganaClicked], "wrong");
-        // Reset the "selected" styles on the unmached elements...
-        removeElements([kanjiClicked, hiraganaClicked], "wrong");
-        // And reset the references
-        kanjiClicked = null;
-        hiraganaClicked = null;
-      }
+      console.log("not a match");
+      highlightElements([kanjiClicked, hiraganaClicked], "wrong");
+      // Reset the "selected" styles on the unmached elements...
+      removeElements([kanjiClicked, hiraganaClicked], "wrong");
+      // And reset the references
+      kanjiClicked = null;
+      hiraganaClicked = null;
+    }
   }
 };
 
 /**
- * 
+ *
  * @param elements - array of elements to remove, or to remove the "selected" class
  * @param correctOrWrong - string of the class name of the element to remove -> "correct" or "wrong"
  */
 
 const removeElements = (elements, correctOrWrong) => {
-    if (correctOrWrong === "correct") {
-      elements.forEach(element => element.remove());
-    } else {
-      elements.forEach(element => element.classList.remove("selected"));
-    }
+  if (correctOrWrong === "correct") {
+    elements.forEach((element) => element.remove());
+  } else {
+    elements.forEach((element) => element.classList.remove("selected"));
+  }
 };
 
 /**
@@ -198,23 +222,29 @@ const removeElements = (elements, correctOrWrong) => {
  */
 
 const checkIfWon = () => {
-    const isWin = foundPairs === totalWordsInSessionCount;
-    const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0;
-    const pairsWereFound = foundPairs !== 0;
-    const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
+  const isWin = foundPairs === totalWordsInSessionCount;
+  const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0;
+  const pairsWereFound = foundPairs !== 0;
+  const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
 
-    if (shouldSetupNextRound) {
-      const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
-      if (lastUsedPairIndex + pairsToRenderCount > totalWordsInSessionCount) {
-        setupRound(shuffledKanjiHiraganaGlossaries, lastUsedPairIndex + lastSetOfPairsNumber);
-      } else {
-        setupRound(shuffledKanjiHiraganaGlossaries, lastUsedPairIndex + pairsToRenderCount);
-      }
+  if (shouldSetupNextRound) {
+    const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
+    if (lastUsedPairIndex + pairsToRenderCount > totalWordsInSessionCount) {
+      setupRound(
+        shuffledKanjiHiraganaGlossaries,
+        lastUsedPairIndex + lastSetOfPairsNumber
+      );
+    } else {
+      setupRound(
+        shuffledKanjiHiraganaGlossaries,
+        lastUsedPairIndex + pairsToRenderCount
+      );
     }
+  }
 
-    if (isWin) {
-      stopTimer();
-    }
+  if (isWin) {
+    stopTimer();
+  }
 };
 
 /**
@@ -222,40 +252,48 @@ const checkIfWon = () => {
  */
 
 const starTimer = () => {
-    gameStart = Date.now();
-    // Update timer every second
-    timerInterval = setInterval(updateTimer, 1000);
+  gameStart = Date.now();
+  // Update timer every second
+  timerInterval = setInterval(updateTimer, 1000);
 };
 
 const stopTimer = () => {
-    // Stop the timer
-    clearInterval(timerInterval);
-    const gameEnd = Date.now();
-    // Convert to seconds
-    const gameDuration = (gameEnd - gameStart) / 1000;
-    alert(`Game duration: ${Math.floor(gameDuration)} seconds`);
+  // Stop the timer
+  clearInterval(timerInterval);
+  const gameEnd = Date.now();
+  // Convert to seconds
+  const gameDuration = (gameEnd - gameStart) / 1000;
+  alert(`Game duration: ${Math.floor(gameDuration)} seconds`);
 };
 
 const updateTimer = () => {
-    const currentTime = Date.now();
-    const elapsedTime = currentTime - gameStart;
-    const minutes = Math.floor(elapsedTime / 60000);
-    const seconds = Math.floor((elapsedTime % 60000) / 1000);
-    document.getElementById('timer').innerText = `${formatTime(minutes)}:${formatTime(seconds)}`;
-}
+  const currentTime = Date.now();
+  const elapsedTime = currentTime - gameStart;
+  const minutes = Math.floor(elapsedTime / 60000);
+  const seconds = Math.floor((elapsedTime % 60000) / 1000);
+  document.getElementById("timer").innerText = `${formatTime(
+    minutes
+  )}:${formatTime(seconds)}`;
+};
 /**
- * 
+ *
  * @param time - minutes or seconds as ints.
  * @returns string formatted in mm:ss format.
  */
 const formatTime = (time) => {
-    // If time is smaller than 10, add 0 in front, eg. 00:03, instead of 0:3.
-    return time < 10 ? `0${time}` : time;
-}
+  // If time is smaller than 10, add 0 in front, eg. 00:03, instead of 0:3.
+  return time < 10 ? `0${time}` : time;
+};
 
-window.addEventListener("load", () => {
-  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
-  // Create the initial state of the game - generate the divs with kanji and hiragana/katakana in HTML.
-  setupRound(shuffledKanjiHiraganaGlossaries, pairsToRenderCount);
-  starTimer();
-});
+// window.addEventListener("load", () => {
+//   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
+//   // Create the initial state of the game - generate the divs with kanji and hiragana/katakana in HTML.
+//   setupRound(shuffledKanjiHiraganaGlossaries, pairsToRenderCount);
+//   starTimer();
+// });
+
+module.exports = {
+  shuffleArray,
+  createWordReadingGlossaryTriplets,
+  formatTime,
+};
