@@ -62,12 +62,6 @@ body {
   color: #ff6b6b;
 }
 
-/* removes the possibility of reselecting the divs during animations */
-.correct,
-.wrong {
-  pointer-events: none;
-}
-
 #glossaryContainer {
   border-radius: 25px;
   width: 450px;

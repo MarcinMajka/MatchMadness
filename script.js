@@ -33,7 +33,7 @@ let leftColumnElementValueClicked = null;
 let rightColumnElementValueClicked = null;
 
 // keep track of the last used pair
-let lastUsedPairIndex = 0;
+let lastUsedTripletIndex = 0;
 // keep track of the number of found pairs
 let foundPairs = 0;
 // variables for starting the timer and incrementing the time
@@ -85,10 +85,10 @@ const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
   let rightColumnValues = [];
 
   // create the divs for the leftColumnValues
-  while (lastUsedPairIndex < pairRenderLimitIndex) {
+  while (lastUsedTripletIndex < pairRenderLimitIndex) {
     const leftColumnElement = document.createElement("div");
     const leftColumnElementValue =
-      leftColValRightColValPairs[lastUsedPairIndex][0];
+      leftColValRightColValPairs[lastUsedTripletIndex][0];
 
     leftColumnElement.classList.add(`box`);
     leftColumnElement.innerHTML = leftColumnElementValue;
@@ -99,14 +99,14 @@ const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
 
     const rightColumnElement = document.createElement("div");
     const rightColumnElementValue =
-      leftColValRightColValPairs[lastUsedPairIndex][1];
+      leftColValRightColValPairs[lastUsedTripletIndex][1];
     rightColumnElement.classList.add(`box`);
     rightColumnElement.innerHTML = rightColumnElementValue;
     rightColumnElement.addEventListener("click", checkIfMatch);
     rightColumnValues.push(rightColumnElement);
     // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
 
-    lastUsedPairIndex++;
+    lastUsedTripletIndex++;
   }
 
   // now shuffle the rightColumnValues and append them to the container
@@ -122,9 +122,16 @@ const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
  * @param className - the class to add and then remove
  */
 function highlightElements(elements, className) {
-  elements.forEach((element) => element.classList.add(className));
+  // Highlighted elements should be disabled during the animation
+  elements.forEach((element) => {
+    element.classList.add(className);
+    element.style.pointerEvents = "none";
+  });
   setTimeout(() => {
-    elements.forEach((element) => element.classList.remove(className));
+    elements.forEach((element) => {
+      element.classList.remove(className);
+      element.style.pointerEvents = "";
+    });
   }, ANIMATION_DURATION);
 }
 
@@ -171,8 +178,8 @@ const checkIfMatch = (event) => {
     // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
     let glossaryIndex = null;
     for (
-      let i = lastUsedPairIndex - pairsToRenderCount;
-      i < lastUsedPairIndex;
+      let i = lastUsedTripletIndex - pairsToRenderCount;
+      i < lastUsedTripletIndex;
       i++
     ) {
       if (
@@ -190,6 +197,7 @@ const checkIfMatch = (event) => {
         [leftColumnElementValueClicked, rightColumnElementValueClicked],
         "correct"
       );
+
       const leftValueRightValue = document.getElementById(
         "leftValueRightValue"
       );
@@ -252,15 +260,15 @@ const checkIfWon = () => {
 
   if (shouldSetupNextRound) {
     const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
-    if (lastUsedPairIndex + pairsToRenderCount > totalWordsInSessionCount) {
+    if (lastUsedTripletIndex + pairsToRenderCount > totalWordsInSessionCount) {
       setupRound(
         shuffledLeftValRightValGlossary,
-        lastUsedPairIndex + lastSetOfPairsNumber
+        lastUsedTripletIndex + lastSetOfPairsNumber
       );
     } else {
       setupRound(
         shuffledLeftValRightValGlossary,
-        lastUsedPairIndex + pairsToRenderCount
+        lastUsedTripletIndex + pairsToRenderCount
       );
     }
   }
