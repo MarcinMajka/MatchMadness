@@ -46,7 +46,6 @@ describe('Test createLeftColValRightColValGlossaryTriplets', () => {
     { kanji: '空', 'hiragana/katakana': 'そら', glossary: 'sky' },
   ]
   test('3 expected entries', () => {
-    console.log('test 3')
     expect(
       createLeftColValRightColValGlossaryTriplets(3, arrayFromJSON)
     ).toEqual([
