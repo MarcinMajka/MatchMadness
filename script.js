@@ -1,82 +1,141 @@
+// const { JM } = require('./dic')
+
 /**
- * Shuffle (randomize the order of) an array of words.
+ * Shuffle (randomize the order of) an array of leftColumnValues.
  * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
  * @param array - an array of strings
  * @returns  a new array with the same strings, but in a random order
  */
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[array[i], array[j]] = [array[j], array[i]]
   }
-  return array;
-};
+  return array
+}
 
 // -------------------
 // Lets try to keep the global variables to a minimum.
 
 // some constants:
-const ANIMATION_DURATION = 200;
-// pairCount shouldn't be bigger than the number of Object.keys(DATA).length, otherwise only words will be rendered
-let pairCount = 3;
+const ANIMATION_DURATION = 250
+
+const totalWordsInSessionCount = 3
+// pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only leftColumnValues will be rendered
+let pairsToRenderCount = 3
+// safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
+if (pairsToRenderCount > totalWordsInSessionCount) {
+  pairsToRenderCount = totalWordsInSessionCount
+}
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
-let firstClicked = null;
-let secondClicked = null;
+let leftColumnElementValueClicked = null
+let rightColumnElementValueClicked = null
 
-// Get the list of english words from the dictionary and shuffle them (we want each game to be different)
-const shuffledKeys = shuffleArray(Object.keys(DATA));
-// safety check - if desired pairCount >= shuffledKeys.length -> pairCount = shuffledKeys.length - 1
-if (pairCount >= shuffledKeys.length) {
-    pairCount = shuffledKeys.length;
-}
-// Create the pairs of words and kanjis
-const wordPairs = shuffledKeys.map((word) => [word, DATA[word]]);
 // keep track of the last used pair
-let lastUsedPairIndex = 0;
-// kep track of the number of found pairs
-let foundPairs = 0;
+let lastUsedTripletIndex = 0
+// keep track of the number of found pairs
+let foundPairs = 0
+// variables for starting the timer and incrementing the time
+let gameStart
+let timerInterval
 // -------------------
 
 /**
- * Dynamically create the divs for words and kanjis and append them to the HTML.
- * @param  wordPairs - an array of pairs of words and kanjis, like [['word1', 'translation1'] ...
+ * Create an array of [leftColumnValue, rightColumnValue, glossary] triplets from dataObject
+ * @param totalWordsInSession - number of total leftColumnValues in one game
+ * @param dataObject - array of arrays
+ * @returns  a new array with with these triplets
+ */
+const createLeftColValRightColValGlossaryTriplets = (
+  totalWordsInSession,
+  dataObject
+) => {
+  const leftColValRightColValGlossaryTriplets = []
+  for (let i = 0; i < totalWordsInSession; i++) {
+    if (i === dataObject.length) return leftColValRightColValGlossaryTriplets
+    const leftValue = dataObject[i].kanji
+    const rightValue = dataObject[i]['hiragana/katakana']
+    const glossary = dataObject[i].glossary
+    leftColValRightColValGlossaryTriplets.push([
+      leftValue,
+      rightValue,
+      glossary,
+    ])
+  }
+  return leftColValRightColValGlossaryTriplets
+}
+
+// Splitting JM into an array of 50-word sets ---------------------------------------------
+const allDicItemsIntoOneArray = createLeftColValRightColValGlossaryTriplets(
+  JM.length,
+  JM
+)
+
+const dicIn50WordSets = []
+let count = 50
+
+for (let i = 0; i < allDicItemsIntoOneArray.length; i++) {
+  const tempArr = []
+  while (count && i < allDicItemsIntoOneArray.length) {
+    tempArr.push(allDicItemsIntoOneArray[i])
+    i++
+    count--
+  }
+  count = 50
+  dicIn50WordSets.push(tempArr)
+}
+// ----------------------------------------------------------------------------------------
+const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
+  totalWordsInSessionCount,
+  JM
+)
+
+const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary)
+
+/**
+ * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
+ * @param  leftColValRightColValPairs - an array of pairs of leftColumnValues and rightColumnValues, like [['word1', 'translation1'] ...
  * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
-const setupRound = (wordPairs, pairRenderLimitIndex) => {
-  // Find the containers for words and kanjis
-  const containerWords = document.querySelector(".english");
-  const containerKanjis = document.querySelector(".kanji");
+const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
+  // Find the containers for leftColumnValues and rightColumnValues
+  const containerLeftColumnValues = document.querySelector('.leftColumn')
+  const containerRightColumnValues = document.querySelector('.rightColumn')
 
-  let kanjis = [];
+  let rightColumnValues = []
 
-  // create the divs for the words
-  while (lastUsedPairIndex < pairRenderLimitIndex) {
-    const word = document.createElement("div");
-    const wordValue = wordPairs[lastUsedPairIndex][0];
+  // create the divs for the leftColumnValues
+  while (lastUsedTripletIndex < pairRenderLimitIndex) {
+    const leftColumnElement = document.createElement('div')
+    const leftColumnElementValue =
+      leftColValRightColValPairs[lastUsedTripletIndex][0]
 
-    word.classList.add(`box`);
-    word.innerHTML = wordValue;
-    // NOTE: we are adding the same function as the event listener to both the word and the kanji. This function will
+    leftColumnElement.classList.add(`box`)
+    leftColumnElement.innerHTML = leftColumnElementValue
+    // NOTE: we are adding the same function as the event listener to both the word and the leftColumnElement. This function will
     // accept the event object as an argument, so we can access the clicked element from it.
-    word.addEventListener("click", checkIfMatch);
-    containerWords.appendChild(word);
+    leftColumnElement.addEventListener('click', checkIfMatch)
+    containerLeftColumnValues.appendChild(leftColumnElement)
 
-    const kanji = document.createElement("div");
-    const kanjiValue = wordPairs[lastUsedPairIndex][1];
-    kanji.classList.add(`box`);
-    kanji.innerHTML = kanjiValue;
-    kanji.addEventListener("click", checkIfMatch);
-    kanjis.push(kanji);
-    // NOTE: do not add the kanji to the container here, we will shuffle them later
+    const rightColumnElement = document.createElement('div')
+    const rightColumnElementValue =
+      leftColValRightColValPairs[lastUsedTripletIndex][1]
+    rightColumnElement.classList.add(`box`)
+    rightColumnElement.innerHTML = rightColumnElementValue
+    rightColumnElement.addEventListener('click', checkIfMatch)
+    rightColumnValues.push(rightColumnElement)
+    // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
 
-    lastUsedPairIndex++;
+    lastUsedTripletIndex++
   }
 
-  // now shuffle the kanjis and append them to the container
-  kanjis = shuffleArray(kanjis);
-  kanjis.forEach((kanji) => containerKanjis.appendChild(kanji));
-};
+  // now shuffle the rightColumnValues and append them to the container
+  rightColumnValues = shuffleArray(rightColumnValues)
+  rightColumnValues.forEach((leftColumnElement) =>
+    containerRightColumnValues.appendChild(leftColumnElement)
+  )
+}
 
 /**
  * Highlight the elements for a short period of time by adding a class to them and then removing it after a timeout.
@@ -84,104 +143,212 @@ const setupRound = (wordPairs, pairRenderLimitIndex) => {
  * @param className - the class to add and then remove
  */
 function highlightElements(elements, className) {
-  elements.forEach((element) => element.classList.add(className));
+  // Highlighted elements should be disabled during the animation
+  elements.forEach((element) => {
+    element.classList.add(className)
+    element.style.pointerEvents = 'none'
+  })
   setTimeout(() => {
-    elements.forEach((element) => element.classList.remove(className));
-  }, ANIMATION_DURATION);
+    elements.forEach((element) => {
+      element.classList.remove(className)
+      element.style.pointerEvents = ''
+    })
+  }, ANIMATION_DURATION)
 }
 
 /**
- * 
+ *
  * @param {target} event - check if selected word and translation match.
  */
 
 const checkIfMatch = (event) => {
-  const clickedElement = event.target;
-
-  // if first is null, assign the clicked element to first, then if second is null, assign the clicked element to second.
-  // Subsequent click will reset second value and set first to the clicked element. So the first value will always be filled, until the end of the game.
-  if (firstClicked === null) {
-    firstClicked = clickedElement;
-    firstClicked.classList.add("selected");
-  } else if (secondClicked === null) {
-    secondClicked = clickedElement;
-    secondClicked.classList.add("selected");
-  } else {
-    // Reset the styles on the old elements...
-    firstClicked.classList.remove("selected");
-    secondClicked.classList.remove("selected");
-    // ... and reset the values
-    firstClicked = clickedElement;
-    secondClicked = null;
-  }
-
-  const valuesAreFilled = firstClicked !== null && secondClicked !== null;
-
-  if (valuesAreFilled) {
-    const firstValue = firstClicked.innerHTML;
-    const secondValue = secondClicked.innerHTML;
-    // TODO: what if I click the same element twice?
-    // TODO: what if the first clicked element is kanji?
-
-    const expectedValue = DATA[firstValue];
-    if (secondValue === expectedValue) {
-      highlightElements([firstClicked, secondClicked], "correct");
-
-      // Remove the elements after a short delay.
-      // TODO: what if user clicks on the elements while they are being removed?
-      setTimeout(() => {
-        // TODO: move the logic for removing the elements to a separate function.
-        firstClicked.remove();
-        secondClicked.remove();
-        firstClicked = null;
-        secondClicked = null;
-        foundPairs++;
-
-        checkIfWon();
-      }, ANIMATION_DURATION);
+  const clickedElement = event.target
+  // left or right column
+  const clickedElementsParentElementsClass =
+    clickedElement.parentElement.getAttribute('class')
+  // true if left column was selected, false if right column was selected
+  const elementFromLeftColumnIsSelected =
+    clickedElementsParentElementsClass === 'leftColumn'
+  if (elementFromLeftColumnIsSelected) {
+    if (leftColumnElementValueClicked === null) {
+      leftColumnElementValueClicked = clickedElement
+      leftColumnElementValueClicked.classList.add('selected')
     } else {
-      console.log("not a match");
-      highlightElements([firstClicked, secondClicked], "wrong");
-
-      // TODO: move the logic for resetting the values to a separate function (maybe reuse the delete function?)
-      // Reset the "selected" styles on the unmached elements...
-      firstClicked.classList.remove("selected");
-      secondClicked.classList.remove("selected");
-      // And reset the references
-      firstClicked = null;
-      secondClicked = null;
+      leftColumnElementValueClicked.classList.remove('selected')
+      leftColumnElementValueClicked = clickedElement
+      leftColumnElementValueClicked.classList.add('selected')
+    }
+  } else {
+    if (rightColumnElementValueClicked === null) {
+      rightColumnElementValueClicked = clickedElement
+      rightColumnElementValueClicked.classList.add('selected')
+    } else {
+      rightColumnElementValueClicked.classList.remove('selected')
+      rightColumnElementValueClicked = clickedElement
+      rightColumnElementValueClicked.classList.add('selected')
     }
   }
-};
+  // if both values are filled
+  if (
+    leftColumnElementValueClicked !== null &&
+    rightColumnElementValueClicked !== null
+  ) {
+    const leftColumnElementValue = leftColumnElementValueClicked.innerHTML
+    const rightColumnElementValue = rightColumnElementValueClicked.innerHTML
+    let expectedRightColumnValue = null
+    // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
+    let glossaryIndex = null
+    for (
+      let i = lastUsedTripletIndex - pairsToRenderCount;
+      i < lastUsedTripletIndex;
+      i++
+    ) {
+      if (
+        leftColumnElementValue === shuffledLeftValRightValGlossary[i][0] &&
+        rightColumnElementValue === shuffledLeftValRightValGlossary[i][1]
+      ) {
+        expectedRightColumnValue = shuffledLeftValRightValGlossary[i][1]
+        glossaryIndex = i
+        break
+      }
+    }
+
+    if (rightColumnElementValue === expectedRightColumnValue) {
+      highlightElements(
+        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        'correct'
+      )
+
+      const leftValueRightValue = document.getElementById('leftValueRightValue')
+      const glossary = document.getElementById('glossary')
+      leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`
+      glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2]
+      // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
+      const leftElementToRemove = leftColumnElementValueClicked
+      const rightElementToRemove = rightColumnElementValueClicked
+      leftColumnElementValueClicked = null
+      rightColumnElementValueClicked = null
+      // Remove the elements after a short delay.
+      setTimeout(() => {
+        removeElements([leftElementToRemove, rightElementToRemove], 'correct')
+
+        foundPairs++
+
+        checkIfWon()
+      }, ANIMATION_DURATION)
+    } else {
+      highlightElements(
+        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        'wrong'
+      )
+      // Reset the "selected" styles on the unmached elements...
+      removeElements(
+        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        'wrong'
+      )
+      // And reset the references
+      leftColumnElementValueClicked = null
+      rightColumnElementValueClicked = null
+    }
+  }
+}
+
+/**
+ *
+ * @param elements - array of elements to remove, or to remove the "selected" class
+ * @param correctOrWrong - string of the class name of the element to remove -> "correct" or "wrong"
+ */
+
+const removeElements = (elements, correctOrWrong) => {
+  if (correctOrWrong === 'correct') {
+    elements.forEach((element) => element.remove())
+  } else {
+    elements.forEach((element) => element.classList.remove('selected'))
+  }
+}
 
 /**
  * Check if next round should be set up or if the game has been won.
  */
 
 const checkIfWon = () => {
-    const isWin = foundPairs === wordPairs.length;
-    const isCurrentRoundOver = foundPairs % pairCount === 0;
-    const pairsWereFound = foundPairs !== 0;
-    const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
+  const isWin = foundPairs === totalWordsInSessionCount
+  const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0
+  const pairsWereFound = foundPairs !== 0
+  const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin
 
-    if (shouldSetupNextRound) {
-      const lastSetOfPairsNumber = wordPairs.length % pairCount;
-      if (lastUsedPairIndex + pairCount > wordPairs.length) {
-        setupRound(wordPairs, lastUsedPairIndex + lastSetOfPairsNumber);
-      } else {
-        setupRound(wordPairs, lastUsedPairIndex + pairCount);
-      }
+  if (shouldSetupNextRound) {
+    const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount
+    if (lastUsedTripletIndex + pairsToRenderCount > totalWordsInSessionCount) {
+      setupRound(
+        shuffledLeftValRightValGlossary,
+        lastUsedTripletIndex + lastSetOfPairsNumber
+      )
+    } else {
+      setupRound(
+        shuffledLeftValRightValGlossary,
+        lastUsedTripletIndex + pairsToRenderCount
+      )
     }
+  }
 
-    if (isWin) {
-      // TODO: display the time it took to win the game
-      alert("You won!");
-    }
+  if (isWin) {
+    // Make buttons visible and actionable
+    const buttons = document.querySelector('.buttonContainer')
+    buttons.style.visibility = 'visible'
+    stopTimer()
+  }
 }
 
-window.addEventListener("load", () => {
-  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet)
-  // Create the initial state of the game - generate the divs with words and kanjis in HTML.
-  setupRound(wordPairs, pairCount);
-  // TODO: add a function to start the timer here.
-});
+/**
+ * Timer functions
+ */
+
+const starTimer = () => {
+  gameStart = Date.now()
+  // Update timer every second
+  timerInterval = setInterval(updateTimer, 1000)
+}
+
+const stopTimer = () => {
+  // Stop the timer
+  clearInterval(timerInterval)
+  const gameEnd = Date.now()
+  // Convert to seconds
+  const gameDuration = (gameEnd - gameStart) / 1000
+  document.getElementById('timer').innerText = `Game duration: ${Math.floor(
+    gameDuration
+  )} seconds`
+}
+
+const updateTimer = () => {
+  const currentTime = Date.now()
+  const elapsedTime = currentTime - gameStart
+  const minutes = Math.floor(elapsedTime / 60000)
+  const seconds = Math.floor((elapsedTime % 60000) / 1000)
+  document.getElementById('timer').innerText = `${formatTime(
+    minutes
+  )}:${formatTime(seconds)}`
+}
+/**
+ *
+ * @param time - minutes or seconds as ints.
+ * @returns string formatted in mm:ss format.
+ */
+const formatTime = (time) => {
+  // If time is smaller than 10, add 0 in front, eg. 00:03, instead of 0:3.
+  return time < 10 ? `0${time}` : time
+}
+
+window.addEventListener('load', () => {
+  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
+  // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
+  setupRound(shuffledLeftValRightValGlossary, pairsToRenderCount)
+  starTimer()
+})
+
+// module.exports = {
+//   shuffleArray,
+//   createLeftColValRightColValGlossaryTriplets,
+//   formatTime,
+// }

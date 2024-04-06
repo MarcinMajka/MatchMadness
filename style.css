@@ -1,19 +1,36 @@
 body {
   background-color: #141b21;
 }
+
+#timer {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    color: wheat;
+    font-size: 100px;
+    margin-bottom: 0;
+}
+
 .container {
   border-radius: 100;
   display: flex;
   align-items: center;
-  margin-top: 3rem;
+  justify-content: center;
+  margin-bottom: 0;
 }
 
-.kanji,
-.english {
-  margin: auto;
+.leftColumn,
+.rightColumn {
+  margin: 0 100px 25px 100px;
 }
 
 .box {
+  resize: both;
+  font-size: 65px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   /* first value is Y axis, second is X axis */
   padding: 0.5rem 1rem;
   margin: 0.8rem;
@@ -22,7 +39,6 @@ body {
   cursor: pointer;
   border-radius: 6px;
   color: white;
-  font-size: 1.2rem;
 }
 
 /* this will define the styles when hovering over the box */
@@ -44,4 +60,65 @@ body {
 .wrong {
   border-color: #ff6b6b;
   color: #ff6b6b;
+}
+
+#glossaryContainer {
+  border-radius: 25px;
+  width: 450px;
+  height: 150px;
+  padding: 25px;
+  color: antiquewhite;
+  background-color: #1d282d;
+  font-size: 30px;
+  overflow: auto;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container.license {
+  margin-top: 130px;
+  padding: 10px 15px;
+}
+
+.license {
+  background-color: #1d282d;
+  color: antiquewhite;
+  font-size: 20px;
+  border-radius: 25px;
+}
+
+.buttonAndLicenseContainer {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  font-weight: bold;
+  visibility: hidden;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  padding: 13px;
+  border-radius: 25px;
+  background-color: antiquewhite;
+  color: #1d282d;
+  letter-spacing: 4px;
+}
+
+.menuButtonContainer {
+  margin: 5px;
+  padding: 10px;
+  border-radius: 25px;
 }
