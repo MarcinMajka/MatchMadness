@@ -122,3 +122,34 @@ a {
   padding: 10px;
   border-radius: 25px;
 }
+
+#word {
+  text-align: center;
+  font-size: 100px;
+  margin: 30px;
+  padding: 15px;
+  border-radius: 25px;
+  background-color: #1d282d;
+  color: antiquewhite;
+}
+
+#userInput {
+  text-align: center;
+  font-size: 100px;
+  margin: 30px;
+  padding: 15px;
+  border-radius: 25px;
+  background-color: #1d282d;
+  color: antiquewhite;
+}
+
+#glossary {
+  text-align: center;
+  height: 250px;
+  font-size: 80px;
+  margin: 30px;
+  padding-bottom: 30px;
+  border-radius: 25px;
+  background-color: #1d282d;
+  color: antiquewhite;
+}
