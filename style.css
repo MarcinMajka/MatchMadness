@@ -78,6 +78,9 @@ a {
 }
 
 .container.license {
+  position: fixed;
+  bottom: 0;
+  margin-bottom: 30px;
   margin-top: 130px;
   padding: 10px 15px;
 }
@@ -148,6 +151,7 @@ a {
   height: 250px;
   font-size: 80px;
   margin: 30px;
+  margin-bottom: 100px;
   padding-bottom: 30px;
   border-radius: 25px;
   background-color: #1d282d;
