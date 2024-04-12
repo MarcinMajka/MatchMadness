@@ -1,6 +1,8 @@
 const wordMadnessWord = document.getElementById('word')
 const wordMadnessInput = document.getElementById('userInput')
 const wordMadnessGlossary = document.getElementById('glossary')
+const matchesInSetButton = document.getElementById('matches')
+const wrongCountInSetButton = document.getElementById('wrong')
 
 const data = [
   [
@@ -28,18 +30,27 @@ const data = [
 
 let currentSetIndex = 0
 let wordIndex = 0
+let currentSetMatchCount = 0
+let wrongCountInSet = 0
 
 function validateInput(e) {
   if (e.code === 'Space' || e.code === 'Enter') {
     if (wordMadnessInput.value.trim() === wordMadnessWord.innerText) {
+      currentSetMatchCount++
       updateGlossary()
       updateWord()
+    } else {
+      //   If input is blank, let's not count it towards fails
+      if (wordMadnessInput.value === '') return
+      wrongCountInSet++
+      displayFailedTries()
     }
   }
 }
 
 function updateWord() {
   console.log(currentSetIndex)
+  displayMatches()
   if (wordIndex < data[currentSetIndex].length) {
     wordMadnessWord.innerText = data[currentSetIndex][wordIndex][0]
     wordMadnessInput.value = ''
@@ -47,6 +58,7 @@ function updateWord() {
   } else {
     currentSetIndex++
     wordIndex = 0
+    currentSetMatchCount = 0
     if (currentSetIndex < data.length) {
       alert('New SET!')
       updateWord()
@@ -64,6 +76,15 @@ function updateGlossary() {
   }\n ${data[currentSetIndex][wordIndex - 1][2]}`
 }
 
+function displayMatches() {
+  const currentSetLenght = data[currentSetIndex].length
+  matchesInSetButton.innerText = `${currentSetMatchCount}/${currentSetLenght}`
+}
+
+function displayFailedTries() {
+  wrongCountInSetButton.innerText = `Fails: ${wrongCountInSet}`
+}
+
 wordMadnessInput.addEventListener('keyup', validateInput)
 wordMadnessInput.addEventListener('keydown', (e) => {
   if (e.code === 'Space') {
@@ -74,4 +95,6 @@ wordMadnessInput.addEventListener('keydown', (e) => {
 window.addEventListener('load', () => {
   updateWord()
   wordMadnessInput.focus()
+  displayMatches()
+  displayFailedTries()
 })

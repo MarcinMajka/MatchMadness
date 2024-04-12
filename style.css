@@ -75,10 +75,13 @@ body {
 
 a {
   text-decoration: none;
+  color: #141b21;
 }
 
 .container.license {
   position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 0;
   margin-bottom: 30px;
   margin-top: 130px;
@@ -151,9 +154,26 @@ a {
   height: 250px;
   font-size: 80px;
   margin: 30px;
-  margin-bottom: 100px;
+
   padding-bottom: 30px;
   border-radius: 25px;
   background-color: #1d282d;
   color: antiquewhite;
+}
+
+#stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonContainer {
+  background-color: #00FF00;
+}
+
+.wordMadnessButtonAndLicenseContainer {
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
 }
