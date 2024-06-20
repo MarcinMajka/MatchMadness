@@ -29,8 +29,13 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
 }
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
-let leftColumnElementValueClicked = null
-let rightColumnElementValueClicked = null
+
+// NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
+
+const state = {
+  leftColumnElementValueClicked: null,
+  rightColumnElementValueClicked: null,
+}
 
 // keep track of the last used pair
 let lastUsedTripletIndex = 0
@@ -115,7 +120,9 @@ const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
     leftColumnElement.innerHTML = leftColumnElementValue
     // NOTE: we are adding the same function as the event listener to both the word and the leftColumnElement. This function will
     // accept the event object as an argument, so we can access the clicked element from it.
-    leftColumnElement.addEventListener('click', checkIfMatch)
+    leftColumnElement.addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    )
     containerLeftColumnValues.appendChild(leftColumnElement)
 
     const rightColumnElement = document.createElement('div')
@@ -123,7 +130,9 @@ const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
       leftColValRightColValPairs[lastUsedTripletIndex][1]
     rightColumnElement.classList.add(`box`)
     rightColumnElement.innerHTML = rightColumnElementValue
-    rightColumnElement.addEventListener('click', checkIfMatch)
+    rightColumnElement.addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    )
     rightColumnValues.push(rightColumnElement)
     // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
 
@@ -161,40 +170,43 @@ function highlightElements(elements, className) {
  * @param {target} event - check if selected word and translation match.
  */
 
-const checkIfMatch = (event) => {
+const checkIfMatch = (event, state) => {
   const clickedElement = event.target
+
   // left or right column
   const clickedElementsParentElementsClass =
     clickedElement.parentElement.getAttribute('class')
+
   // true if left column was selected, false if right column was selected
   const elementFromLeftColumnIsSelected =
     clickedElementsParentElementsClass === 'leftColumn'
   if (elementFromLeftColumnIsSelected) {
-    if (leftColumnElementValueClicked === null) {
-      leftColumnElementValueClicked = clickedElement
-      leftColumnElementValueClicked.classList.add('selected')
+    if (state.leftColumnElementValueClicked === null) {
+      state.leftColumnElementValueClicked = clickedElement
+      state.leftColumnElementValueClicked.classList.add('selected')
     } else {
-      leftColumnElementValueClicked.classList.remove('selected')
-      leftColumnElementValueClicked = clickedElement
-      leftColumnElementValueClicked.classList.add('selected')
+      state.leftColumnElementValueClicked.classList.remove('selected')
+      state.leftColumnElementValueClicked = clickedElement
+      state.leftColumnElementValueClicked.classList.add('selected')
     }
   } else {
-    if (rightColumnElementValueClicked === null) {
-      rightColumnElementValueClicked = clickedElement
-      rightColumnElementValueClicked.classList.add('selected')
+    if (state.rightColumnElementValueClicked === null) {
+      state.rightColumnElementValueClicked = clickedElement
+      state.rightColumnElementValueClicked.classList.add('selected')
     } else {
-      rightColumnElementValueClicked.classList.remove('selected')
-      rightColumnElementValueClicked = clickedElement
-      rightColumnElementValueClicked.classList.add('selected')
+      state.rightColumnElementValueClicked.classList.remove('selected')
+      state.rightColumnElementValueClicked = clickedElement
+      state.rightColumnElementValueClicked.classList.add('selected')
     }
   }
   // if both values are filled
   if (
-    leftColumnElementValueClicked !== null &&
-    rightColumnElementValueClicked !== null
+    state.leftColumnElementValueClicked !== null &&
+    state.rightColumnElementValueClicked !== null
   ) {
-    const leftColumnElementValue = leftColumnElementValueClicked.innerHTML
-    const rightColumnElementValue = rightColumnElementValueClicked.innerHTML
+    const leftColumnElementValue = state.leftColumnElementValueClicked.innerHTML
+    const rightColumnElementValue =
+      state.rightColumnElementValueClicked.innerHTML
     let expectedRightColumnValue = null
     // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
     let glossaryIndex = null
@@ -215,7 +227,10 @@ const checkIfMatch = (event) => {
 
     if (rightColumnElementValue === expectedRightColumnValue) {
       highlightElements(
-        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        [
+          state.leftColumnElementValueClicked,
+          state.rightColumnElementValueClicked,
+        ],
         'correct'
       )
 
@@ -224,10 +239,10 @@ const checkIfMatch = (event) => {
       leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`
       glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2]
       // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
-      const leftElementToRemove = leftColumnElementValueClicked
-      const rightElementToRemove = rightColumnElementValueClicked
-      leftColumnElementValueClicked = null
-      rightColumnElementValueClicked = null
+      const leftElementToRemove = state.leftColumnElementValueClicked
+      const rightElementToRemove = state.rightColumnElementValueClicked
+      state.leftColumnElementValueClicked = null
+      state.rightColumnElementValueClicked = null
       // Remove the elements after a short delay.
       setTimeout(() => {
         removeElements([leftElementToRemove, rightElementToRemove], 'correct')
@@ -238,17 +253,23 @@ const checkIfMatch = (event) => {
       }, ANIMATION_DURATION)
     } else {
       highlightElements(
-        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        [
+          state.leftColumnElementValueClicked,
+          state.rightColumnElementValueClicked,
+        ],
         'wrong'
       )
       // Reset the "selected" styles on the unmached elements...
       removeElements(
-        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        [
+          state.leftColumnElementValueClicked,
+          state.rightColumnElementValueClicked,
+        ],
         'wrong'
       )
       // And reset the references
-      leftColumnElementValueClicked = null
-      rightColumnElementValueClicked = null
+      state.leftColumnElementValueClicked = null
+      state.rightColumnElementValueClicked = null
     }
   }
 }
