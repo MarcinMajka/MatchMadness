@@ -8,37 +8,42 @@
  */
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[array[i], array[j]] = [array[j], array[i]]
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
-  return array
-}
+  return array;
+};
 
 // -------------------
 // Lets try to keep the global variables to a minimum.
 
 // some constants:
-const ANIMATION_DURATION = 250
+const ANIMATION_DURATION = 250;
 
-const totalWordsInSessionCount = 3
+const totalWordsInSessionCount = 3;
 // pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only leftColumnValues will be rendered
-let pairsToRenderCount = 3
+let pairsToRenderCount = 3;
 // safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
 if (pairsToRenderCount > totalWordsInSessionCount) {
-  pairsToRenderCount = totalWordsInSessionCount
+  pairsToRenderCount = totalWordsInSessionCount;
 }
 
 // We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
-let leftColumnElementValueClicked = null
-let rightColumnElementValueClicked = null
+
+// NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
+
+const state = {
+  leftColumnElementValueClicked: null,
+  rightColumnElementValueClicked: null,
+};
 
 // keep track of the last used pair
-let lastUsedTripletIndex = 0
+let lastUsedTripletIndex = 0;
 // keep track of the number of found pairs
-let foundPairs = 0
+let foundPairs = 0;
 // variables for starting the timer and incrementing the time
-let gameStart
-let timerInterval
+let gameStart;
+let timerInterval;
 // -------------------
 
 /**
@@ -51,47 +56,47 @@ const createLeftColValRightColValGlossaryTriplets = (
   totalWordsInSession,
   dataObject
 ) => {
-  const leftColValRightColValGlossaryTriplets = []
+  const leftColValRightColValGlossaryTriplets = [];
   for (let i = 0; i < totalWordsInSession; i++) {
-    if (i === dataObject.length) return leftColValRightColValGlossaryTriplets
-    const leftValue = dataObject[i].kanji
-    const rightValue = dataObject[i]['hiragana/katakana']
-    const glossary = dataObject[i].glossary
+    if (i === dataObject.length) return leftColValRightColValGlossaryTriplets;
+    const leftValue = dataObject[i].kanji;
+    const rightValue = dataObject[i]['hiragana/katakana'];
+    const glossary = dataObject[i].glossary;
     leftColValRightColValGlossaryTriplets.push([
       leftValue,
       rightValue,
       glossary,
-    ])
+    ]);
   }
-  return leftColValRightColValGlossaryTriplets
-}
+  return leftColValRightColValGlossaryTriplets;
+};
 
 // Splitting JM into an array of 50-word sets ---------------------------------------------
 const allDicItemsIntoOneArray = createLeftColValRightColValGlossaryTriplets(
   JM.length,
   JM
-)
+);
 
-const dicIn50WordSets = []
-let count = 50
+const dicIn50WordSets = [];
+let count = 50;
 
 for (let i = 0; i < allDicItemsIntoOneArray.length; i++) {
-  const tempArr = []
+  const tempArr = [];
   while (count && i < allDicItemsIntoOneArray.length) {
-    tempArr.push(allDicItemsIntoOneArray[i])
-    i++
-    count--
+    tempArr.push(allDicItemsIntoOneArray[i]);
+    i++;
+    count--;
   }
-  count = 50
-  dicIn50WordSets.push(tempArr)
+  count = 50;
+  dicIn50WordSets.push(tempArr);
 }
 // ----------------------------------------------------------------------------------------
 const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
   totalWordsInSessionCount,
   JM
-)
+);
 
-const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary)
+const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary);
 
 /**
  * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
@@ -100,42 +105,46 @@ const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary)
  */
 const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
   // Find the containers for leftColumnValues and rightColumnValues
-  const containerLeftColumnValues = document.querySelector('.leftColumn')
-  const containerRightColumnValues = document.querySelector('.rightColumn')
+  const containerLeftColumnValues = document.querySelector('.leftColumn');
+  const containerRightColumnValues = document.querySelector('.rightColumn');
 
-  let rightColumnValues = []
+  let rightColumnValues = [];
 
   // create the divs for the leftColumnValues
   while (lastUsedTripletIndex < pairRenderLimitIndex) {
-    const leftColumnElement = document.createElement('div')
+    const leftColumnElement = document.createElement('div');
     const leftColumnElementValue =
-      leftColValRightColValPairs[lastUsedTripletIndex][0]
+      leftColValRightColValPairs[lastUsedTripletIndex][0];
 
-    leftColumnElement.classList.add(`box`)
-    leftColumnElement.innerHTML = leftColumnElementValue
+    leftColumnElement.classList.add(`box`);
+    leftColumnElement.innerHTML = leftColumnElementValue;
     // NOTE: we are adding the same function as the event listener to both the word and the leftColumnElement. This function will
     // accept the event object as an argument, so we can access the clicked element from it.
-    leftColumnElement.addEventListener('click', checkIfMatch)
-    containerLeftColumnValues.appendChild(leftColumnElement)
+    leftColumnElement.addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    );
+    containerLeftColumnValues.appendChild(leftColumnElement);
 
-    const rightColumnElement = document.createElement('div')
+    const rightColumnElement = document.createElement('div');
     const rightColumnElementValue =
-      leftColValRightColValPairs[lastUsedTripletIndex][1]
-    rightColumnElement.classList.add(`box`)
-    rightColumnElement.innerHTML = rightColumnElementValue
-    rightColumnElement.addEventListener('click', checkIfMatch)
-    rightColumnValues.push(rightColumnElement)
+      leftColValRightColValPairs[lastUsedTripletIndex][1];
+    rightColumnElement.classList.add(`box`);
+    rightColumnElement.innerHTML = rightColumnElementValue;
+    rightColumnElement.addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    );
+    rightColumnValues.push(rightColumnElement);
     // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
 
-    lastUsedTripletIndex++
+    lastUsedTripletIndex++;
   }
 
   // now shuffle the rightColumnValues and append them to the container
-  rightColumnValues = shuffleArray(rightColumnValues)
+  rightColumnValues = shuffleArray(rightColumnValues);
   rightColumnValues.forEach((leftColumnElement) =>
     containerRightColumnValues.appendChild(leftColumnElement)
-  )
-}
+  );
+};
 
 /**
  * Highlight the elements for a short period of time by adding a class to them and then removing it after a timeout.
@@ -145,15 +154,15 @@ const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
 function highlightElements(elements, className) {
   // Highlighted elements should be disabled during the animation
   elements.forEach((element) => {
-    element.classList.add(className)
-    element.style.pointerEvents = 'none'
-  })
+    element.classList.add(className);
+    element.style.pointerEvents = 'none';
+  });
   setTimeout(() => {
     elements.forEach((element) => {
-      element.classList.remove(className)
-      element.style.pointerEvents = ''
-    })
-  }, ANIMATION_DURATION)
+      element.classList.remove(className);
+      element.style.pointerEvents = '';
+    });
+  }, ANIMATION_DURATION);
 }
 
 /**
@@ -161,43 +170,47 @@ function highlightElements(elements, className) {
  * @param {target} event - check if selected word and translation match.
  */
 
-const checkIfMatch = (event) => {
-  const clickedElement = event.target
+const checkIfMatch = (event, state) => {
+  const clickedElement = event.target;
+
   // left or right column
   const clickedElementsParentElementsClass =
-    clickedElement.parentElement.getAttribute('class')
+    clickedElement.parentElement.getAttribute('class');
+
   // true if left column was selected, false if right column was selected
   const elementFromLeftColumnIsSelected =
-    clickedElementsParentElementsClass === 'leftColumn'
+    clickedElementsParentElementsClass === 'leftColumn';
   if (elementFromLeftColumnIsSelected) {
-    if (leftColumnElementValueClicked === null) {
-      leftColumnElementValueClicked = clickedElement
-      leftColumnElementValueClicked.classList.add('selected')
+    if (state.leftColumnElementValueClicked === null) {
+      state.leftColumnElementValueClicked = clickedElement;
+      state.leftColumnElementValueClicked.classList.add('selected');
     } else {
-      leftColumnElementValueClicked.classList.remove('selected')
-      leftColumnElementValueClicked = clickedElement
-      leftColumnElementValueClicked.classList.add('selected')
+      state.leftColumnElementValueClicked.classList.remove('selected');
+      state.leftColumnElementValueClicked = clickedElement;
+      state.leftColumnElementValueClicked.classList.add('selected');
     }
   } else {
-    if (rightColumnElementValueClicked === null) {
-      rightColumnElementValueClicked = clickedElement
-      rightColumnElementValueClicked.classList.add('selected')
+    if (state.rightColumnElementValueClicked === null) {
+      state.rightColumnElementValueClicked = clickedElement;
+      state.rightColumnElementValueClicked.classList.add('selected');
     } else {
-      rightColumnElementValueClicked.classList.remove('selected')
-      rightColumnElementValueClicked = clickedElement
-      rightColumnElementValueClicked.classList.add('selected')
+      state.rightColumnElementValueClicked.classList.remove('selected');
+      state.rightColumnElementValueClicked = clickedElement;
+      state.rightColumnElementValueClicked.classList.add('selected');
     }
   }
   // if both values are filled
   if (
-    leftColumnElementValueClicked !== null &&
-    rightColumnElementValueClicked !== null
+    state.leftColumnElementValueClicked !== null &&
+    state.rightColumnElementValueClicked !== null
   ) {
-    const leftColumnElementValue = leftColumnElementValueClicked.innerHTML
-    const rightColumnElementValue = rightColumnElementValueClicked.innerHTML
-    let expectedRightColumnValue = null
+    const leftColumnElementValue =
+      state.leftColumnElementValueClicked.innerHTML;
+    const rightColumnElementValue =
+      state.rightColumnElementValueClicked.innerHTML;
+    let expectedRightColumnValue = null;
     // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
-    let glossaryIndex = null
+    let glossaryIndex = null;
     for (
       let i = lastUsedTripletIndex - pairsToRenderCount;
       i < lastUsedTripletIndex;
@@ -207,51 +220,62 @@ const checkIfMatch = (event) => {
         leftColumnElementValue === shuffledLeftValRightValGlossary[i][0] &&
         rightColumnElementValue === shuffledLeftValRightValGlossary[i][1]
       ) {
-        expectedRightColumnValue = shuffledLeftValRightValGlossary[i][1]
-        glossaryIndex = i
-        break
+        expectedRightColumnValue = shuffledLeftValRightValGlossary[i][1];
+        glossaryIndex = i;
+        break;
       }
     }
 
     if (rightColumnElementValue === expectedRightColumnValue) {
       highlightElements(
-        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        [
+          state.leftColumnElementValueClicked,
+          state.rightColumnElementValueClicked,
+        ],
         'correct'
-      )
+      );
 
-      const leftValueRightValue = document.getElementById('leftValueRightValue')
-      const glossary = document.getElementById('glossary')
-      leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`
-      glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2]
+      const leftValueRightValue = document.getElementById(
+        'leftValueRightValue'
+      );
+      const glossary = document.getElementById('glossary');
+      leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
+      glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
       // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
-      const leftElementToRemove = leftColumnElementValueClicked
-      const rightElementToRemove = rightColumnElementValueClicked
-      leftColumnElementValueClicked = null
-      rightColumnElementValueClicked = null
+      const leftElementToRemove = state.leftColumnElementValueClicked;
+      const rightElementToRemove = state.rightColumnElementValueClicked;
+      state.leftColumnElementValueClicked = null;
+      state.rightColumnElementValueClicked = null;
       // Remove the elements after a short delay.
       setTimeout(() => {
-        removeElements([leftElementToRemove, rightElementToRemove], 'correct')
+        removeElements([leftElementToRemove, rightElementToRemove], 'correct');
 
-        foundPairs++
+        foundPairs++;
 
-        checkIfWon()
-      }, ANIMATION_DURATION)
+        checkIfWon();
+      }, ANIMATION_DURATION);
     } else {
       highlightElements(
-        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        [
+          state.leftColumnElementValueClicked,
+          state.rightColumnElementValueClicked,
+        ],
         'wrong'
-      )
+      );
       // Reset the "selected" styles on the unmached elements...
       removeElements(
-        [leftColumnElementValueClicked, rightColumnElementValueClicked],
+        [
+          state.leftColumnElementValueClicked,
+          state.rightColumnElementValueClicked,
+        ],
         'wrong'
-      )
+      );
       // And reset the references
-      leftColumnElementValueClicked = null
-      rightColumnElementValueClicked = null
+      state.leftColumnElementValueClicked = null;
+      state.rightColumnElementValueClicked = null;
     }
   }
-}
+};
 
 /**
  *
@@ -261,75 +285,75 @@ const checkIfMatch = (event) => {
 
 const removeElements = (elements, correctOrWrong) => {
   if (correctOrWrong === 'correct') {
-    elements.forEach((element) => element.remove())
+    elements.forEach((element) => element.remove());
   } else {
-    elements.forEach((element) => element.classList.remove('selected'))
+    elements.forEach((element) => element.classList.remove('selected'));
   }
-}
+};
 
 /**
  * Check if next round should be set up or if the game has been won.
  */
 
 const checkIfWon = () => {
-  const isWin = foundPairs === totalWordsInSessionCount
-  const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0
-  const pairsWereFound = foundPairs !== 0
-  const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin
+  const isWin = foundPairs === totalWordsInSessionCount;
+  const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0;
+  const pairsWereFound = foundPairs !== 0;
+  const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
 
   if (shouldSetupNextRound) {
-    const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount
+    const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
     if (lastUsedTripletIndex + pairsToRenderCount > totalWordsInSessionCount) {
       setupRound(
         shuffledLeftValRightValGlossary,
         lastUsedTripletIndex + lastSetOfPairsNumber
-      )
+      );
     } else {
       setupRound(
         shuffledLeftValRightValGlossary,
         lastUsedTripletIndex + pairsToRenderCount
-      )
+      );
     }
   }
 
   if (isWin) {
     // Make buttons visible and actionable
-    const buttons = document.querySelector('.buttonContainer')
-    buttons.style.visibility = 'visible'
-    stopTimer()
+    const buttons = document.querySelector('.buttonContainer');
+    buttons.style.visibility = 'visible';
+    stopTimer();
   }
-}
+};
 
 /**
  * Timer functions
  */
 
 const starTimer = () => {
-  gameStart = Date.now()
+  gameStart = Date.now();
   // Update timer every second
-  timerInterval = setInterval(updateTimer, 1000)
-}
+  timerInterval = setInterval(updateTimer, 1000);
+};
 
 const stopTimer = () => {
   // Stop the timer
-  clearInterval(timerInterval)
-  const gameEnd = Date.now()
+  clearInterval(timerInterval);
+  const gameEnd = Date.now();
   // Convert to seconds
-  const gameDuration = (gameEnd - gameStart) / 1000
+  const gameDuration = (gameEnd - gameStart) / 1000;
   document.getElementById('timer').innerText = `Game duration: ${Math.floor(
     gameDuration
-  )} seconds`
-}
+  )} seconds`;
+};
 
 const updateTimer = () => {
-  const currentTime = Date.now()
-  const elapsedTime = currentTime - gameStart
-  const minutes = Math.floor(elapsedTime / 60000)
-  const seconds = Math.floor((elapsedTime % 60000) / 1000)
+  const currentTime = Date.now();
+  const elapsedTime = currentTime - gameStart;
+  const minutes = Math.floor(elapsedTime / 60000);
+  const seconds = Math.floor((elapsedTime % 60000) / 1000);
   document.getElementById('timer').innerText = `${formatTime(
     minutes
-  )}:${formatTime(seconds)}`
-}
+  )}:${formatTime(seconds)}`;
+};
 /**
  *
  * @param time - minutes or seconds as ints.
@@ -337,15 +361,15 @@ const updateTimer = () => {
  */
 const formatTime = (time) => {
   // If time is smaller than 10, add 0 in front, eg. 00:03, instead of 0:3.
-  return time < 10 ? `0${time}` : time
-}
+  return time < 10 ? `0${time}` : time;
+};
 
 window.addEventListener('load', () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
   // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
-  setupRound(shuffledLeftValRightValGlossary, pairsToRenderCount)
-  starTimer()
-})
+  setupRound(shuffledLeftValRightValGlossary, pairsToRenderCount);
+  starTimer();
+});
 
 // module.exports = {
 //   shuffleArray,
