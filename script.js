@@ -103,7 +103,11 @@ const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary);
  * @param  leftColValRightColValPairs - an array of pairs of leftColumnValues and rightColumnValues, like [['word1', 'translation1'] ...
  * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
-const setupRound = (leftColValRightColValPairs, pairRenderLimitIndex) => {
+const setupRound = (
+  state,
+  leftColValRightColValPairs,
+  pairRenderLimitIndex
+) => {
   // Find the containers for leftColumnValues and rightColumnValues
   const containerLeftColumnValues = document.querySelector('.leftColumn');
   const containerRightColumnValues = document.querySelector('.rightColumn');
@@ -367,7 +371,7 @@ const formatTime = (time) => {
 window.addEventListener('load', () => {
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
   // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
-  setupRound(shuffledLeftValRightValGlossary, pairsToRenderCount);
+  setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
   starTimer();
 });
 
