@@ -29,7 +29,7 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
 }
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
-const state = {
+const initialState = {
   columnElements: {
     leftColumnElementValueClicked: null,
     rightColumnElementValueClicked: null,
@@ -267,7 +267,7 @@ const checkIfMatch = (event, state) => {
 
         state.foundPairs++;
 
-        checkIfWon();
+        checkIfWon(state);
       }, ANIMATION_DURATION);
     } else {
       highlightElements(
@@ -310,7 +310,7 @@ const removeElements = (elements, correctOrWrong) => {
  * Check if next round should be set up or if the game has been won.
  */
 
-const checkIfWon = () => {
+const checkIfWon = (state) => {
   const isWin = state.foundPairs === totalWordsInSessionCount;
   const isCurrentRoundOver = state.foundPairs % pairsToRenderCount === 0;
   const pairsWereFound = state.foundPairs !== 0;
@@ -340,7 +340,7 @@ const checkIfWon = () => {
     // Make buttons visible and actionable
     const buttons = document.querySelector('.buttonContainer');
     buttons.style.visibility = 'visible';
-    stopTimer();
+    stopTimer(state);
   }
 };
 
@@ -348,13 +348,13 @@ const checkIfWon = () => {
  * Timer functions
  */
 
-const starTimer = () => {
+const starTimer = (state) => {
   state.gameStart = Date.now();
   // Update timer every second
-  timerInterval = setInterval(updateTimer, 1000);
+  timerInterval = setInterval(() => updateTimer(state), 1000);
 };
 
-const stopTimer = () => {
+const stopTimer = (state) => {
   // Stop the timer
   clearInterval(timerInterval);
   const gameEnd = Date.now();
@@ -365,7 +365,7 @@ const stopTimer = () => {
   )} seconds`;
 };
 
-const updateTimer = () => {
+const updateTimer = (state) => {
   const currentTime = Date.now();
   const elapsedTime = currentTime - state.gameStart;
   const minutes = Math.floor(elapsedTime / 60000);
@@ -384,11 +384,12 @@ const formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
-window.addEventListener('load', () => {
+window.addEventListener('load', (state) => {
+  state = { ...initialState };
   // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
   // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
   setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
-  starTimer();
+  starTimer(state);
 });
 
 // module.exports = {
