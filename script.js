@@ -28,10 +28,6 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
   pairsToRenderCount = totalWordsInSessionCount;
 }
 
-// variables for starting the timer and incrementing the time
-let gameStart;
-let timerInterval;
-
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
 const state = {
   columnElements: {
@@ -41,6 +37,8 @@ const state = {
   // keep track of the last used pair
   lastUsedTripletIndex: 0,
   foundPairs: 0,
+  // variable for keeping the game start time
+  gameStart: null,
 };
 
 // -------------------
@@ -351,7 +349,7 @@ const checkIfWon = () => {
  */
 
 const starTimer = () => {
-  gameStart = Date.now();
+  state.gameStart = Date.now();
   // Update timer every second
   timerInterval = setInterval(updateTimer, 1000);
 };
@@ -361,7 +359,7 @@ const stopTimer = () => {
   clearInterval(timerInterval);
   const gameEnd = Date.now();
   // Convert to seconds
-  const gameDuration = (gameEnd - gameStart) / 1000;
+  const gameDuration = (gameEnd - state.gameStart) / 1000;
   document.getElementById('timer').innerText = `Game duration: ${Math.floor(
     gameDuration
   )} seconds`;
@@ -369,7 +367,7 @@ const stopTimer = () => {
 
 const updateTimer = () => {
   const currentTime = Date.now();
-  const elapsedTime = currentTime - gameStart;
+  const elapsedTime = currentTime - state.gameStart;
   const minutes = Math.floor(elapsedTime / 60000);
   const seconds = Math.floor((elapsedTime % 60000) / 1000);
   document.getElementById('timer').innerText = `${formatTime(
