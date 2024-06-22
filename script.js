@@ -1,4 +1,4 @@
-// const { JM } = require('./dic')
+const { JM } = require('./dic');
 
 /**
  * Shuffle (randomize the order of) an array of leftColumnValues.
@@ -384,16 +384,23 @@ const formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
-window.addEventListener('load', (state) => {
-  state = { ...initialState };
-  // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
-  // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
-  setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
-  starTimer(state);
-});
+if (typeof window !== 'undefined') {
+  // NOTE: In node environment (e.g. when we are running tests) the window
+  // object is not defined, because it belongs to the browser environment.
+  // By checking if window is defined, we can make sure that the code inside
+  // this `if` block is only executed in the browser environment.
 
-// module.exports = {
-//   shuffleArray,
-//   createLeftColValRightColValGlossaryTriplets,
-//   formatTime,
-// }
+  window.addEventListener('load', (state) => {
+    state = { ...initialState };
+    // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
+    // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
+    setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
+    starTimer(state);
+  });
+}
+
+module.exports = {
+  shuffleArray,
+  createLeftColValRightColValGlossaryTriplets,
+  formatTime,
+};
