@@ -28,8 +28,6 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
   pairsToRenderCount = totalWordsInSessionCount;
 }
 
-// keep track of the number of found pairs
-let foundPairs = 0;
 // variables for starting the timer and incrementing the time
 let gameStart;
 let timerInterval;
@@ -42,6 +40,7 @@ const state = {
   },
   // keep track of the last used pair
   lastUsedTripletIndex: 0,
+  foundPairs: 0,
 };
 
 // -------------------
@@ -268,7 +267,7 @@ const checkIfMatch = (event, state) => {
       setTimeout(() => {
         removeElements([leftElementToRemove, rightElementToRemove], 'correct');
 
-        foundPairs++;
+        state.foundPairs++;
 
         checkIfWon();
       }, ANIMATION_DURATION);
@@ -314,9 +313,9 @@ const removeElements = (elements, correctOrWrong) => {
  */
 
 const checkIfWon = () => {
-  const isWin = foundPairs === totalWordsInSessionCount;
-  const isCurrentRoundOver = foundPairs % pairsToRenderCount === 0;
-  const pairsWereFound = foundPairs !== 0;
+  const isWin = state.foundPairs === totalWordsInSessionCount;
+  const isCurrentRoundOver = state.foundPairs % pairsToRenderCount === 0;
+  const pairsWereFound = state.foundPairs !== 0;
   const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
 
   if (shouldSetupNextRound) {
