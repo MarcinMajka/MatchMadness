@@ -33,8 +33,10 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
 
 const state = {
-  leftColumnElementValueClicked: null,
-  rightColumnElementValueClicked: null,
+  columnElements: {
+    leftColumnElementValueClicked: null,
+    rightColumnElementValueClicked: null,
+  },
 };
 
 // keep track of the last used pair
@@ -185,33 +187,45 @@ const checkIfMatch = (event, state) => {
   const elementFromLeftColumnIsSelected =
     clickedElementsParentElementsClass === 'leftColumn';
   if (elementFromLeftColumnIsSelected) {
-    if (state.leftColumnElementValueClicked === null) {
-      state.leftColumnElementValueClicked = clickedElement;
-      state.leftColumnElementValueClicked.classList.add('selected');
+    if (state.columnElements.leftColumnElementValueClicked === null) {
+      state.columnElements.leftColumnElementValueClicked = clickedElement;
+      state.columnElements.leftColumnElementValueClicked.classList.add(
+        'selected'
+      );
     } else {
-      state.leftColumnElementValueClicked.classList.remove('selected');
-      state.leftColumnElementValueClicked = clickedElement;
-      state.leftColumnElementValueClicked.classList.add('selected');
+      state.columnElements.leftColumnElementValueClicked.classList.remove(
+        'selected'
+      );
+      state.columnElements.leftColumnElementValueClicked = clickedElement;
+      state.columnElements.leftColumnElementValueClicked.classList.add(
+        'selected'
+      );
     }
   } else {
-    if (state.rightColumnElementValueClicked === null) {
-      state.rightColumnElementValueClicked = clickedElement;
-      state.rightColumnElementValueClicked.classList.add('selected');
+    if (state.columnElements.rightColumnElementValueClicked === null) {
+      state.columnElements.rightColumnElementValueClicked = clickedElement;
+      state.columnElements.rightColumnElementValueClicked.classList.add(
+        'selected'
+      );
     } else {
-      state.rightColumnElementValueClicked.classList.remove('selected');
-      state.rightColumnElementValueClicked = clickedElement;
-      state.rightColumnElementValueClicked.classList.add('selected');
+      state.columnElements.rightColumnElementValueClicked.classList.remove(
+        'selected'
+      );
+      state.columnElements.rightColumnElementValueClicked = clickedElement;
+      state.columnElements.rightColumnElementValueClicked.classList.add(
+        'selected'
+      );
     }
   }
   // if both values are filled
   if (
-    state.leftColumnElementValueClicked !== null &&
-    state.rightColumnElementValueClicked !== null
+    state.columnElements.leftColumnElementValueClicked !== null &&
+    state.columnElements.rightColumnElementValueClicked !== null
   ) {
     const leftColumnElementValue =
-      state.leftColumnElementValueClicked.innerHTML;
+      state.columnElements.leftColumnElementValueClicked.innerHTML;
     const rightColumnElementValue =
-      state.rightColumnElementValueClicked.innerHTML;
+      state.columnElements.rightColumnElementValueClicked.innerHTML;
     let expectedRightColumnValue = null;
     // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
     let glossaryIndex = null;
@@ -233,8 +247,8 @@ const checkIfMatch = (event, state) => {
     if (rightColumnElementValue === expectedRightColumnValue) {
       highlightElements(
         [
-          state.leftColumnElementValueClicked,
-          state.rightColumnElementValueClicked,
+          state.columnElements.leftColumnElementValueClicked,
+          state.columnElements.rightColumnElementValueClicked,
         ],
         'correct'
       );
@@ -246,10 +260,12 @@ const checkIfMatch = (event, state) => {
       leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
       glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
       // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
-      const leftElementToRemove = state.leftColumnElementValueClicked;
-      const rightElementToRemove = state.rightColumnElementValueClicked;
-      state.leftColumnElementValueClicked = null;
-      state.rightColumnElementValueClicked = null;
+      const leftElementToRemove =
+        state.columnElements.leftColumnElementValueClicked;
+      const rightElementToRemove =
+        state.columnElements.rightColumnElementValueClicked;
+      state.columnElements.leftColumnElementValueClicked = null;
+      state.columnElements.rightColumnElementValueClicked = null;
       // Remove the elements after a short delay.
       setTimeout(() => {
         removeElements([leftElementToRemove, rightElementToRemove], 'correct');
@@ -261,22 +277,22 @@ const checkIfMatch = (event, state) => {
     } else {
       highlightElements(
         [
-          state.leftColumnElementValueClicked,
-          state.rightColumnElementValueClicked,
+          state.columnElements.leftColumnElementValueClicked,
+          state.columnElements.rightColumnElementValueClicked,
         ],
         'wrong'
       );
       // Reset the "selected" styles on the unmached elements...
       removeElements(
         [
-          state.leftColumnElementValueClicked,
-          state.rightColumnElementValueClicked,
+          state.columnElements.leftColumnElementValueClicked,
+          state.columnElements.rightColumnElementValueClicked,
         ],
         'wrong'
       );
       // And reset the references
-      state.leftColumnElementValueClicked = null;
-      state.rightColumnElementValueClicked = null;
+      state.columnElements.leftColumnElementValueClicked = null;
+      state.columnElements.rightColumnElementValueClicked = null;
     }
   }
 };
