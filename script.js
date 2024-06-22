@@ -20,7 +20,7 @@ const shuffleArray = (array) => {
 // some constants:
 const ANIMATION_DURATION = 250;
 
-const totalWordsInSessionCount = 3;
+const totalWordsInSessionCount = 4;
 // pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only leftColumnValues will be rendered
 let pairsToRenderCount = 3;
 // safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
@@ -28,24 +28,22 @@ if (pairsToRenderCount > totalWordsInSessionCount) {
   pairsToRenderCount = totalWordsInSessionCount;
 }
 
-// We are storing the reference to the last clicked divs in the global scope, so we can access them from any function.
-
-// NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
-
-const state = {
-  columnElements: {
-    leftColumnElementValueClicked: null,
-    rightColumnElementValueClicked: null,
-  },
-};
-
-// keep track of the last used pair
-let lastUsedTripletIndex = 0;
 // keep track of the number of found pairs
 let foundPairs = 0;
 // variables for starting the timer and incrementing the time
 let gameStart;
 let timerInterval;
+
+// NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
+const state = {
+  columnElements: {
+    leftColumnElementValueClicked: null,
+    rightColumnElementValueClicked: null,
+  },
+  // keep track of the last used pair
+  lastUsedTripletIndex: 0,
+};
+
 // -------------------
 
 /**
@@ -117,10 +115,10 @@ const setupRound = (
   let rightColumnValues = [];
 
   // create the divs for the leftColumnValues
-  while (lastUsedTripletIndex < pairRenderLimitIndex) {
+  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
     const leftColumnElement = document.createElement('div');
     const leftColumnElementValue =
-      leftColValRightColValPairs[lastUsedTripletIndex][0];
+      leftColValRightColValPairs[state.lastUsedTripletIndex][0];
 
     leftColumnElement.classList.add(`box`);
     leftColumnElement.innerHTML = leftColumnElementValue;
@@ -133,7 +131,7 @@ const setupRound = (
 
     const rightColumnElement = document.createElement('div');
     const rightColumnElementValue =
-      leftColValRightColValPairs[lastUsedTripletIndex][1];
+      leftColValRightColValPairs[state.lastUsedTripletIndex][1];
     rightColumnElement.classList.add(`box`);
     rightColumnElement.innerHTML = rightColumnElementValue;
     rightColumnElement.addEventListener('click', (event) =>
@@ -142,7 +140,7 @@ const setupRound = (
     rightColumnValues.push(rightColumnElement);
     // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
 
-    lastUsedTripletIndex++;
+    state.lastUsedTripletIndex++;
   }
 
   // now shuffle the rightColumnValues and append them to the container
@@ -230,8 +228,8 @@ const checkIfMatch = (event, state) => {
     // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
     let glossaryIndex = null;
     for (
-      let i = lastUsedTripletIndex - pairsToRenderCount;
-      i < lastUsedTripletIndex;
+      let i = state.lastUsedTripletIndex - pairsToRenderCount;
+      i < state.lastUsedTripletIndex;
       i++
     ) {
       if (
@@ -323,15 +321,20 @@ const checkIfWon = () => {
 
   if (shouldSetupNextRound) {
     const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
-    if (lastUsedTripletIndex + pairsToRenderCount > totalWordsInSessionCount) {
+    const isLastSetToRender =
+      state.lastUsedTripletIndex + pairsToRenderCount >
+      totalWordsInSessionCount;
+    if (isLastSetToRender) {
       setupRound(
+        state,
         shuffledLeftValRightValGlossary,
-        lastUsedTripletIndex + lastSetOfPairsNumber
+        state.lastUsedTripletIndex + lastSetOfPairsNumber
       );
     } else {
       setupRound(
+        state,
         shuffledLeftValRightValGlossary,
-        lastUsedTripletIndex + pairsToRenderCount
+        state.lastUsedTripletIndex + pairsToRenderCount
       );
     }
   }
