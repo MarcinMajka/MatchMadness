@@ -4,7 +4,7 @@
   "description": "Just like in Duolingo. But better!",
   "main": "script.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +17,13 @@
     "tabWidth": 2,
     "semi": true,
     "singleQuote": true
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "html"
+    ]
   }
 }
