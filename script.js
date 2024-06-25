@@ -1,4 +1,19 @@
-const { JM } = require('./dic');
+// const { JM } = require('./dic');
+
+/**
+ * Wrapper for document.querySelector()
+ */
+const getElement = (selector) => {
+  return document.querySelector(selector);
+};
+
+/**
+ * Wrapper for document.createElement()
+ */
+const addElement = (elementType) => {
+  const element = document.createElement(elementType);
+  return element;
+};
 
 /**
  * Shuffle (randomize the order of) an array of leftColumnValues.
@@ -106,14 +121,14 @@ const setupRound = (
   pairRenderLimitIndex
 ) => {
   // Find the containers for leftColumnValues and rightColumnValues
-  const containerLeftColumnValues = document.querySelector('.leftColumn');
-  const containerRightColumnValues = document.querySelector('.rightColumn');
+  const containerLeftColumnValues = getElement('.leftColumn');
+  const containerRightColumnValues = getElement('.rightColumn');
 
   let rightColumnValues = [];
 
   // create the divs for the leftColumnValues
   while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
-    const leftColumnElement = document.createElement('div');
+    const leftColumnElement = addElement('div');
     const leftColumnElementValue =
       leftColValRightColValPairs[state.lastUsedTripletIndex][0];
 
@@ -126,7 +141,7 @@ const setupRound = (
     );
     containerLeftColumnValues.appendChild(leftColumnElement);
 
-    const rightColumnElement = document.createElement('div');
+    const rightColumnElement = addElement('div');
     const rightColumnElementValue =
       leftColValRightColValPairs[state.lastUsedTripletIndex][1];
     rightColumnElement.classList.add(`box`);
@@ -248,10 +263,8 @@ const checkIfMatch = (event, state) => {
         'correct'
       );
 
-      const leftValueRightValue = document.getElementById(
-        'leftValueRightValue'
-      );
-      const glossary = document.getElementById('glossary');
+      const leftValueRightValue = getElement('#leftValueRightValue');
+      const glossary = getElement('#glossary');
       leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
       glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
       // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
@@ -338,7 +351,7 @@ const checkIfWon = (state) => {
 
   if (isWin) {
     // Make buttons visible and actionable
-    const buttons = document.querySelector('.buttonContainer');
+    const buttons = getElement('.buttonContainer');
     buttons.style.visibility = 'visible';
     stopTimer(state);
   }
@@ -360,7 +373,7 @@ const stopTimer = (state) => {
   const gameEnd = Date.now();
   // Convert to seconds
   const gameDuration = (gameEnd - state.gameStart) / 1000;
-  document.getElementById('timer').innerText = `Game duration: ${Math.floor(
+  getElement('#timer').innerText = `Game duration: ${Math.floor(
     gameDuration
   )} seconds`;
 };
@@ -370,9 +383,9 @@ const updateTimer = (state) => {
   const elapsedTime = currentTime - state.gameStart;
   const minutes = Math.floor(elapsedTime / 60000);
   const seconds = Math.floor((elapsedTime % 60000) / 1000);
-  document.getElementById('timer').innerText = `${formatTime(
-    minutes
-  )}:${formatTime(seconds)}`;
+  getElement('#timer').innerText = `${formatTime(minutes)}:${formatTime(
+    seconds
+  )}`;
 };
 /**
  *
@@ -399,8 +412,8 @@ if (typeof window !== 'undefined') {
   });
 }
 
-module.exports = {
-  shuffleArray,
-  createLeftColValRightColValGlossaryTriplets,
-  formatTime,
-};
+// module.exports = {
+//   shuffleArray,
+//   createLeftColValRightColValGlossaryTriplets,
+//   formatTime,
+// };
