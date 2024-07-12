@@ -280,7 +280,7 @@ const checkIfMatch = (event, state) => {
 
         state.foundPairs++;
 
-        checkIfWon(state);
+        checkIfWon(state, totalWordsInSessionCount);
       }, ANIMATION_DURATION);
     } else {
       highlightElements(
@@ -323,17 +323,16 @@ const removeElements = (elements, correctOrWrong) => {
  * Check if next round should be set up or if the game has been won.
  */
 
-const checkIfWon = (state) => {
-  const isWin = state.foundPairs === totalWordsInSessionCount;
+const checkIfWon = (state, totalWordCount) => {
+  const isWin = state.foundPairs === totalWordCount;
   const isCurrentRoundOver = state.foundPairs % pairsToRenderCount === 0;
   const pairsWereFound = state.foundPairs !== 0;
   const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
 
   if (shouldSetupNextRound) {
-    const lastSetOfPairsNumber = totalWordsInSessionCount % pairsToRenderCount;
+    const lastSetOfPairsNumber = totalWordCount % pairsToRenderCount;
     const isLastSetToRender =
-      state.lastUsedTripletIndex + pairsToRenderCount >
-      totalWordsInSessionCount;
+      state.lastUsedTripletIndex + pairsToRenderCount > totalWordCount;
     if (isLastSetToRender) {
       setupRound(
         state,
