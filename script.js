@@ -1,4 +1,4 @@
-// const { JM } = require('./dic');
+const { JM } = require('./dic');
 
 /**
  * Wrapper for document.querySelector()
@@ -280,7 +280,7 @@ const checkIfMatch = (event, state) => {
 
         state.foundPairs++;
 
-        checkIfWon(state, totalWordsInSessionCount);
+        updateUIIfRoundFinished(state, totalWordsInSessionCount);
       }, ANIMATION_DURATION);
     } else {
       highlightElements(
@@ -324,10 +324,14 @@ const removeElements = (elements, correctOrWrong) => {
  */
 
 const checkIfWon = (state, totalWordCount) => {
-  const isWin = state.foundPairs === totalWordCount;
-  const isCurrentRoundOver = state.foundPairs % pairsToRenderCount === 0;
-  const pairsWereFound = state.foundPairs !== 0;
-  const shouldSetupNextRound = isCurrentRoundOver && pairsWereFound && !isWin;
+  return state.foundPairs === totalWordCount;
+};
+
+const updateUIIfRoundFinished = (state, totalWordCount) => {
+  const isWin = checkIfWon(state, totalWordCount);
+  const isCurrentRoundOver =
+    state.foundPairs !== 0 && state.foundPairs % pairsToRenderCount === 0;
+  const shouldSetupNextRound = isCurrentRoundOver && !isWin;
 
   if (shouldSetupNextRound) {
     const lastSetOfPairsNumber = totalWordCount % pairsToRenderCount;
@@ -411,8 +415,9 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// module.exports = {
-//   shuffleArray,
-//   createLeftColValRightColValGlossaryTriplets,
-//   formatTime,
-// };
+module.exports = {
+  shuffleArray,
+  createLeftColValRightColValGlossaryTriplets,
+  formatTime,
+  checkIfWon,
+};
