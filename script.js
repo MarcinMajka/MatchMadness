@@ -1,4 +1,4 @@
-const { JM } = require('./dic');
+// const { JM } = require('./dic');
 
 /**
  * Wrapper for document.querySelector()
@@ -329,8 +329,7 @@ const checkIfWon = (state, totalWordCount) => {
 
 const updateUIIfRoundFinished = (state, totalWordCount) => {
   const isWin = checkIfWon(state, totalWordCount);
-  const isCurrentRoundOver =
-    state.foundPairs !== 0 && state.foundPairs % pairsToRenderCount === 0;
+  const isCurrentRoundOver = roundIsFinished(state, pairsToRenderCount);
   const shouldSetupNextRound = isCurrentRoundOver && !isWin;
 
   if (shouldSetupNextRound) {
@@ -358,6 +357,10 @@ const updateUIIfRoundFinished = (state, totalWordCount) => {
     buttons.style.visibility = 'visible';
     stopTimer(state);
   }
+};
+
+const roundIsFinished = (state, pairsToRender) => {
+  return state.foundPairs !== 0 && state.foundPairs % pairsToRender === 0;
 };
 
 /**
@@ -415,9 +418,9 @@ if (typeof window !== 'undefined') {
   });
 }
 
-module.exports = {
-  shuffleArray,
-  createLeftColValRightColValGlossaryTriplets,
-  formatTime,
-  checkIfWon,
-};
+// module.exports = {
+//   shuffleArray,
+//   createLeftColValRightColValGlossaryTriplets,
+//   formatTime,
+//   checkIfWon,
+// };
