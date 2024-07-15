@@ -156,3 +156,43 @@ describe('JSdom test', () => {
     );
   });
 });
+
+describe('Test checkIfWon', () => {
+  test('foundPairs == totalWordCount', () => {
+    const gameWon = {
+      state: {
+        foundPairs: 7,
+      },
+      wordCount: 7,
+    };
+    expect(checkIfWon(gameWon.state, gameWon.wordCount)).toBe(true);
+  });
+
+  test('foundPairs < totalWordCount', () => {
+    const gameNotWon = {
+      state: {
+        foundPairs: 9,
+      },
+      wordCount: 10,
+    };
+
+    expect(checkIfWon(gameNotWon.state, gameNotWon.wordCount)).toBe(false);
+  });
+
+  // TODO: throw an exception instead of returning false, since it's an impossible case
+  test('foundPairs > totalWordCount', () => {
+    const edgeCase_notAchievableForUser = {
+      state: {
+        foundPairs: 10,
+      },
+      wordCount: 7,
+    };
+
+    expect(
+      checkIfWon(
+        edgeCase_notAchievableForUser.state,
+        edgeCase_notAchievableForUser.wordCount
+      )
+    ).toBe(false);
+  });
+});

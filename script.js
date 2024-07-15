@@ -1,4 +1,4 @@
-// const { JM } = require('./dic');
+const { JM } = require('./dic');
 
 /**
  * Wrapper for document.querySelector()
@@ -418,9 +418,9 @@ if (typeof window !== 'undefined') {
   });
 }
 
-// module.exports = {
-//   shuffleArray,
-//   createLeftColValRightColValGlossaryTriplets,
-//   formatTime,
-//   checkIfWon,
-// };
+module.exports = {
+  shuffleArray,
+  createLeftColValRightColValGlossaryTriplets,
+  formatTime,
+  checkIfWon,
+};
