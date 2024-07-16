@@ -1,4 +1,4 @@
-const { JM } = require('./dic');
+// const { JM } = require('./dic');
 
 /**
  * Wrapper for document.querySelector()
@@ -181,6 +181,42 @@ function highlightElements(elements, className) {
   }, ANIMATION_DURATION);
 }
 
+const addSelectedClassToClickedElement = (state, clickedElement, className) => {
+  if (className == 'leftColumn') {
+    state.columnElements.leftColumnElementValueClicked = clickedElement;
+    state.columnElements.leftColumnElementValueClicked.classList.add(
+      'selected'
+    );
+  } else {
+    state.columnElements.rightColumnElementValueClicked = clickedElement;
+    state.columnElements.rightColumnElementValueClicked.classList.add(
+      'selected'
+    );
+  }
+};
+
+const handleClicksFromSameColumn = (state, clickedElement, selectedColumn) => {
+  if (selectedColumn) {
+    if (state.columnElements.leftColumnElementValueClicked === null) {
+      addSelectedClassToClickedElement(state, clickedElement, 'leftColumn');
+    } else {
+      state.columnElements.leftColumnElementValueClicked.classList.remove(
+        'selected'
+      );
+      addSelectedClassToClickedElement(state, clickedElement, 'leftColumn');
+    }
+  } else {
+    if (state.columnElements.rightColumnElementValueClicked === null) {
+      addSelectedClassToClickedElement(state, clickedElement, 'rightColumn');
+    } else {
+      state.columnElements.rightColumnElementValueClicked.classList.remove(
+        'selected'
+      );
+      addSelectedClassToClickedElement(state, clickedElement, 'rightColumn');
+    }
+  }
+};
+
 /**
  *
  * @param {target} event - check if selected word and translation match.
@@ -196,37 +232,13 @@ const checkIfMatch = (event, state) => {
   // true if left column was selected, false if right column was selected
   const elementFromLeftColumnIsSelected =
     clickedElementsParentElementsClass === 'leftColumn';
-  if (elementFromLeftColumnIsSelected) {
-    if (state.columnElements.leftColumnElementValueClicked === null) {
-      state.columnElements.leftColumnElementValueClicked = clickedElement;
-      state.columnElements.leftColumnElementValueClicked.classList.add(
-        'selected'
-      );
-    } else {
-      state.columnElements.leftColumnElementValueClicked.classList.remove(
-        'selected'
-      );
-      state.columnElements.leftColumnElementValueClicked = clickedElement;
-      state.columnElements.leftColumnElementValueClicked.classList.add(
-        'selected'
-      );
-    }
-  } else {
-    if (state.columnElements.rightColumnElementValueClicked === null) {
-      state.columnElements.rightColumnElementValueClicked = clickedElement;
-      state.columnElements.rightColumnElementValueClicked.classList.add(
-        'selected'
-      );
-    } else {
-      state.columnElements.rightColumnElementValueClicked.classList.remove(
-        'selected'
-      );
-      state.columnElements.rightColumnElementValueClicked = clickedElement;
-      state.columnElements.rightColumnElementValueClicked.classList.add(
-        'selected'
-      );
-    }
-  }
+
+  handleClicksFromSameColumn(
+    state,
+    clickedElement,
+    elementFromLeftColumnIsSelected
+  );
+
   // if both values are filled
   if (
     state.columnElements.leftColumnElementValueClicked !== null &&
@@ -418,9 +430,9 @@ if (typeof window !== 'undefined') {
   });
 }
 
-module.exports = {
-  shuffleArray,
-  createLeftColValRightColValGlossaryTriplets,
-  formatTime,
-  checkIfWon,
-};
+// module.exports = {
+//   shuffleArray,
+//   createLeftColValRightColValGlossaryTriplets,
+//   formatTime,
+//   checkIfWon,
+// };
