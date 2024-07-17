@@ -217,29 +217,7 @@ const handleClicksFromSameColumn = (state, clickedElement, selectedColumn) => {
   }
 };
 
-/**
- *
- * @param {target} event - check if selected word and translation match.
- */
-
-const checkIfMatch = (event, state) => {
-  const clickedElement = event.target;
-
-  // left or right column
-  const clickedElementsParentElementsClass =
-    clickedElement.parentElement.getAttribute('class');
-
-  // true if left column was selected, false if right column was selected
-  const elementFromLeftColumnIsSelected =
-    clickedElementsParentElementsClass === 'leftColumn';
-
-  handleClicksFromSameColumn(
-    state,
-    clickedElement,
-    elementFromLeftColumnIsSelected
-  );
-
-  // if both values are filled
+const handleClicksFromBothColumns = (state) => {
   if (
     state.columnElements.leftColumnElementValueClicked !== null &&
     state.columnElements.rightColumnElementValueClicked !== null
@@ -315,6 +293,32 @@ const checkIfMatch = (event, state) => {
       state.columnElements.rightColumnElementValueClicked = null;
     }
   }
+};
+
+/**
+ *
+ * @param {target} event - check if selected word and translation match.
+ */
+
+const checkIfMatch = (event, state) => {
+  const clickedElement = event.target;
+
+  // left or right column
+  const clickedElementsParentElementsClass =
+    clickedElement.parentElement.getAttribute('class');
+
+  // true if left column was selected, false if right column was selected
+  const elementFromLeftColumnIsSelected =
+    clickedElementsParentElementsClass === 'leftColumn';
+
+  handleClicksFromSameColumn(
+    state,
+    clickedElement,
+    elementFromLeftColumnIsSelected
+  );
+
+  // if both values are filled
+  handleClicksFromBothColumns(state);
 };
 
 /**
