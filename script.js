@@ -217,6 +217,41 @@ const handleColumnElementClick = (state, clickedElement, selectedColumn) => {
   }
 };
 
+const handleCorrectAnswer = (
+  state,
+  leftColumnElementValue,
+  rightColumnElementValue,
+  glossaryIndex
+) => {
+  highlightElements(
+    [
+      state.columnElements.leftColumnElementValueClicked,
+      state.columnElements.rightColumnElementValueClicked,
+    ],
+    'correct'
+  );
+
+  const leftValueRightValue = getElement('#leftValueRightValue');
+  const glossary = getElement('#glossary');
+  leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
+  glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
+  // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
+  const leftElementToRemove =
+    state.columnElements.leftColumnElementValueClicked;
+  const rightElementToRemove =
+    state.columnElements.rightColumnElementValueClicked;
+  state.columnElements.leftColumnElementValueClicked = null;
+  state.columnElements.rightColumnElementValueClicked = null;
+  // Remove the elements after a short delay.
+  setTimeout(() => {
+    removeElements([leftElementToRemove, rightElementToRemove], 'correct');
+
+    state.foundPairs++;
+
+    updateUIIfRoundFinished(state, totalWordsInSessionCount);
+  }, ANIMATION_DURATION);
+};
+
 const handleColumnElementComparison = (state) => {
   const leftColumnElementValue =
     state.columnElements.leftColumnElementValueClicked.innerHTML;
@@ -241,33 +276,12 @@ const handleColumnElementComparison = (state) => {
   }
 
   if (rightColumnElementValue === expectedRightColumnValue) {
-    highlightElements(
-      [
-        state.columnElements.leftColumnElementValueClicked,
-        state.columnElements.rightColumnElementValueClicked,
-      ],
-      'correct'
+    handleCorrectAnswer(
+      state,
+      leftColumnElementValue,
+      rightColumnElementValue,
+      glossaryIndex
     );
-
-    const leftValueRightValue = getElement('#leftValueRightValue');
-    const glossary = getElement('#glossary');
-    leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
-    glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
-    // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
-    const leftElementToRemove =
-      state.columnElements.leftColumnElementValueClicked;
-    const rightElementToRemove =
-      state.columnElements.rightColumnElementValueClicked;
-    state.columnElements.leftColumnElementValueClicked = null;
-    state.columnElements.rightColumnElementValueClicked = null;
-    // Remove the elements after a short delay.
-    setTimeout(() => {
-      removeElements([leftElementToRemove, rightElementToRemove], 'correct');
-
-      state.foundPairs++;
-
-      updateUIIfRoundFinished(state, totalWordsInSessionCount);
-    }, ANIMATION_DURATION);
   } else {
     highlightElements(
       [
