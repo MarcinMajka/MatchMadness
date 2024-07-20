@@ -235,13 +235,16 @@ const handleCorrectAnswer = (
   const glossary = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
   glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
+
   // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
   const leftElementToRemove =
     state.columnElements.leftColumnElementValueClicked;
   const rightElementToRemove =
     state.columnElements.rightColumnElementValueClicked;
+
   state.columnElements.leftColumnElementValueClicked = null;
   state.columnElements.rightColumnElementValueClicked = null;
+
   // Remove the elements after a short delay.
   setTimeout(() => {
     removeElements([leftElementToRemove, rightElementToRemove], 'correct');
@@ -250,6 +253,29 @@ const handleCorrectAnswer = (
 
     updateUIIfRoundFinished(state, totalWordsInSessionCount);
   }, ANIMATION_DURATION);
+};
+
+const handleIncorrectAnswer = (state) => {
+  highlightElements(
+    [
+      state.columnElements.leftColumnElementValueClicked,
+      state.columnElements.rightColumnElementValueClicked,
+    ],
+    'wrong'
+  );
+
+  // Reset the "selected" styles on the unmached elements...
+  removeElements(
+    [
+      state.columnElements.leftColumnElementValueClicked,
+      state.columnElements.rightColumnElementValueClicked,
+    ],
+    'wrong'
+  );
+
+  // And reset the references
+  state.columnElements.leftColumnElementValueClicked = null;
+  state.columnElements.rightColumnElementValueClicked = null;
 };
 
 const handleColumnElementComparison = (state) => {
@@ -283,24 +309,7 @@ const handleColumnElementComparison = (state) => {
       glossaryIndex
     );
   } else {
-    highlightElements(
-      [
-        state.columnElements.leftColumnElementValueClicked,
-        state.columnElements.rightColumnElementValueClicked,
-      ],
-      'wrong'
-    );
-    // Reset the "selected" styles on the unmached elements...
-    removeElements(
-      [
-        state.columnElements.leftColumnElementValueClicked,
-        state.columnElements.rightColumnElementValueClicked,
-      ],
-      'wrong'
-    );
-    // And reset the references
-    state.columnElements.leftColumnElementValueClicked = null;
-    state.columnElements.rightColumnElementValueClicked = null;
+    handleIncorrectAnswer(state);
   }
 };
 
@@ -316,7 +325,6 @@ const checkIfMatch = (event, state) => {
   const clickedElementsParentElementsClass =
     clickedElement.parentElement.getAttribute('class');
 
-  // true if left column was selected, false if right column was selected
   const elementFromLeftColumnIsSelected =
     clickedElementsParentElementsClass === 'leftColumn';
 
