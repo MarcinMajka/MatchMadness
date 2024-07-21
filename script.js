@@ -221,7 +221,7 @@ const handleCorrectAnswer = (
   state,
   leftColumnElementValue,
   rightColumnElementValue,
-  glossaryIndex
+  tripletIndex
 ) => {
   highlightElements(
     [
@@ -234,7 +234,7 @@ const handleCorrectAnswer = (
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossary = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
-  glossary.innerHTML = shuffledLeftValRightValGlossary[glossaryIndex][2];
+  glossary.innerHTML = shuffledLeftValRightValGlossary[tripletIndex][2];
 
   // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
   const leftElementToRemove =
@@ -278,14 +278,14 @@ const handleIncorrectAnswer = (state) => {
   state.columnElements.rightColumnElementValueClicked = null;
 };
 
-const handleColumnElementComparison = (state) => {
-  const leftColumnElementValue =
-    state.columnElements.leftColumnElementValueClicked.innerHTML;
-  const rightColumnElementValue =
-    state.columnElements.rightColumnElementValueClicked.innerHTML;
+const getTripletIndexAndExpectedRightColumnElementValue = (
+  state,
+  leftColumnElementValue,
+  rightColumnElementValue
+) => {
+  let tripletIndex = null;
   let expectedRightColumnValue = null;
-  // Index of the shuffledLeftValRightValGlossary triple, to take the glossary from
-  let glossaryIndex = null;
+
   for (
     let i = state.lastUsedTripletIndex - pairsToRenderCount;
     i < state.lastUsedTripletIndex;
@@ -295,18 +295,34 @@ const handleColumnElementComparison = (state) => {
       leftColumnElementValue === shuffledLeftValRightValGlossary[i][0] &&
       rightColumnElementValue === shuffledLeftValRightValGlossary[i][1]
     ) {
+      tripletIndex = i;
       expectedRightColumnValue = shuffledLeftValRightValGlossary[i][1];
-      glossaryIndex = i;
       break;
     }
   }
+
+  return [tripletIndex, expectedRightColumnValue];
+};
+
+const handleColumnElementComparison = (state) => {
+  const leftColumnElementValue =
+    state.columnElements.leftColumnElementValueClicked.innerHTML;
+  const rightColumnElementValue =
+    state.columnElements.rightColumnElementValueClicked.innerHTML;
+
+  [tripletIndex, expectedRightColumnValue] =
+    getTripletIndexAndExpectedRightColumnElementValue(
+      state,
+      leftColumnElementValue,
+      rightColumnElementValue
+    );
 
   if (rightColumnElementValue === expectedRightColumnValue) {
     handleCorrectAnswer(
       state,
       leftColumnElementValue,
       rightColumnElementValue,
-      glossaryIndex
+      tripletIndex
     );
   } else {
     handleIncorrectAnswer(state);
