@@ -110,6 +110,58 @@ const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
 
 const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary);
 
+const getValuesForRound = (
+  state,
+  leftColValRightColValPairs,
+  pairRenderLimitIndex
+) => {
+  const columnElementNodes = {
+    left: [],
+    right: [],
+  };
+
+  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
+    const leftColumnElement = addElement('div');
+    leftColumnElement.classList.add('box');
+    leftColumnElement.innerHTML =
+      leftColValRightColValPairs[state.lastUsedTripletIndex][0];
+
+    const rightColumnElement = addElement('div');
+    rightColumnElement.classList.add('box');
+    rightColumnElement.innerHTML =
+      leftColValRightColValPairs[state.lastUsedTripletIndex][1];
+
+    columnElementNodes.left.push(leftColumnElement);
+    columnElementNodes.right.push(rightColumnElement);
+
+    state.lastUsedTripletIndex++;
+  }
+
+  shuffleArray(columnElementNodes.left);
+  shuffleArray(columnElementNodes.right);
+
+  return columnElementNodes;
+};
+
+const appendValuesToColumns = (state, columnElementNodes) => {
+  const columns = {
+    left: getElement('.leftColumn'),
+    right: getElement('.rightColumn'),
+  };
+
+  for (let i = 0; i < columnElementNodes.left.length; i++) {
+    columns.left.appendChild(columnElementNodes.left[i]);
+    columns.right.appendChild(columnElementNodes.right[i]);
+
+    columnElementNodes.left[i].addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    );
+    columnElementNodes.right[i].addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    );
+  }
+};
+
 /**
  * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
  * @param  leftColValRightColValPairs - an array of pairs of leftColumnValues and rightColumnValues, like [['word1', 'translation1'] ...
@@ -120,46 +172,12 @@ const setupRound = (
   leftColValRightColValPairs,
   pairRenderLimitIndex
 ) => {
-  // Find the containers for leftColumnValues and rightColumnValues
-  const containerLeftColumnValues = getElement('.leftColumn');
-  const containerRightColumnValues = getElement('.rightColumn');
-
-  let rightColumnValues = [];
-
-  // create the divs for the leftColumnValues
-  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
-    const leftColumnElement = addElement('div');
-    const leftColumnElementValue =
-      leftColValRightColValPairs[state.lastUsedTripletIndex][0];
-
-    leftColumnElement.classList.add(`box`);
-    leftColumnElement.innerHTML = leftColumnElementValue;
-    // NOTE: we are adding the same function as the event listener to both the word and the leftColumnElement. This function will
-    // accept the event object as an argument, so we can access the clicked element from it.
-    leftColumnElement.addEventListener('click', (event) =>
-      checkIfMatch(event, state)
-    );
-    containerLeftColumnValues.appendChild(leftColumnElement);
-
-    const rightColumnElement = addElement('div');
-    const rightColumnElementValue =
-      leftColValRightColValPairs[state.lastUsedTripletIndex][1];
-    rightColumnElement.classList.add(`box`);
-    rightColumnElement.innerHTML = rightColumnElementValue;
-    rightColumnElement.addEventListener('click', (event) =>
-      checkIfMatch(event, state)
-    );
-    rightColumnValues.push(rightColumnElement);
-    // NOTE: do not add the leftColumnElement to the container here, we will shuffle them later
-
-    state.lastUsedTripletIndex++;
-  }
-
-  // now shuffle the rightColumnValues and append them to the container
-  rightColumnValues = shuffleArray(rightColumnValues);
-  rightColumnValues.forEach((leftColumnElement) =>
-    containerRightColumnValues.appendChild(leftColumnElement)
+  const columnElementNodes = getValuesForRound(
+    state,
+    leftColValRightColValPairs,
+    pairRenderLimitIndex
   );
+  appendValuesToColumns(state, columnElementNodes);
 };
 
 /**
