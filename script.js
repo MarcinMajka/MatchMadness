@@ -120,16 +120,21 @@ const getValuesForRound = (
     right: [],
   };
 
-  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
-    const leftColumnElement = addElement('div');
-    leftColumnElement.classList.add('box');
-    leftColumnElement.innerHTML =
-      leftColValRightColValPairs[state.lastUsedTripletIndex][0];
+  const prepareNodeForGame = (text) => {
+    const node = addElement('div');
+    node.classList.add('box');
+    node.innerText = text;
 
-    const rightColumnElement = addElement('div');
-    rightColumnElement.classList.add('box');
-    rightColumnElement.innerHTML =
-      leftColValRightColValPairs[state.lastUsedTripletIndex][1];
+    return node;
+  };
+
+  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
+    const leftColumnElement = prepareNodeForGame(
+      leftColValRightColValPairs[state.lastUsedTripletIndex][0]
+    );
+    const rightColumnElement = prepareNodeForGame(
+      leftColValRightColValPairs[state.lastUsedTripletIndex][1]
+    );
 
     columnElementNodes.left.push(leftColumnElement);
     columnElementNodes.right.push(rightColumnElement);
