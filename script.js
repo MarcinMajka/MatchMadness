@@ -265,8 +265,7 @@ const handleCorrectAnswer = (
   const rightElementToRemove =
     state.columnElements.rightColumnElementValueClicked;
 
-  state.columnElements.leftColumnElementValueClicked = null;
-  state.columnElements.rightColumnElementValueClicked = null;
+  clearClickedElements(state);
 
   // Remove the elements after a short delay.
   setTimeout(() => {
@@ -297,6 +296,10 @@ const handleIncorrectAnswer = (state) => {
   );
 
   // And reset the references
+  clearClickedElements(state);
+};
+
+const clearClickedElements = (state) => {
   state.columnElements.leftColumnElementValueClicked = null;
   state.columnElements.rightColumnElementValueClicked = null;
 };
