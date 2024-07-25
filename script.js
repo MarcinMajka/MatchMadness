@@ -1,6 +1,23 @@
 // const { JM } = require('./dic');
 
 /**
+ * Wrapper for window
+ */
+const startGame = (
+  initialState,
+  shuffledLeftValRightValGlossary,
+  pairsToRenderCount
+) => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+      let state = { ...initialState };
+      setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
+      startTimer(state);
+    });
+  }
+};
+
+/**
  * Wrapper for document.querySelector()
  */
 const getElement = (selector) => {
@@ -447,7 +464,7 @@ const roundIsFinished = (state, pairsToRender) => {
  * Timer functions
  */
 
-const starTimer = (state) => {
+const startTimer = (state) => {
   state.gameStart = Date.now();
   // Update timer every second
   timerInterval = setInterval(() => updateTimer(state), 1000);
@@ -483,20 +500,7 @@ const formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
-if (typeof window !== 'undefined') {
-  // NOTE: In node environment (e.g. when we are running tests) the window
-  // object is not defined, because it belongs to the browser environment.
-  // By checking if window is defined, we can make sure that the code inside
-  // this `if` block is only executed in the browser environment.
-
-  window.addEventListener('load', (state) => {
-    state = { ...initialState };
-    // We are starting the game when the page is loaded - before that, we don't have the divs to work with (they are not rendered yet).
-    // Create the initial state of the game - generate the divs with leftColumnValues and rightColumnValues in HTML.
-    setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
-    starTimer(state);
-  });
-}
+startGame(initialState, shuffledLeftValRightValGlossary, pairsToRenderCount);
 
 // module.exports = {
 //   shuffleArray,
