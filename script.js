@@ -1,5 +1,20 @@
 // const { JM } = require('./dic');
 
+fetch('dicIn50WordSets.json')
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok ' + response.statusText);
+    }
+    return response.json();
+  })
+  .then((data) => {
+    const wordSets = data;
+    console.log('wordSets loaded successfully:', wordSets[0]);
+    console.log('number of sets: ', wordSets.length);
+    // You can now use `wordSets` in your code
+  })
+  .catch((error) => console.error('Error fetching wordSets:', error));
+
 /**
  * Wrapper for window
  */
