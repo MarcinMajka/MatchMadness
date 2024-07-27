@@ -1,33 +1,31 @@
 // const { JM } = require('./dic');
 
-fetch('dicIn50WordSets.json')
-  .then((response) => {
-    if (!response.ok) {
-      throw new Error('Network response was not ok ' + response.statusText);
-    }
-    return response.json();
-  })
-  .then((data) => {
-    const wordSets = data;
-    console.log('wordSets loaded successfully:', wordSets[0]);
-    console.log('number of sets: ', wordSets.length);
-    // You can now use `wordSets` in your code
-  })
-  .catch((error) => console.error('Error fetching wordSets:', error));
-
 /**
  * Wrapper for window
  */
-const startGame = (
-  initialState,
-  shuffledLeftValRightValGlossary,
-  pairsToRenderCount
-) => {
+const startGame = (initialState, pairsToRenderCount) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
-      let state = { ...initialState };
-      setupRound(state, shuffledLeftValRightValGlossary, pairsToRenderCount);
-      startTimer(state);
+      fetch('dicIn50WordSets.json')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(
+              'Network response was not ok ' + response.statusText
+            );
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const wordSets = data;
+          console.log('wordSets loaded successfully:', wordSets[0]);
+          console.log('number of sets: ', wordSets.length);
+          // You can now use `wordSets` in your code
+
+          let state = { ...initialState, currentSet: wordSets[0] };
+          setupRound(state, state.currentSet, pairsToRenderCount);
+          startTimer(state);
+        })
+        .catch((error) => console.error('Error fetching wordSets:', error));
     });
   }
 };
@@ -86,6 +84,7 @@ const initialState = {
   foundPairs: 0,
   // variable for keeping the game start time
   gameStart: null,
+  currentSet: null,
 };
 
 // -------------------
@@ -115,32 +114,10 @@ const createLeftColValRightColValGlossaryTriplets = (
   return leftColValRightColValGlossaryTriplets;
 };
 
-// Splitting JM into an array of 50-word sets ---------------------------------------------
-const allDicItemsIntoOneArray = createLeftColValRightColValGlossaryTriplets(
-  JM.length,
-  JM
-);
-
-const dicIn50WordSets = [];
-let count = 50;
-
-for (let i = 0; i < allDicItemsIntoOneArray.length; i++) {
-  const tempArr = [];
-  while (count && i < allDicItemsIntoOneArray.length) {
-    tempArr.push(allDicItemsIntoOneArray[i]);
-    i++;
-    count--;
-  }
-  count = 50;
-  dicIn50WordSets.push(tempArr);
-}
-// ----------------------------------------------------------------------------------------
 const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
   totalWordsInSessionCount,
   JM
 );
-
-const shuffledLeftValRightValGlossary = shuffleArray(leftValRightValGlossary);
 
 const getValuesForRound = (
   state,
@@ -289,7 +266,7 @@ const handleCorrectAnswer = (
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossary = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
-  glossary.innerHTML = shuffledLeftValRightValGlossary[tripletIndex][2];
+  glossary.innerHTML = state.currentSet[tripletIndex][2];
 
   // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
   const leftElementToRemove =
@@ -350,11 +327,11 @@ const getTripletIndexAndExpectedRightColumnElementValue = (
     i++
   ) {
     if (
-      leftColumnElementValue === shuffledLeftValRightValGlossary[i][0] &&
-      rightColumnElementValue === shuffledLeftValRightValGlossary[i][1]
+      leftColumnElementValue === state.currentSet[i][0] &&
+      rightColumnElementValue === state.currentSet[i][1]
     ) {
       tripletIndex = i;
-      expectedRightColumnValue = shuffledLeftValRightValGlossary[i][1];
+      expectedRightColumnValue = state.currentSet[i][1];
       break;
     }
   }
@@ -451,13 +428,13 @@ const updateUIIfRoundFinished = (state, totalWordCount) => {
     if (isLastSetToRender) {
       setupRound(
         state,
-        shuffledLeftValRightValGlossary,
+        state.currentSet,
         state.lastUsedTripletIndex + lastSetOfPairsNumber
       );
     } else {
       setupRound(
         state,
-        shuffledLeftValRightValGlossary,
+        state.currentSet,
         state.lastUsedTripletIndex + pairsToRenderCount
       );
     }
@@ -515,7 +492,7 @@ const formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
-startGame(initialState, shuffledLeftValRightValGlossary, pairsToRenderCount);
+startGame(initialState, pairsToRenderCount);
 
 // module.exports = {
 //   shuffleArray,
