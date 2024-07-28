@@ -17,11 +17,9 @@ const startGame = (initialState, pairsToRenderCount) => {
         })
         .then((data) => {
           const wordSets = data;
-          console.log('wordSets loaded successfully:', wordSets[0]);
-          console.log('number of sets: ', wordSets.length);
-          // You can now use `wordSets` in your code
+          const setIndex = localStorage.getItem('setIndex');
 
-          let state = { ...initialState, currentSet: wordSets[0] };
+          let state = { ...initialState, currentSet: wordSets[setIndex] };
           setupRound(state, pairsToRenderCount);
           startTimer(state);
         })
