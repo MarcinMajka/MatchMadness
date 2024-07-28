@@ -22,7 +22,7 @@ const startGame = (initialState, pairsToRenderCount) => {
           // You can now use `wordSets` in your code
 
           let state = { ...initialState, currentSet: wordSets[0] };
-          setupRound(state, state.currentSet, pairsToRenderCount);
+          setupRound(state, pairsToRenderCount);
           startTimer(state);
         })
         .catch((error) => console.error('Error fetching wordSets:', error));
@@ -119,11 +119,7 @@ const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
   JM
 );
 
-const getValuesForRound = (
-  state,
-  leftColValRightColValPairs,
-  pairRenderLimitIndex
-) => {
+const getValuesForRound = (state, pairRenderLimitIndex) => {
   const columnElementNodes = {
     left: [],
     right: [],
@@ -139,10 +135,10 @@ const getValuesForRound = (
 
   while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
     const leftColumnElement = prepareNodeForGame(
-      leftColValRightColValPairs[state.lastUsedTripletIndex][0]
+      state.currentSet[state.lastUsedTripletIndex][0]
     );
     const rightColumnElement = prepareNodeForGame(
-      leftColValRightColValPairs[state.lastUsedTripletIndex][1]
+      state.currentSet[state.lastUsedTripletIndex][1]
     );
 
     columnElementNodes.left.push(leftColumnElement);
@@ -181,16 +177,8 @@ const appendValuesToColumns = (state, columnElementNodes) => {
  * @param  leftColValRightColValPairs - an array of pairs of leftColumnValues and rightColumnValues, like [['word1', 'translation1'] ...
  * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
-const setupRound = (
-  state,
-  leftColValRightColValPairs,
-  pairRenderLimitIndex
-) => {
-  const columnElementNodes = getValuesForRound(
-    state,
-    leftColValRightColValPairs,
-    pairRenderLimitIndex
-  );
+const setupRound = (state, pairRenderLimitIndex) => {
+  const columnElementNodes = getValuesForRound(state, pairRenderLimitIndex);
   appendValuesToColumns(state, columnElementNodes);
 };
 
@@ -426,17 +414,9 @@ const updateUIIfRoundFinished = (state, totalWordCount) => {
     const isLastSetToRender =
       state.lastUsedTripletIndex + pairsToRenderCount > totalWordCount;
     if (isLastSetToRender) {
-      setupRound(
-        state,
-        state.currentSet,
-        state.lastUsedTripletIndex + lastSetOfPairsNumber
-      );
+      setupRound(state, state.lastUsedTripletIndex + lastSetOfPairsNumber);
     } else {
-      setupRound(
-        state,
-        state.currentSet,
-        state.lastUsedTripletIndex + pairsToRenderCount
-      );
+      setupRound(state, state.lastUsedTripletIndex + pairsToRenderCount);
     }
   }
 
