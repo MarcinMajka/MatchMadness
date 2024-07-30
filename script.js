@@ -22,7 +22,7 @@ const startGame = (initialState) => {
 
           let state = {
             ...initialState,
-            currentSet: wordSets[setIndex],
+            currentSet: shuffleArray(wordSets[setIndex]),
             pairsToRender: pairsToRenderLS,
           };
           setupRound(state, state.pairsToRender);
