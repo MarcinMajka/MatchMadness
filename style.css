@@ -19,9 +19,11 @@ body {
   margin-bottom: 0;
 }
 
-.leftColumn,
+.leftColumn {
+  margin-right: 100px;
+}
 .rightColumn {
-  margin: 0 100px 25px 100px;
+  margin-left: 100px;
 }
 
 .box {
@@ -39,6 +41,7 @@ body {
   cursor: pointer;
   border-radius: 6px;
   color: white;
+  font-size: calc(2vw + 2vh);
 }
 
 /* this will define the styles when hovering over the box */
