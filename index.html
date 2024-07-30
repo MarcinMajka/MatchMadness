@@ -9,7 +9,10 @@
 
 <body style="display:flex; justify-content:center; align-content:center;">
     <div class="menu container" style="display:flex; flex-direction: column; position: relative">
+
+        <input type="number" id="setPairsToRenderInput" placeholder="Pairs per screen: 3 - 7">
         <input type="number" id="setNumberInput" placeholder="Choose set: 1 - 2763">
+        
         <div class="menuButtonContainer" style="position: relative;">
             <a href="matchMadness.html" class="button">Match Madness</a>
             <a href="wordMadness.html" class="button"> Word Madness</a>
@@ -21,8 +24,12 @@
     </div>
     <script>
         const setNumberInput = document.getElementById("setNumberInput");
+        const setPairsToRenderInput = document.getElementById("setPairsToRenderInput");
         setNumberInput.addEventListener('change', (e) => {
             localStorage.setItem("setIndex", event.target.value);
+        })
+        setPairsToRenderInput.addEventListener('change', (e) => {
+            localStorage.setItem("pairsToRender", event.target.value)
         })
 
     </script>

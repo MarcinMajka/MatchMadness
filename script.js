@@ -3,7 +3,7 @@
 /**
  * Wrapper for window
  */
-const startGame = (initialState, pairsToRenderCount) => {
+const startGame = (initialState) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
       fetch('dicIn50WordSets.json')
@@ -18,9 +18,14 @@ const startGame = (initialState, pairsToRenderCount) => {
         .then((data) => {
           const wordSets = data;
           const setIndex = localStorage.getItem('setIndex');
+          const pairsToRenderLS = localStorage.getItem('pairsToRender');
 
-          let state = { ...initialState, currentSet: wordSets[setIndex] };
-          setupRound(state, pairsToRenderCount);
+          let state = {
+            ...initialState,
+            currentSet: wordSets[setIndex],
+            pairsToRender: pairsToRenderLS,
+          };
+          setupRound(state, state.pairsToRender);
           startTimer(state);
         })
         .catch((error) => console.error('Error fetching wordSets:', error));
@@ -57,19 +62,7 @@ const shuffleArray = (array) => {
   return array;
 };
 
-// -------------------
-// Lets try to keep the global variables to a minimum.
-
-// some constants:
 const ANIMATION_DURATION = 250;
-
-const totalWordsInSessionCount = 4;
-// pairsToRenderCount shouldn't be bigger than the totalWordsInSessionCount, otherwise only leftColumnValues will be rendered
-let pairsToRenderCount = 3;
-// safety check - if desired pairsToRenderCount >= shuffledKeys.length -> pairsToRenderCount = shuffledKeys.length - 1
-if (pairsToRenderCount > totalWordsInSessionCount) {
-  pairsToRenderCount = totalWordsInSessionCount;
-}
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
 const initialState = {
@@ -83,6 +76,7 @@ const initialState = {
   // variable for keeping the game start time
   gameStart: null,
   currentSet: null,
+  pairsToRender: null,
 };
 
 const getValuesForRound = (state, pairRenderLimitIndex) => {
@@ -236,7 +230,7 @@ const handleCorrectAnswer = (
 
     state.foundPairs++;
 
-    updateUIIfRoundFinished(state, totalWordsInSessionCount);
+    updateUIIfRoundFinished(state);
   }, ANIMATION_DURATION);
 };
 
@@ -276,7 +270,7 @@ const getTripletIndexAndExpectedRightColumnElementValue = (
   let expectedRightColumnValue = null;
 
   for (
-    let i = state.lastUsedTripletIndex - pairsToRenderCount;
+    let i = state.lastUsedTripletIndex - state.pairsToRender;
     i < state.lastUsedTripletIndex;
     i++
   ) {
@@ -362,28 +356,17 @@ const removeElements = (elements, correctOrWrong) => {
   }
 };
 
-/**
- * Check if next round should be set up or if the game has been won.
- */
-
-const checkIfWon = (state, totalWordCount) => {
-  return state.foundPairs === totalWordCount;
-};
-
-const updateUIIfRoundFinished = (state, totalWordCount) => {
-  const isWin = checkIfWon(state, totalWordCount);
-  const isCurrentRoundOver = roundIsFinished(state, pairsToRenderCount);
+const updateUIIfRoundFinished = (state) => {
+  const setLength = state.currentSet.length;
+  const isWin = state.foundPairs == setLength;
+  const isCurrentRoundOver = roundIsFinished(state);
   const shouldSetupNextRound = isCurrentRoundOver && !isWin;
 
   if (shouldSetupNextRound) {
-    const lastSetOfPairsNumber = totalWordCount % pairsToRenderCount;
-    const isLastSetToRender =
-      state.lastUsedTripletIndex + pairsToRenderCount > totalWordCount;
-    if (isLastSetToRender) {
-      setupRound(state, state.lastUsedTripletIndex + lastSetOfPairsNumber);
-    } else {
-      setupRound(state, state.lastUsedTripletIndex + pairsToRenderCount);
-    }
+    const remainingPairs = setLength - state.lastUsedTripletIndex;
+    const nextPairsToRender = Math.min(state.pairsToRender, remainingPairs);
+
+    setupRound(state, state.lastUsedTripletIndex + nextPairsToRender);
   }
 
   if (isWin) {
@@ -394,8 +377,8 @@ const updateUIIfRoundFinished = (state, totalWordCount) => {
   }
 };
 
-const roundIsFinished = (state, pairsToRender) => {
-  return state.foundPairs !== 0 && state.foundPairs % pairsToRender === 0;
+const roundIsFinished = (state) => {
+  return state.foundPairs !== 0 && state.foundPairs % state.pairsToRender === 0;
 };
 
 /**
@@ -438,10 +421,9 @@ const formatTime = (time) => {
   return time < 10 ? `0${time}` : time;
 };
 
-startGame(initialState, pairsToRenderCount);
+startGame(initialState);
 
 // module.exports = {
 //   shuffleArray,
 //   formatTime,
-//   checkIfWon,
 // };
