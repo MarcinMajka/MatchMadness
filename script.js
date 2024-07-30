@@ -85,38 +85,6 @@ const initialState = {
   currentSet: null,
 };
 
-// -------------------
-
-/**
- * Create an array of [leftColumnValue, rightColumnValue, glossary] triplets from dataObject
- * @param totalWordsInSession - number of total leftColumnValues in one game
- * @param dataObject - array of arrays
- * @returns  a new array with with these triplets
- */
-const createLeftColValRightColValGlossaryTriplets = (
-  totalWordsInSession,
-  dataObject
-) => {
-  const leftColValRightColValGlossaryTriplets = [];
-  for (let i = 0; i < totalWordsInSession; i++) {
-    if (i === dataObject.length) return leftColValRightColValGlossaryTriplets;
-    const leftValue = dataObject[i].kanji;
-    const rightValue = dataObject[i]['hiragana/katakana'];
-    const glossary = dataObject[i].glossary;
-    leftColValRightColValGlossaryTriplets.push([
-      leftValue,
-      rightValue,
-      glossary,
-    ]);
-  }
-  return leftColValRightColValGlossaryTriplets;
-};
-
-const leftValRightValGlossary = createLeftColValRightColValGlossaryTriplets(
-  totalWordsInSessionCount,
-  JM
-);
-
 const getValuesForRound = (state, pairRenderLimitIndex) => {
   const columnElementNodes = {
     left: [],
@@ -474,7 +442,6 @@ startGame(initialState, pairsToRenderCount);
 
 // module.exports = {
 //   shuffleArray,
-//   createLeftColValRightColValGlossaryTriplets,
 //   formatTime,
 //   checkIfWon,
 // };
