@@ -64,13 +64,32 @@ body {
 
 #glossaryContainer {
   border-radius: 25px;
-  width: 450px;
-  height: 150px;
-  padding: 25px;
+  width: 500px;
+  height: fit-content;
   color: antiquewhite;
   background-color: #1d282d;
-  font-size: 30px;
-  overflow: auto;
+  font-size: 35px;
+  text-overflow: ellipsis;
+  text-align: center;
+  padding: 0 10px;
+}
+
+#leftValueRightValue {
+  height: 20%;
+  margin: 30px;
+  margin-bottom: 15px;
+}
+
+#glossary {
+  text-align: center;
+  height: fit-content;
+  font-size: 80px;
+  padding-bottom: 30px;
+  border-radius: 25px;
+  background-color: #1d282d;
+  color: antiquewhite;
+  margin: 0 10px;
+  word-wrap: break-word;
 }
 
 a {
@@ -149,17 +168,7 @@ a {
   color: antiquewhite;
 }
 
-#glossary {
-  text-align: center;
-  height: 250px;
-  font-size: 80px;
-  margin: 30px;
 
-  padding-bottom: 30px;
-  border-radius: 25px;
-  background-color: #1d282d;
-  color: antiquewhite;
-}
 
 #stats {
   display: flex;
