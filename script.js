@@ -17,13 +17,13 @@ const startGame = (initialState) => {
         })
         .then((data) => {
           const wordSets = data;
-          const setIndex = localStorage.getItem('setIndex');
-          const pairsToRenderLS = localStorage.getItem('pairsToRender');
+          const setIndex = localStorage.getItem('setIndex') || 0;
+          const pairsToRender = localStorage.getItem('pairsToRender') || 5;
 
           let state = {
             ...initialState,
             currentSet: shuffleArray(wordSets[setIndex]),
-            pairsToRender: pairsToRenderLS,
+            pairsToRender,
           };
           setupRound(state, state.pairsToRender);
           startTimer(state);
