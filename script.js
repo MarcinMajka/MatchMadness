@@ -1,4 +1,18 @@
-// const { JM } = require('./dic');
+const ANIMATION_DURATION = 250;
+
+// NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
+const initialState = {
+  columnElements: {
+    leftColumnElementValueClicked: null,
+    rightColumnElementValueClicked: null,
+  },
+  // keep track of the last used pair
+  lastUsedTripletIndex: 0,
+  foundPairs: 0,
+  gameStartTime: null,
+  currentSet: null,
+  pairsToRender: null,
+};
 
 /**
  * Wrapper for window
@@ -60,23 +74,6 @@ const shuffleArray = (array) => {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
-};
-
-const ANIMATION_DURATION = 250;
-
-// NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
-const initialState = {
-  columnElements: {
-    leftColumnElementValueClicked: null,
-    rightColumnElementValueClicked: null,
-  },
-  // keep track of the last used pair
-  lastUsedTripletIndex: 0,
-  foundPairs: 0,
-  // variable for keeping the game start time
-  gameStart: null,
-  currentSet: null,
-  pairsToRender: null,
 };
 
 const getValuesForRound = (state, pairRenderLimitIndex) => {
@@ -386,7 +383,7 @@ const roundIsFinished = (state) => {
  */
 
 const startTimer = (state) => {
-  state.gameStart = Date.now();
+  state.gameStartTime = Date.now();
   // Update timer every second
   timerInterval = setInterval(() => updateTimer(state), 1000);
 };
@@ -396,7 +393,7 @@ const stopTimer = (state) => {
   clearInterval(timerInterval);
   const gameEnd = Date.now();
   // Convert to seconds
-  const gameDuration = (gameEnd - state.gameStart) / 1000;
+  const gameDuration = (gameEnd - state.gameStartTime) / 1000;
   getElement('#timer').innerText = `Game duration: ${Math.floor(
     gameDuration
   )} seconds`;
@@ -404,7 +401,7 @@ const stopTimer = (state) => {
 
 const updateTimer = (state) => {
   const currentTime = Date.now();
-  const elapsedTime = currentTime - state.gameStart;
+  const elapsedTime = currentTime - state.gameStartTime;
   const minutes = Math.floor(elapsedTime / 60000);
   const seconds = Math.floor((elapsedTime % 60000) / 1000);
   getElement('#timer').innerText = `${formatTime(minutes)}:${formatTime(

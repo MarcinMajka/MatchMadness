@@ -12,7 +12,6 @@ body {
 }
 
 .container {
-  border-radius: 100;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,7 +27,6 @@ body {
 
 .box {
   resize: both;
-  font-size: 65px;
   display: flex;
   justify-content: center;
   align-items: center;

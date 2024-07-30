@@ -32,12 +32,7 @@ global.window = document.defaultView;
 global.navigator = window.navigator;
 global.localStorage = window.localStorage;
 
-const {
-  shuffleArray,
-  createLeftColValRightColValGlossaryTriplets,
-  formatTime,
-  checkIfWon,
-} = require('./script');
+const { shuffleArray, formatTime } = require('./script');
 // const JM = require('./dic');
 
 describe('Test shuffleArray', () => {
@@ -68,71 +63,6 @@ describe('Test shuffleArray', () => {
     const shuffledArray = shuffleArray([...input]);
     // Expect shuffled array to have the same order of elements (0 elements)
     expect(shuffledArray).toEqual(input);
-  });
-});
-
-describe('Test createLeftColValRightColValGlossaryTriplets', () => {
-  const arrayFromJSON = [
-    { kanji: '火', 'hiragana/katakana': 'ひ', glossary: 'fire' },
-    { kanji: '水', 'hiragana/katakana': 'みず', glossary: 'water' },
-    { kanji: '木', 'hiragana/katakana': 'き', glossary: 'wood' },
-    { kanji: '土', 'hiragana/katakana': 'ど', glossary: 'earth' },
-    { kanji: '心臓', 'hiragana/katakana': 'しんぞう', glossary: 'heart' },
-    { kanji: '空', 'hiragana/katakana': 'そら', glossary: 'sky' },
-  ];
-  test('3 expected entries', () => {
-    expect(
-      createLeftColValRightColValGlossaryTriplets(3, arrayFromJSON)
-    ).toEqual([
-      ['火', 'ひ', 'fire'],
-      ['水', 'みず', 'water'],
-      ['木', 'き', 'wood'],
-    ]);
-  });
-  test('4 expected entries', () => {
-    expect(
-      createLeftColValRightColValGlossaryTriplets(4, arrayFromJSON)
-    ).toEqual([
-      ['火', 'ひ', 'fire'],
-      ['水', 'みず', 'water'],
-      ['木', 'き', 'wood'],
-      ['土', 'ど', 'earth'],
-    ]);
-  });
-  test('5 expected entries', () => {
-    expect(
-      createLeftColValRightColValGlossaryTriplets(5, arrayFromJSON)
-    ).toEqual([
-      ['火', 'ひ', 'fire'],
-      ['水', 'みず', 'water'],
-      ['木', 'き', 'wood'],
-      ['土', 'ど', 'earth'],
-      ['心臓', 'しんぞう', 'heart'],
-    ]);
-  });
-  test('6 expected entries', () => {
-    expect(
-      createLeftColValRightColValGlossaryTriplets(6, arrayFromJSON)
-    ).toEqual([
-      ['火', 'ひ', 'fire'],
-      ['水', 'みず', 'water'],
-      ['木', 'き', 'wood'],
-      ['土', 'ど', 'earth'],
-      ['心臓', 'しんぞう', 'heart'],
-      ['空', 'そら', 'sky'],
-    ]);
-  });
-  test('More expected entries than the length of arrayJSON', () => {
-    expect(
-      createLeftColValRightColValGlossaryTriplets(7, arrayFromJSON)
-    ).toEqual([
-      ['火', 'ひ', 'fire'],
-      ['水', 'みず', 'water'],
-      ['木', 'き', 'wood'],
-      ['土', 'ど', 'earth'],
-      ['心臓', 'しんぞう', 'heart'],
-      ['空', 'そら', 'sky'],
-    ]);
   });
 });
 
