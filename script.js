@@ -14,9 +14,7 @@ const initialState = {
   pairsToRender: null,
 };
 
-/**
- * Wrapper for window
- */
+// Wrappers -------------------------------------------------------------------
 const startGame = (initialState) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
@@ -47,20 +45,15 @@ const startGame = (initialState) => {
   }
 };
 
-/**
- * Wrapper for document.querySelector()
- */
 const getElement = (selector) => {
   return document.querySelector(selector);
 };
 
-/**
- * Wrapper for document.createElement()
- */
 const addElement = (elementType) => {
   const element = document.createElement(elementType);
   return element;
 };
+// ----------------------------------------------------------------------------
 
 /**
  * Shuffle (randomize the order of) an array of leftColumnValues.
@@ -131,7 +124,6 @@ const appendValuesToColumns = (state, columnElementNodes) => {
 
 /**
  * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
- * @param  leftColValRightColValPairs - an array of pairs of leftColumnValues and rightColumnValues, like [['word1', 'translation1'] ...
  * @param  pairRenderLimitIndex - index of the last pair to render + 1
  */
 const setupRound = (state, pairRenderLimitIndex) => {
