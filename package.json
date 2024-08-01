@@ -30,5 +30,6 @@
       "text",
       "html"
     ]
-  }
+  },
+  "type": "module"
 }

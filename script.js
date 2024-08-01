@@ -1,3 +1,5 @@
+import { startTimer, stopTimer } from './timer.js';
+
 const ANIMATION_DURATION = 250;
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
@@ -10,6 +12,7 @@ const initialState = {
   lastUsedTripletIndex: 0,
   foundPairs: 0,
   gameStartTime: null,
+  timerInterval: null,
   currentSet: null,
   pairsToRender: null,
 };
@@ -45,7 +48,7 @@ const startGame = (initialState) => {
   }
 };
 
-const getElement = (selector) => {
+export const getElement = (selector) => {
   return document.querySelector(selector);
 };
 
@@ -282,7 +285,7 @@ const handleColumnElementComparison = (state) => {
   const rightColumnElementValue =
     state.columnElements.rightColumnElementValueClicked.innerHTML;
 
-  [tripletIndex, expectedRightColumnValue] =
+  const [tripletIndex, expectedRightColumnValue] =
     getTripletIndexAndExpectedRightColumnElementValue(
       state,
       leftColumnElementValue,
@@ -368,46 +371,6 @@ const updateUIIfRoundFinished = (state) => {
 
 const roundIsFinished = (state) => {
   return state.foundPairs !== 0 && state.foundPairs % state.pairsToRender === 0;
-};
-
-/**
- * Timer functions
- */
-
-const startTimer = (state) => {
-  state.gameStartTime = Date.now();
-  // Update timer every second
-  timerInterval = setInterval(() => updateTimer(state), 1000);
-};
-
-const stopTimer = (state) => {
-  // Stop the timer
-  clearInterval(timerInterval);
-  const gameEnd = Date.now();
-  // Convert to seconds
-  const gameDuration = (gameEnd - state.gameStartTime) / 1000;
-  getElement('#timer').innerText = `Game duration: ${Math.floor(
-    gameDuration
-  )} seconds`;
-};
-
-const updateTimer = (state) => {
-  const currentTime = Date.now();
-  const elapsedTime = currentTime - state.gameStartTime;
-  const minutes = Math.floor(elapsedTime / 60000);
-  const seconds = Math.floor((elapsedTime % 60000) / 1000);
-  getElement('#timer').innerText = `${formatTime(minutes)}:${formatTime(
-    seconds
-  )}`;
-};
-/**
- *
- * @param time - minutes or seconds as ints.
- * @returns string formatted in mm:ss format.
- */
-const formatTime = (time) => {
-  // If time is smaller than 10, add 0 in front, eg. 00:03, instead of 0:3.
-  return time < 10 ? `0${time}` : time;
 };
 
 startGame(initialState);
