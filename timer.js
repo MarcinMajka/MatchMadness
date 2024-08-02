@@ -1,4 +1,4 @@
-import { getElement } from './script.js';
+import { getElement } from './wrappers.js';
 
 export const startTimer = (state) => {
   state.gameStartTime = Date.now();

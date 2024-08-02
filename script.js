@@ -1,4 +1,5 @@
 import { startTimer, stopTimer } from './timer.js';
+import { getElement, addElement } from './wrappers.js';
 
 const ANIMATION_DURATION = 250;
 
@@ -17,7 +18,6 @@ const initialState = {
   pairsToRender: null,
 };
 
-// Wrappers -------------------------------------------------------------------
 const startGame = (initialState) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
@@ -47,16 +47,6 @@ const startGame = (initialState) => {
     });
   }
 };
-
-export const getElement = (selector) => {
-  return document.querySelector(selector);
-};
-
-const addElement = (elementType) => {
-  const element = document.createElement(elementType);
-  return element;
-};
-// ----------------------------------------------------------------------------
 
 /**
  * Shuffle (randomize the order of) an array of leftColumnValues.
