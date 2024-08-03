@@ -143,7 +143,7 @@ function highlightElements(elements, className) {
   }, ANIMATION_DURATION);
 }
 
-const addSelectedClassToClickedElement = (state, clickedElement, className) => {
+const selectElement = (state, clickedElement, className) => {
   if (className == 'leftColumn') {
     state.columnElements.leftColumnElementValueClicked = clickedElement;
     state.columnElements.leftColumnElementValueClicked.classList.add(
@@ -160,21 +160,21 @@ const addSelectedClassToClickedElement = (state, clickedElement, className) => {
 const handleColumnElementClick = (state, clickedElement, selectedColumn) => {
   if (selectedColumn) {
     if (state.columnElements.leftColumnElementValueClicked === null) {
-      addSelectedClassToClickedElement(state, clickedElement, 'leftColumn');
+      selectElement(state, clickedElement, 'leftColumn');
     } else {
       state.columnElements.leftColumnElementValueClicked.classList.remove(
         'selected'
       );
-      addSelectedClassToClickedElement(state, clickedElement, 'leftColumn');
+      selectElement(state, clickedElement, 'leftColumn');
     }
   } else {
     if (state.columnElements.rightColumnElementValueClicked === null) {
-      addSelectedClassToClickedElement(state, clickedElement, 'rightColumn');
+      selectElement(state, clickedElement, 'rightColumn');
     } else {
       state.columnElements.rightColumnElementValueClicked.classList.remove(
         'selected'
       );
-      addSelectedClassToClickedElement(state, clickedElement, 'rightColumn');
+      selectElement(state, clickedElement, 'rightColumn');
     }
   }
 };
