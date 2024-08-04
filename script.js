@@ -185,13 +185,13 @@ const handleCorrectAnswer = (
   rightColumnElementValue,
   tripletIndex
 ) => {
-  highlightElements(
-    [
-      state.columnElements.leftColumnElementValueClicked,
-      state.columnElements.rightColumnElementValueClicked,
-    ],
-    'correct'
-  );
+  // highlightElements(
+  //   [
+  //     state.columnElements.leftColumnElementValueClicked,
+  //     state.columnElements.rightColumnElementValueClicked,
+  //   ],
+  //   'correct'
+  // );
 
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossary = getElement('#glossary');
@@ -217,13 +217,13 @@ const handleCorrectAnswer = (
 };
 
 const handleIncorrectAnswer = (state) => {
-  highlightElements(
-    [
-      state.columnElements.leftColumnElementValueClicked,
-      state.columnElements.rightColumnElementValueClicked,
-    ],
-    'wrong'
-  );
+  // highlightElements(
+  //   [
+  //     state.columnElements.leftColumnElementValueClicked,
+  //     state.columnElements.rightColumnElementValueClicked,
+  //   ],
+  //   'wrong'
+  // );
 
   // Reset the "selected" styles on the unmached elements...
   removeElements(
