@@ -1,7 +1,14 @@
 import { startTimer, stopTimer } from './timer.js';
 import { getElement, addElement } from './wrappers.js';
-
-const ANIMATION_DURATION = 250;
+import {
+  ANIMATION_DURATION,
+  highlightElements,
+  clearClickedElements,
+  selectElement,
+  removeElements,
+  updateUIIfRoundFinished,
+  setupRound,
+} from './UI.js';
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
 const initialState = {
@@ -62,7 +69,7 @@ const shuffleArray = (array) => {
   return array;
 };
 
-const getValuesForRound = (state, pairRenderLimitIndex) => {
+export const getValuesForRound = (state, pairRenderLimitIndex) => {
   const columnElementNodes = {
     left: [],
     right: [],
@@ -96,67 +103,6 @@ const getValuesForRound = (state, pairRenderLimitIndex) => {
   return columnElementNodes;
 };
 
-const appendValuesToColumns = (state, columnElementNodes) => {
-  const columns = {
-    left: getElement('.leftColumn'),
-    right: getElement('.rightColumn'),
-  };
-
-  for (let i = 0; i < columnElementNodes.left.length; i++) {
-    columns.left.appendChild(columnElementNodes.left[i]);
-    columns.right.appendChild(columnElementNodes.right[i]);
-
-    columnElementNodes.left[i].addEventListener('click', (event) =>
-      checkIfMatch(event, state)
-    );
-    columnElementNodes.right[i].addEventListener('click', (event) =>
-      checkIfMatch(event, state)
-    );
-  }
-};
-
-/**
- * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
- * @param  pairRenderLimitIndex - index of the last pair to render + 1
- */
-const setupRound = (state, pairRenderLimitIndex) => {
-  const columnElementNodes = getValuesForRound(state, pairRenderLimitIndex);
-  appendValuesToColumns(state, columnElementNodes);
-};
-
-/**
- * Highlight the elements for a short period of time by adding a class to them and then removing it after a timeout.
- * @param elements - an array of DOM elements
- * @param className - the class to add and then remove
- */
-function highlightElements(elements, className) {
-  // Highlighted elements should be disabled during the animation
-  elements.forEach((element) => {
-    element.classList.add(className);
-    element.style.pointerEvents = 'none';
-  });
-  setTimeout(() => {
-    elements.forEach((element) => {
-      element.classList.remove(className);
-      element.style.pointerEvents = '';
-    });
-  }, ANIMATION_DURATION);
-}
-
-const selectElement = (state, clickedElement, className) => {
-  if (className == 'leftColumn') {
-    state.columnElements.leftColumnElementValueClicked = clickedElement;
-    state.columnElements.leftColumnElementValueClicked.classList.add(
-      'selected'
-    );
-  } else {
-    state.columnElements.rightColumnElementValueClicked = clickedElement;
-    state.columnElements.rightColumnElementValueClicked.classList.add(
-      'selected'
-    );
-  }
-};
-
 const handleColumnElementClick = (state, clickedElement, selectedColumn) => {
   if (selectedColumn) {
     if (state.columnElements.leftColumnElementValueClicked === null) {
@@ -185,13 +131,13 @@ const handleCorrectAnswer = (
   rightColumnElementValue,
   tripletIndex
 ) => {
-  // highlightElements(
-  //   [
-  //     state.columnElements.leftColumnElementValueClicked,
-  //     state.columnElements.rightColumnElementValueClicked,
-  //   ],
-  //   'correct'
-  // );
+  highlightElements(
+    [
+      state.columnElements.leftColumnElementValueClicked,
+      state.columnElements.rightColumnElementValueClicked,
+    ],
+    'correct'
+  );
 
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossary = getElement('#glossary');
@@ -217,13 +163,13 @@ const handleCorrectAnswer = (
 };
 
 const handleIncorrectAnswer = (state) => {
-  // highlightElements(
-  //   [
-  //     state.columnElements.leftColumnElementValueClicked,
-  //     state.columnElements.rightColumnElementValueClicked,
-  //   ],
-  //   'wrong'
-  // );
+  highlightElements(
+    [
+      state.columnElements.leftColumnElementValueClicked,
+      state.columnElements.rightColumnElementValueClicked,
+    ],
+    'wrong'
+  );
 
   // Reset the "selected" styles on the unmached elements...
   removeElements(
@@ -236,11 +182,6 @@ const handleIncorrectAnswer = (state) => {
 
   // And reset the references
   clearClickedElements(state);
-};
-
-const clearClickedElements = (state) => {
-  state.columnElements.leftColumnElementValueClicked = null;
-  state.columnElements.rightColumnElementValueClicked = null;
 };
 
 const getTripletIndexAndExpectedRightColumnElementValue = (
@@ -299,7 +240,7 @@ const handleColumnElementComparison = (state) => {
  * @param {target} event - check if selected word and translation match.
  */
 
-const checkIfMatch = (event, state) => {
+export const checkIfMatch = (event, state) => {
   const clickedElement = event.target;
 
   // left or right column
@@ -324,42 +265,7 @@ const checkIfMatch = (event, state) => {
   }
 };
 
-/**
- *
- * @param elements - array of elements to remove, or to remove the "selected" class
- * @param correctOrWrong - string of the class name of the element to remove -> "correct" or "wrong"
- */
-
-const removeElements = (elements, correctOrWrong) => {
-  if (correctOrWrong === 'correct') {
-    elements.forEach((element) => element.remove());
-  } else {
-    elements.forEach((element) => element.classList.remove('selected'));
-  }
-};
-
-const updateUIIfRoundFinished = (state) => {
-  const setLength = state.currentSet.length;
-  const isWin = state.foundPairs == setLength;
-  const isCurrentRoundOver = roundIsFinished(state);
-  const shouldSetupNextRound = isCurrentRoundOver && !isWin;
-
-  if (shouldSetupNextRound) {
-    const remainingPairs = setLength - state.lastUsedTripletIndex;
-    const nextPairsToRender = Math.min(state.pairsToRender, remainingPairs);
-
-    setupRound(state, state.lastUsedTripletIndex + nextPairsToRender);
-  }
-
-  if (isWin) {
-    // Make buttons visible and actionable
-    const buttons = getElement('.buttonContainer');
-    buttons.style.visibility = 'visible';
-    stopTimer(state);
-  }
-};
-
-const roundIsFinished = (state) => {
+export const roundIsFinished = (state) => {
   return state.foundPairs !== 0 && state.foundPairs % state.pairsToRender === 0;
 };
 
@@ -367,5 +273,4 @@ startGame(initialState);
 
 // module.exports = {
 //   shuffleArray,
-//   formatTime,
 // };
