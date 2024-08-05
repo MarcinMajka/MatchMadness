@@ -22,16 +22,16 @@
                 app uses JMdict</a>
         </div>
     </div>
+    <script type="module" src="storeWordSets.js"></script>
     <script>
         const setNumberInput = document.getElementById("setNumberInput");
         const setPairsToRenderInput = document.getElementById("setPairsToRenderInput");
-        setNumberInput.addEventListener('change', (e) => {
+        setNumberInput.addEventListener('change', (event) => {
             localStorage.setItem("setIndex", event.target.value);
         })
-        setPairsToRenderInput.addEventListener('change', (e) => {
+        setPairsToRenderInput.addEventListener('change', (event) => {
             localStorage.setItem("pairsToRender", event.target.value)
         })
-
     </script>
 </body>
 
