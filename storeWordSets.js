@@ -1,7 +1,7 @@
 import { loadDicIn50WordSets } from './indexedDBHandler.js';
 
-const DB_NAME = 'MyDatabase';
-const STORE_NAME = 'Files';
+const DB_NAME = 'AllWordSets';
+const STORE_NAME = 'WordSets';
 const FILE_URL = './dicIn50WordSets.json';
 
 async function initializeData() {
@@ -15,7 +15,6 @@ async function initializeData() {
 }
 
 function useFileData(data) {
-  console.log('Using file data:', data);
   if (Array.isArray(data) && data.length > 0) {
     const specificArray = data[0];
     console.log('Specific array:', specificArray);

@@ -10,7 +10,7 @@ export function openDatabase(dbName, storeName) {
     };
 
     request.onsuccess = (event) => {
-      console.log('Database opened successfully:', dbName);
+      console.log('Database opened successfully - dbName:', dbName);
       resolve(event.target.result);
     };
 
@@ -23,7 +23,7 @@ export function openDatabase(dbName, storeName) {
 
 export function saveToIndexedDB(db, storeName, key, data) {
   return new Promise((resolve, reject) => {
-    console.log('Saving to IndexedDB:', key);
+    console.log('Starting saving to IndexedDB:', key);
     const transaction = db.transaction(storeName, 'readwrite');
     const store = transaction.objectStore(storeName);
     const request = store.put(data, key);
@@ -94,7 +94,7 @@ export async function loadDicIn50WordSets(dbName, storeName, url) {
       }
 
       // Save the blob to IndexedDB
-      await saveToIndexedDB(db, storeName, 'indexedDBWordSets.json', fileData);
+      await saveToIndexedDB(db, storeName, 'AllWordSetsBlob', fileData);
       console.log('File saved to IndexedDB');
     }
 
@@ -103,15 +103,15 @@ export async function loadDicIn50WordSets(dbName, storeName, url) {
     console.log('File content:', text); // Log the content of the file
     const jsonData = JSON.parse(text);
 
-    // Check if indexedDBWordSets.json exists and is an array
+    // Check if AllWordSetsBlob exists and is an array
     if (!Array.isArray(jsonData)) {
       throw new Error('Data is not an array');
     }
 
-    console.log('Successfully loaded indexedDBWordSets.json');
+    console.log('Successfully loaded AllWordSetsBlob');
     return jsonData;
   } catch (error) {
-    console.error('Error loading indexedDBWordSets.json:', error);
+    console.error('Error loading AllWordSetsBlob:', error);
     throw error;
   }
 }
