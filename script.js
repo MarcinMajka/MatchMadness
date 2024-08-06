@@ -28,29 +28,16 @@ const initialState = {
 const startGame = (initialState) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
-      fetch('dicIn50WordSets.json')
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(
-              'Network response was not ok ' + response.statusText
-            );
-          }
-          return response.json();
-        })
-        .then((data) => {
-          const wordSets = data;
-          const setIndex = localStorage.getItem('setIndex') || 0;
-          const pairsToRender = localStorage.getItem('pairsToRender') || 5;
+      const currentSet = JSON.parse(localStorage.getItem('currentSet'));
+      const pairsToRender = localStorage.getItem('pairsToRender') || 5;
 
-          let state = {
-            ...initialState,
-            currentSet: shuffleArray(wordSets[setIndex]),
-            pairsToRender,
-          };
-          setupRound(state, state.pairsToRender);
-          startTimer(state);
-        })
-        .catch((error) => console.error('Error fetching wordSets:', error));
+      let state = {
+        ...initialState,
+        currentSet: shuffleArray(currentSet),
+        pairsToRender,
+      };
+      setupRound(state, state.pairsToRender);
+      startTimer(state);
     });
   }
 };

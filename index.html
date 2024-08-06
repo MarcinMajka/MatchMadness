@@ -11,7 +11,7 @@
     <div class="menu container" style="display:flex; flex-direction: column; position: relative">
 
         <input type="number" id="setPairsToRenderInput" placeholder="Pairs per screen: 3 - 7">
-        <input type="number" id="setNumberInput" placeholder="Choose set: 1 - 2763">
+        <input type="number" id="setIndexInput" placeholder="Choose set: 1 - 2763">
         
         <div class="menuButtonContainer" style="position: relative;">
             <a href="matchMadness.html" class="button">Match Madness</a>
@@ -23,15 +23,20 @@
         </div>
     </div>
     <script type="module" src="storeWordSets.js"></script>
-    <script>
-        const setNumberInput = document.getElementById("setNumberInput");
+    <script type="module">
+        import {initializeSet} from './storeWordSets.js';
+
+        const setIndexInput = document.getElementById("setIndexInput");
         const setPairsToRenderInput = document.getElementById("setPairsToRenderInput");
-        setNumberInput.addEventListener('change', (event) => {
-            localStorage.setItem("setIndex", event.target.value);
+        setIndexInput.addEventListener('input', (event) => {
+            const input = event.target.value;
+            const index = input ? Number(input) - 1 : 0;
+            initializeSet(index);
         })
-        setPairsToRenderInput.addEventListener('change', (event) => {
+        setPairsToRenderInput.addEventListener('input', (event) => {
             localStorage.setItem("pairsToRender", event.target.value)
         })
+
     </script>
 </body>
 
