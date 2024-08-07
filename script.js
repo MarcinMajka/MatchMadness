@@ -1,4 +1,5 @@
 import { startTimer } from './timer.js';
+import { shuffleArray } from './utils.js';
 import { getElement, addElement } from './wrappers.js';
 import {
   ANIMATION_DURATION,
@@ -43,20 +44,6 @@ const startGame = (initialState) => {
       startTimer(state);
     });
   }
-};
-
-/**
- * Shuffle (randomize the order of) an array of leftColumnValues.
- * NOTE: there is no reason for this function to accept a dictionary as an argument, let's keep it simple.
- * @param array - an array of strings
- * @returns  a new array with the same strings, but in a random order
- */
-const shuffleArray = (array) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
 };
 
 export const getValuesForRound = (state, pairRenderLimitIndex) => {
@@ -133,6 +120,7 @@ const handleCorrectAnswer = (
 
   clearClickedElements(state);
 
+  // TODO: add wrapper
   // Remove the elements after a short delay.
   setTimeout(() => {
     removeElements([leftElementToRemove, rightElementToRemove], 'correct');
