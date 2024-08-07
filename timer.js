@@ -11,21 +11,26 @@ export const startTimer = (state) => {
 };
 
 export const stopTimer = (state) => {
+  // TODO: logic function
   // Stop the timer
   clearIntervalWrapper(state.timerInterval);
   const gameEnd = Date.now();
-  // Convert to seconds
   const gameDuration = (gameEnd - state.gameStartTime) / 1000;
+
+  // TODO: UI function
+  // Convert to seconds
   getElement('#timer').innerText = `Game duration: ${Math.floor(
     gameDuration
   )} seconds`;
 };
 
 const updateTimer = (state) => {
+  // TODO: logic function
   const currentTime = Date.now();
   const elapsedTime = currentTime - state.gameStartTime;
   const minutes = Math.floor(elapsedTime / 60000);
   const seconds = Math.floor((elapsedTime % 60000) / 1000);
+  // TODO: UI function
   getElement('#timer').innerText = `${formatTime(minutes)}:${formatTime(
     seconds
   )}`;
