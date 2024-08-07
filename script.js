@@ -109,6 +109,7 @@ const handleCorrectAnswer = (
     'correct'
   );
 
+  // TODO: extract to UI function
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossary = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
