@@ -1,14 +1,18 @@
-import { getElement } from './wrappers.js';
+import {
+  clearIntervalWrapper,
+  getElement,
+  setIntervalWrapper,
+} from './wrappers.js';
 
 export const startTimer = (state) => {
   state.gameStartTime = Date.now();
   // Update timer every second
-  state.timerInterval = setInterval(() => updateTimer(state), 1000);
+  state.timerInterval = setIntervalWrapper(() => updateTimer(state), 1000);
 };
 
 export const stopTimer = (state) => {
   // Stop the timer
-  clearInterval(state.timerInterval);
+  clearIntervalWrapper(state.timerInterval);
   const gameEnd = Date.now();
   // Convert to seconds
   const gameDuration = (gameEnd - state.gameStartTime) / 1000;

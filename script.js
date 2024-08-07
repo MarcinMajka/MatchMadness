@@ -1,4 +1,4 @@
-import { startTimer, stopTimer } from './timer.js';
+import { startTimer } from './timer.js';
 import { getElement, addElement } from './wrappers.js';
 import {
   ANIMATION_DURATION,

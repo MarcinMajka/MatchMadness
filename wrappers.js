@@ -6,3 +6,11 @@ export const addElement = (elementType) => {
   const element = document.createElement(elementType);
   return element;
 };
+
+export const setIntervalWrapper = (cb, timeIncrement) => {
+  return setInterval(cb, timeIncrement);
+};
+
+export const clearIntervalWrapper = (timerInterval) => {
+  clearInterval(timerInterval);
+};
