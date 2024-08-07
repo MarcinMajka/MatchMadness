@@ -47,21 +47,17 @@ export const removeElements = (elements, correctOrWrong) => {
 };
 
 export const clearClickedElements = (state) => {
-  state.columnElements.leftColumnElementValueClicked = null;
-  state.columnElements.rightColumnElementValueClicked = null;
+  state.clickedColumnElements.left = null;
+  state.clickedColumnElements.right = null;
 };
 
 export const selectElement = (state, clickedElement, className) => {
   if (className == 'leftColumn') {
-    state.columnElements.leftColumnElementValueClicked = clickedElement;
-    state.columnElements.leftColumnElementValueClicked.classList.add(
-      'selected'
-    );
+    state.clickedColumnElements.left = clickedElement;
+    state.clickedColumnElements.left.classList.add('selected');
   } else {
-    state.columnElements.rightColumnElementValueClicked = clickedElement;
-    state.columnElements.rightColumnElementValueClicked.classList.add(
-      'selected'
-    );
+    state.clickedColumnElements.right = clickedElement;
+    state.clickedColumnElements.right.classList.add('selected');
   }
 };
 

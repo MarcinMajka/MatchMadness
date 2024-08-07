@@ -12,9 +12,9 @@ import {
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
 const initialState = {
-  columnElements: {
-    leftColumnElementValueClicked: null,
-    rightColumnElementValueClicked: null,
+  clickedColumnElements: {
+    left: null,
+    right: null,
   },
   // keep track of the last used pair
   lastUsedTripletIndex: 0,
@@ -25,16 +25,19 @@ const initialState = {
   pairsToRender: null,
 };
 
+const loadGamePreferences = () => {
+  const currentSet = JSON.parse(localStorage.getItem('currentSet'));
+  const pairsToRender = localStorage.getItem('pairsToRender') || 5;
+
+  return { currentSet: shuffleArray(currentSet), pairsToRender };
+};
+
 const startGame = (initialState) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
-      const currentSet = JSON.parse(localStorage.getItem('currentSet'));
-      const pairsToRender = localStorage.getItem('pairsToRender') || 5;
-
       let state = {
         ...initialState,
-        currentSet: shuffleArray(currentSet),
-        pairsToRender,
+        ...loadGamePreferences(),
       };
       setupRound(state, state.pairsToRender);
       startTimer(state);
@@ -92,21 +95,17 @@ export const getValuesForRound = (state, pairRenderLimitIndex) => {
 
 const handleColumnElementClick = (state, clickedElement, selectedColumn) => {
   if (selectedColumn) {
-    if (state.columnElements.leftColumnElementValueClicked === null) {
+    if (state.clickedColumnElements.left === null) {
       selectElement(state, clickedElement, 'leftColumn');
     } else {
-      state.columnElements.leftColumnElementValueClicked.classList.remove(
-        'selected'
-      );
+      state.clickedColumnElements.left.classList.remove('selected');
       selectElement(state, clickedElement, 'leftColumn');
     }
   } else {
-    if (state.columnElements.rightColumnElementValueClicked === null) {
+    if (state.clickedColumnElements.right === null) {
       selectElement(state, clickedElement, 'rightColumn');
     } else {
-      state.columnElements.rightColumnElementValueClicked.classList.remove(
-        'selected'
-      );
+      state.clickedColumnElements.right.classList.remove('selected');
       selectElement(state, clickedElement, 'rightColumn');
     }
   }
@@ -119,10 +118,7 @@ const handleCorrectAnswer = (
   tripletIndex
 ) => {
   highlightElements(
-    [
-      state.columnElements.leftColumnElementValueClicked,
-      state.columnElements.rightColumnElementValueClicked,
-    ],
+    [state.clickedColumnElements.left, state.clickedColumnElements.right],
     'correct'
   );
 
@@ -131,11 +127,9 @@ const handleCorrectAnswer = (
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
   glossary.innerHTML = state.currentSet[tripletIndex][2];
 
-  // assigning leftColumnElementValueClicked and rightColumnElementValueClicked to different values, so that the User can select other divs during the animation
-  const leftElementToRemove =
-    state.columnElements.leftColumnElementValueClicked;
-  const rightElementToRemove =
-    state.columnElements.rightColumnElementValueClicked;
+  // assigning left and right to different values, so that the User can select other divs during the animation
+  const leftElementToRemove = state.clickedColumnElements.left;
+  const rightElementToRemove = state.clickedColumnElements.right;
 
   clearClickedElements(state);
 
@@ -151,19 +145,13 @@ const handleCorrectAnswer = (
 
 const handleIncorrectAnswer = (state) => {
   highlightElements(
-    [
-      state.columnElements.leftColumnElementValueClicked,
-      state.columnElements.rightColumnElementValueClicked,
-    ],
+    [state.clickedColumnElements.left, state.clickedColumnElements.right],
     'wrong'
   );
 
   // Reset the "selected" styles on the unmached elements...
   removeElements(
-    [
-      state.columnElements.leftColumnElementValueClicked,
-      state.columnElements.rightColumnElementValueClicked,
-    ],
+    [state.clickedColumnElements.left, state.clickedColumnElements.right],
     'wrong'
   );
 
@@ -198,10 +186,8 @@ const getTripletIndexAndExpectedRightColumnElementValue = (
 };
 
 const handleColumnElementComparison = (state) => {
-  const leftColumnElementValue =
-    state.columnElements.leftColumnElementValueClicked.innerHTML;
-  const rightColumnElementValue =
-    state.columnElements.rightColumnElementValueClicked.innerHTML;
+  const leftColumnElementValue = state.clickedColumnElements.left.innerHTML;
+  const rightColumnElementValue = state.clickedColumnElements.right.innerHTML;
 
   const [tripletIndex, expectedRightColumnValue] =
     getTripletIndexAndExpectedRightColumnElementValue(
@@ -244,8 +230,8 @@ export const checkIfMatch = (event, state) => {
   );
 
   const bothColumnsHaveSelectedElements =
-    state.columnElements.leftColumnElementValueClicked !== null &&
-    state.columnElements.rightColumnElementValueClicked !== null;
+    state.clickedColumnElements.left !== null &&
+    state.clickedColumnElements.right !== null;
 
   if (bothColumnsHaveSelectedElements) {
     handleColumnElementComparison(state);
