@@ -147,6 +147,7 @@ const handleIncorrectAnswer = (state) => {
   clearClickedElements(state);
 };
 
+// TODO: maybe could be changed now to check keyVal pairs instead of this loop?
 const getTripletIndexAndExpectedRightColumnElementValue = (
   state,
   leftColumnElementValue,
