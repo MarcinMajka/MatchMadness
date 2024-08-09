@@ -100,7 +100,7 @@ export async function loadDicIn50WordSets(dbName, storeName, url) {
 
     // Convert Blob to JSON
     const text = await fileData.text();
-    console.log('File content:', text); // Log the content of the file
+    // console.log('File content:', text); // Log the content of the file
     const jsonData = JSON.parse(text);
 
     // Check if AllWordSetsBlob exists and is an array

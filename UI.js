@@ -46,6 +46,7 @@ export const removeElements = (elements, correctOrWrong) => {
   }
 };
 
+// TODO: move out of UI -> script.js
 export const clearClickedElements = (state) => {
   state.clickedColumnElements.left = null;
   state.clickedColumnElements.right = null;
