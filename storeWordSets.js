@@ -15,8 +15,6 @@ const parseAsTriplets = (listOfTripletsData) => {
 export async function initializeSet(setIndex) {
   try {
     const wordSets = await loadDicIn50WordSets(DB_NAME, STORE_NAME, FILE_URL);
-    console.log('Loaded word sets:', wordSets);
-
     const currentSet = parseAsTriplets(wordSets[setIndex]);
 
     localStorage.setItem('currentSet', JSON.stringify(currentSet));

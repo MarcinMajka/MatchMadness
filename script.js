@@ -27,7 +27,7 @@ const initialState = {
 };
 
 const loadGamePreferences = () => {
-  const currentSet = JSON.parse(localStorage.getItem('currentSet'));
+  const currentSet = JSON.parse(localStorage.getItem('currentSet')) || 0;
   const pairsToRender = localStorage.getItem('pairsToRender') || 5;
 
   return { currentSet: shuffleArray(currentSet), pairsToRender };
