@@ -62,10 +62,10 @@ export const getValuesForRound = (state, pairRenderLimitIndex) => {
 
   while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
     const leftColumnElement = prepareNodeForGame(
-      state.currentSet[state.lastUsedTripletIndex][0]
+      state.currentSet[state.lastUsedTripletIndex].kanji
     );
     const rightColumnElement = prepareNodeForGame(
-      state.currentSet[state.lastUsedTripletIndex][1]
+      state.currentSet[state.lastUsedTripletIndex].reading
     );
 
     columnElementNodes.left.push(leftColumnElement);
@@ -109,10 +109,11 @@ const handleCorrectAnswer = (
     'correct'
   );
 
+  // TODO: extract to UI function
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossary = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
-  glossary.innerHTML = state.currentSet[tripletIndex][2];
+  glossary.innerHTML = state.currentSet[tripletIndex].glossary;
 
   // assigning left and right to different values, so that the User can select other divs during the animation
   const leftElementToRemove = state.clickedColumnElements.left;
@@ -161,11 +162,11 @@ const getTripletIndexAndExpectedRightColumnElementValue = (
     i++
   ) {
     if (
-      leftColumnElementValue === state.currentSet[i][0] &&
-      rightColumnElementValue === state.currentSet[i][1]
+      leftColumnElementValue === state.currentSet[i].kanji &&
+      rightColumnElementValue === state.currentSet[i].reading
     ) {
       tripletIndex = i;
-      expectedRightColumnValue = state.currentSet[i][1];
+      expectedRightColumnValue = state.currentSet[i].reading;
       break;
     }
   }
