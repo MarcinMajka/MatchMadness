@@ -1,6 +1,6 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
-import { getElement, addElement } from './wrappers.js';
+import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
   highlightElements,
@@ -121,9 +121,8 @@ const handleCorrectAnswer = (
 
   clearClickedElements(state);
 
-  // TODO: add wrapper
   // Remove the elements after a short delay.
-  setTimeout(() => {
+  setTimeoutWrapper(() => {
     removeElements([leftElementToRemove, rightElementToRemove], 'correct');
 
     state.foundPairs++;

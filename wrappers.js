@@ -14,3 +14,7 @@ export const setIntervalWrapper = (cb, timeIncrement) => {
 export const clearIntervalWrapper = (timerInterval) => {
   clearInterval(timerInterval);
 };
+
+export const setTimeoutWrapper = (cb, timeoutDuration) => {
+  setTimeout(cb, timeoutDuration);
+};
