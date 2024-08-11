@@ -4,7 +4,6 @@ import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
   highlightElements,
-  clearClickedElements,
   selectElement,
   removeElements,
   updateUIIfRoundFinished,
@@ -96,6 +95,11 @@ const handleColumnElementClick = (state, clickedElement, selectedColumn) => {
       selectElement(state, clickedElement, 'rightColumn');
     }
   }
+};
+
+export const clearClickedElements = (state) => {
+  state.clickedColumnElements.left = null;
+  state.clickedColumnElements.right = null;
 };
 
 const handleCorrectAnswer = (
