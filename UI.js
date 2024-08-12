@@ -95,3 +95,15 @@ export const appendValuesToColumns = (state, columnElementNodes) => {
     );
   }
 };
+
+export const updateGlossary = (
+  state,
+  leftColumnElementValue,
+  rightColumnElementValue,
+  tripletIndex
+) => {
+  const leftValueRightValue = getElement('#leftValueRightValue');
+  const glossary = getElement('#glossary');
+  leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
+  glossary.innerHTML = state.currentSet[tripletIndex].glossary;
+};
