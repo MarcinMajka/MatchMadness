@@ -10,12 +10,18 @@ export const startTimer = (state) => {
   state.timerInterval = setIntervalWrapper(() => updateTimer(state), 1000);
 };
 
-export const stopTimer = (state) => {
-  // TODO: logic function
+const getGameDuration = (state) => {
   // Stop the timer
   clearIntervalWrapper(state.timerInterval);
+
   const gameEnd = Date.now();
   const gameDuration = (gameEnd - state.gameStartTime) / 1000;
+
+  return gameDuration;
+};
+
+export const stopTimer = (state) => {
+  const gameDuration = getGameDuration(state);
 
   // TODO: UI function
   // Convert to seconds
