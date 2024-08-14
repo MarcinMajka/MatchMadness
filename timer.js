@@ -17,17 +17,17 @@ const getGameDuration = (state) => {
   const gameEnd = Date.now();
   const gameDuration = (gameEnd - state.gameStartTime) / 1000;
 
-  return gameDuration;
+  // Convert to seconds
+  return Math.floor(gameDuration);
+};
+
+const showGameDuration = (gameDuration) => {
+  getElement('#timer').innerText = `Game duration: ${gameDuration} seconds`;
 };
 
 export const stopTimer = (state) => {
   const gameDuration = getGameDuration(state);
-
-  // TODO: UI function
-  // Convert to seconds
-  getElement('#timer').innerText = `Game duration: ${Math.floor(
-    gameDuration
-  )} seconds`;
+  showGameDuration(gameDuration);
 };
 
 const updateTimer = (state) => {
