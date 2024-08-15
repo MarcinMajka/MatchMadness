@@ -30,16 +30,23 @@ export const stopTimer = (state) => {
   showGameDuration(gameDuration);
 };
 
-const updateTimer = (state) => {
-  // TODO: logic function
+const getElapsedTime = (state) => {
   const currentTime = Date.now();
   const elapsedTime = currentTime - state.gameStartTime;
-  const minutes = Math.floor(elapsedTime / 60000);
-  const seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+  return {
+    minutes: Math.floor(elapsedTime / 60000),
+    seconds: Math.floor((elapsedTime % 60000) / 1000),
+  };
+};
+
+const updateTimer = (state) => {
+  const elapsedTime = getElapsedTime(state);
+
   // TODO: UI function
-  getElement('#timer').innerText = `${formatTime(minutes)}:${formatTime(
-    seconds
-  )}`;
+  getElement('#timer').innerText = `${formatTime(
+    elapsedTime.minutes
+  )}:${formatTime(elapsedTime.seconds)}`;
 };
 
 /**
