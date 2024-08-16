@@ -40,13 +40,15 @@ const getElapsedTime = (state) => {
   };
 };
 
-const updateTimer = (state) => {
-  const elapsedTime = getElapsedTime(state);
-
-  // TODO: UI function
+const renderTimer = (elapsedTime) => {
   getElement('#timer').innerText = `${formatTime(
     elapsedTime.minutes
   )}:${formatTime(elapsedTime.seconds)}`;
+};
+
+const updateTimer = (state) => {
+  const elapsedTime = getElapsedTime(state);
+  renderTimer(elapsedTime);
 };
 
 /**
