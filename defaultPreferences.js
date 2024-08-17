@@ -22,3 +22,5 @@ export async function initializeSet(setIndex) {
     console.error('Failed to initialize data:', error);
   }
 }
+
+initializeSet(0);
