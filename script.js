@@ -238,7 +238,3 @@ export const roundIsFinished = (state) => {
 };
 
 startGame(initialState);
-
-// module.exports = {
-//   shuffleArray,
-// };

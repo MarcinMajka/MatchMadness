@@ -32,7 +32,8 @@ global.window = document.defaultView;
 global.navigator = window.navigator;
 global.localStorage = window.localStorage;
 
-const { shuffleArray, formatTime } = require('./script');
+const formatTime = require('./timer');
+const shuffleArray = require('./utils.js');
 // const JM = require('./dic');
 
 describe('Test shuffleArray', () => {
