@@ -154,13 +154,12 @@ const handleIncorrectAnswer = (state) => {
 };
 
 // TODO: maybe could be changed now to check keyVal pairs instead of this loop?
-const getTripletIndexAndExpectedRightColumnElementValue = (
+const getTripletIndex = (
   state,
   leftColumnElementValue,
   rightColumnElementValue
 ) => {
   let tripletIndex = null;
-  let expectedRightColumnValue = null;
 
   for (
     let i = state.lastUsedTripletIndex - state.pairsToRender;
@@ -172,24 +171,32 @@ const getTripletIndexAndExpectedRightColumnElementValue = (
       rightColumnElementValue === state.currentSet[i].reading
     ) {
       tripletIndex = i;
-      expectedRightColumnValue = state.currentSet[i].reading;
       break;
     }
   }
 
-  return [tripletIndex, expectedRightColumnValue];
+  return tripletIndex;
+};
+
+const getExpectedRightColumnValue = (state, tripletIndex) => {
+  return state.currentSet[tripletIndex]
+    ? state.currentSet[tripletIndex].reading
+    : 'false';
 };
 
 const handleColumnElementComparison = (state) => {
   const leftColumnElementValue = state.clickedColumnElements.left.innerHTML;
   const rightColumnElementValue = state.clickedColumnElements.right.innerHTML;
 
-  const [tripletIndex, expectedRightColumnValue] =
-    getTripletIndexAndExpectedRightColumnElementValue(
-      state,
-      leftColumnElementValue,
-      rightColumnElementValue
-    );
+  const tripletIndex = getTripletIndex(
+    state,
+    leftColumnElementValue,
+    rightColumnElementValue
+  );
+  const expectedRightColumnValue = getExpectedRightColumnValue(
+    state,
+    tripletIndex
+  );
 
   if (rightColumnElementValue === expectedRightColumnValue) {
     handleCorrectAnswer(
