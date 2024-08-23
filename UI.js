@@ -1,6 +1,10 @@
 import { getElement } from './wrappers.js';
 import { stopTimer } from './timer.js';
-import { checkIfMatch, roundIsFinished, getValuesForRound } from './script.js';
+import {
+  checkIfMatch,
+  roundIsFinished,
+  getValuesForRound,
+} from './matchMadness.js';
 
 export const ANIMATION_DURATION = 250;
 

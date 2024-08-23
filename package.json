@@ -2,7 +2,7 @@
   "name": "matchmadness",
   "version": "1.0.0",
   "description": "Just like in Duolingo. But better!",
-  "main": "script.js",
+  "main": "matchMadness.js",
   "scripts": {
     "test": "jest --coverage"
   },
