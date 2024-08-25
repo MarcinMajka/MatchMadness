@@ -64,6 +64,8 @@ body {
 }
 
 #glossaryContainer {
+  display: flex;
+  flex-direction: column;
   border-radius: 25px;
   width: 500px;
   height: fit-content;
@@ -79,6 +81,11 @@ body {
   height: 20%;
   margin: 30px;
   margin-bottom: 15px;
+}
+
+#topSection {
+  display: flex;
+  align-items: center;
 }
 
 #glossary {
