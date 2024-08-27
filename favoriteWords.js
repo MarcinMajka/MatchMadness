@@ -13,7 +13,7 @@ request.onsuccess = (event) => {
 
 request.onupgradeneeded = (event) => {
   db = event.target.result;
-  const objectStore = db.createObjectStore('items', {
+  const objectStore = db.createObjectStore('favWords', {
     keyPath: 'id',
     autoIncrement: true,
   });
@@ -24,15 +24,15 @@ request.onupgradeneeded = (event) => {
 };
 
 function addWord(kanji, reading, glossary) {
-  const transaction = db.transaction(['items'], 'readwrite');
-  const objectStore = transaction.objectStore('items');
+  const transaction = db.transaction(['favWords'], 'readwrite');
+  const objectStore = transaction.objectStore('favWords');
   const request = objectStore.add({
-    kanji: kanji,
-    reading: reading,
-    glossary: glossary,
+    kanji,
+    reading,
+    glossary,
   });
 
-  request.onsuccess = (event) => {
+  request.onsuccess = () => {
     console.log('Item added successfully');
   };
 
@@ -44,7 +44,7 @@ function addWord(kanji, reading, glossary) {
 function getItemBykanji(kanji) {
   const transaction = db.transaction(['favWords'], 'readonly');
   const objectStore = transaction.objectStore('favWords');
-  const index = objectStore.index('wordIndex');
+  const index = objectStore.index('kanji');
   const request = index.get(kanji);
 
   request.onsuccess = (event) => {
