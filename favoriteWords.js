@@ -23,7 +23,7 @@ request.onupgradeneeded = (event) => {
   console.log('Object store created');
 };
 
-function addWord(kanji, reading, glossary) {
+const addWord = (kanji, reading, glossary) => {
   const transaction = db.transaction(['favWords'], 'readwrite');
   const objectStore = transaction.objectStore('favWords');
   const request = objectStore.add({
@@ -39,9 +39,9 @@ function addWord(kanji, reading, glossary) {
   request.onerror = (event) => {
     console.error('Error adding item: ' + event.target.error);
   };
-}
+};
 
-function getItemBykanji(kanji) {
+const getItemBykanji = (kanji) => {
   const transaction = db.transaction(['favWords'], 'readonly');
   const objectStore = transaction.objectStore('favWords');
   const index = objectStore.index('kanji');
@@ -58,7 +58,7 @@ function getItemBykanji(kanji) {
   request.onerror = (event) => {
     console.error('Error getting item: ' + event.target.error);
   };
-}
+};
 
 // This makes these functions callable in the console
 window.addWord = function (kanji, reading, glossary) {
