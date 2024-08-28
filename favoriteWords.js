@@ -1,3 +1,5 @@
+import { getElement } from './wrappers.js';
+
 let db;
 
 const request = indexedDB.open('FavoriteWords', 1);
@@ -68,3 +70,11 @@ window.addWord = function (kanji, reading, glossary) {
 window.getItemBykanji = function (kanji) {
   getItemBykanji(kanji);
 };
+
+const addButton = getElement('#addButton');
+addButton.addEventListener('click', () => {
+  const kanjiToAdd = getElement('#favKanji').value.trim();
+  const readingToAdd = getElement('#favReading').value.trim();
+  const glossaryToAdd = getElement('#favGlossary').value.trim();
+  addWord(kanjiToAdd, readingToAdd, glossaryToAdd);
+});
