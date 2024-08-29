@@ -111,3 +111,8 @@ export const updateGlossary = (
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
   glossary.innerHTML = state.currentSet[tripletIndex].glossary;
 };
+
+const likeButton = getElement('#likeButton');
+likeButton.addEventListener('click', function () {
+  this.classList.toggle('liked');
+});

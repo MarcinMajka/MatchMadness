@@ -245,8 +245,3 @@ export const roundIsFinished = (state) => {
 };
 
 startGame(initialState);
-
-const likeButton = document.getElementById('likeButton');
-likeButton.addEventListener('click', function () {
-  this.classList.toggle('liked');
-});
