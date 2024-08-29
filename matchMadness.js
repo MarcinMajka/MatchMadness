@@ -9,6 +9,7 @@ import {
   updateUIIfRoundFinished,
   setupRound,
   updateGlossary,
+  showLikeButton,
 } from './UI.js';
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
@@ -120,6 +121,8 @@ const handleCorrectAnswer = (
     rightColumnElementValue,
     tripletIndex
   );
+
+  showLikeButton();
 
   // assigning left and right to different values, so that the User can select other divs during the animation
   const leftElementToRemove = state.clickedColumnElements.left;

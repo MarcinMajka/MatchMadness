@@ -116,3 +116,7 @@ const likeButton = getElement('#likeButton');
 likeButton.addEventListener('click', function () {
   this.classList.toggle('liked');
 });
+
+export const showLikeButton = () => {
+  likeButton.style.visibility = 'visible';
+};
