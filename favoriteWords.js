@@ -71,8 +71,8 @@ window.getItemBykanji = function (kanji) {
   getItemBykanji(kanji);
 };
 
-const addButton = getElement('#addButton');
-addButton.addEventListener('click', () => {
+const likeButton = getElement('#likeButton');
+likeButton.addEventListener('click', () => {
   const kanjiToAdd = getElement('#favKanji').value.trim();
   const readingToAdd = getElement('#favReading').value.trim();
   const glossaryToAdd = getElement('#favGlossary').value.trim();
