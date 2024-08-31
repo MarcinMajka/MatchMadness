@@ -5,6 +5,7 @@ import {
   roundIsFinished,
   getValuesForRound,
 } from './matchMadness.js';
+import { addWord } from './favoriteWords.js';
 
 export const ANIMATION_DURATION = 250;
 
@@ -110,6 +111,13 @@ export const updateGlossary = (
   const glossary = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
   glossary.innerHTML = state.currentSet[tripletIndex].glossary;
+  likeButton.addEventListener('click', (event) => {
+    addWord(
+      leftColumnElementValue,
+      rightColumnElementValue,
+      state.currentSet[tripletIndex].glossary
+    );
+  });
 };
 
 const likeButton = getElement('#likeButton');

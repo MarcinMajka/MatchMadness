@@ -25,7 +25,7 @@ request.onupgradeneeded = (event) => {
   console.log('Object store created');
 };
 
-const addWord = (kanji, reading, glossary) => {
+export const addWord = (kanji, reading, glossary) => {
   const transaction = db.transaction(['favWords'], 'readwrite');
   const objectStore = transaction.objectStore('favWords');
   const request = objectStore.add({
