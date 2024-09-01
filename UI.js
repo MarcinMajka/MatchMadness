@@ -108,9 +108,9 @@ export const updateGlossary = (
   tripletIndex
 ) => {
   const leftValueRightValue = getElement('#leftValueRightValue');
-  const glossary = getElement('#glossary');
+  const glossaryElement = getElement('#glossary');
   leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
-  glossary.innerHTML = state.currentSet[tripletIndex].glossary;
+  glossaryElement.innerHTML = state.currentSet[tripletIndex].glossary;
   likeButton.addEventListener('click', (event) => {
     addWord(
       leftColumnElementValue,
