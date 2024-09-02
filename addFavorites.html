@@ -14,6 +14,11 @@
         <button id="likeButton" class="button">Save</button>
     </div>
 
-    <script type="module" src="favoriteWords.js"></script>
+    <script type="module" src="favoriteWords.js">
+        window.addEventListener('load', () => {
+                const favoriteWordData = getFavoriteWordData();
+                addClickListenerToLikeButton(...favoriteWordData);
+            });
+    </script>
 </body>
 </html>

@@ -71,10 +71,40 @@ window.getItemBykanji = function (kanji) {
   getItemBykanji(kanji);
 };
 
-const likeButton = getElement('#likeButton');
-likeButton.addEventListener('click', () => {
-  const kanjiToAdd = getElement('#favKanji').value.trim();
-  const readingToAdd = getElement('#favReading').value.trim();
-  const glossaryToAdd = getElement('#favGlossary').value.trim();
-  addWord(kanjiToAdd, readingToAdd, glossaryToAdd);
+export const getFavoriteWordData = (
+  kanjiSelector,
+  readingSelector,
+  glossarySelector
+) => {
+  const kanji = kanjiSelector.value;
+  const reading = readingSelector.value;
+  const glossary = glossarySelector.value;
+  return [kanji, reading, glossary];
+};
+
+export const addClickListenerToLikeButton = (
+  kanjiSelector,
+  readingSelector,
+  glossarySelector
+) => {
+  const likeButton = getElement('#likeButton');
+  likeButton.addEventListener('click', () => {
+    const [kanji, reading, glossary] = getFavoriteWordData(
+      kanjiSelector,
+      readingSelector,
+      glossarySelector
+    );
+    addWord(kanji, reading, glossary);
+  });
+};
+
+window.addEventListener('load', () => {
+  const kanjiSelector = getElement('#favKanji');
+  const readingSelector = getElement('#favReading');
+  const glossarySelector = getElement('#favGlossary');
+  addClickListenerToLikeButton(
+    kanjiSelector,
+    readingSelector,
+    glossarySelector
+  );
 });
