@@ -25,6 +25,11 @@ const initialState = {
   timerInterval: null,
   currentSet: null,
   pairsToRender: null,
+  currentCorrectWord: {
+    kanji: null,
+    reading: null,
+    glossary: null,
+  },
 };
 
 const loadGamePreferences = () => {
@@ -202,6 +207,12 @@ const handleColumnElementComparison = (state) => {
   );
 
   if (rightColumnElementValue === expectedRightColumnValue) {
+    const currentCorrectWord = {
+      kanji: leftColumnElementValue,
+      reading: rightColumnElementValue,
+      glossary: state.currentSet[tripletIndex].glossary,
+    };
+
     handleCorrectAnswer(
       state,
       leftColumnElementValue,
