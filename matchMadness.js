@@ -207,6 +207,7 @@ const handleColumnElementComparison = (state) => {
   );
 
   if (rightColumnElementValue === expectedRightColumnValue) {
+    // TODO: use this instead of leftColumnElementValue, rightColumnElementValue, tripletIndex
     const currentCorrectWord = {
       kanji: leftColumnElementValue,
       reading: rightColumnElementValue,
