@@ -109,23 +109,13 @@ export const clearClickedElements = (state) => {
   state.clickedColumnElements.right = null;
 };
 
-const handleCorrectAnswer = (
-  state,
-  leftColumnElementValue,
-  rightColumnElementValue,
-  tripletIndex
-) => {
+const handleCorrectAnswer = (state) => {
   highlightElements(
     [state.clickedColumnElements.left, state.clickedColumnElements.right],
     'correct'
   );
 
-  updateGlossary(
-    state,
-    leftColumnElementValue,
-    rightColumnElementValue,
-    tripletIndex
-  );
+  updateGlossary(state);
 
   showLikeButton();
 
@@ -207,19 +197,13 @@ const handleColumnElementComparison = (state) => {
   );
 
   if (rightColumnElementValue === expectedRightColumnValue) {
-    // TODO: use this instead of leftColumnElementValue, rightColumnElementValue, tripletIndex
-    const currentCorrectWord = {
+    state.currentCorrectWord = {
       kanji: leftColumnElementValue,
       reading: rightColumnElementValue,
       glossary: state.currentSet[tripletIndex].glossary,
     };
 
-    handleCorrectAnswer(
-      state,
-      leftColumnElementValue,
-      rightColumnElementValue,
-      tripletIndex
-    );
+    handleCorrectAnswer(state);
   } else {
     handleIncorrectAnswer(state);
   }

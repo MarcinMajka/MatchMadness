@@ -101,16 +101,12 @@ export const appendValuesToColumns = (state, columnElementNodes) => {
   }
 };
 
-export const updateGlossary = (
-  state,
-  leftColumnElementValue,
-  rightColumnElementValue,
-  tripletIndex
-) => {
+export const updateGlossary = (state) => {
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossaryElement = getElement('#glossary');
-  leftValueRightValue.innerHTML = `${leftColumnElementValue} - ${rightColumnElementValue}:`;
-  glossaryElement.innerHTML = state.currentSet[tripletIndex].glossary;
+  leftValueRightValue.innerHTML = `${state.currentCorrectWord.kanji} - ${state.currentCorrectWord.reading}:`;
+  glossaryElement.innerHTML = state.currentCorrectWord.glossary;
+
   likeButton.addEventListener('click', (event) => {
     addWord(
       leftColumnElementValue,
