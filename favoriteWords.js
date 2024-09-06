@@ -98,12 +98,12 @@ export const addClickListenerToLikeButton = (
   });
 };
 
-// Safety net for not throwing errors when not on addFavorites.html
 function initializeFavoriteWords() {
   const kanjiSelector = getElement('#favKanji');
   const readingSelector = getElement('#favReading');
   const glossarySelector = getElement('#favGlossary');
 
+  // Safety net for not throwing errors when not on addFavorites.html
   if (kanjiSelector && readingSelector && glossarySelector) {
     addClickListenerToLikeButton(
       kanjiSelector,
@@ -113,9 +113,4 @@ function initializeFavoriteWords() {
   }
 }
 
-// Only run the initialization if we're on the correct page
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeFavoriteWords);
-} else {
-  initializeFavoriteWords();
-}
+initializeFavoriteWords();
