@@ -106,17 +106,9 @@ export const updateGlossary = (state) => {
   const glossaryElement = getElement('#glossary');
   leftValueRightValue.innerHTML = `${state.currentCorrectWord.kanji} - ${state.currentCorrectWord.reading}:`;
   glossaryElement.innerHTML = state.currentCorrectWord.glossary;
-
-  likeButton.addEventListener('click', (event) => {
-    addWord(
-      leftColumnElementValue,
-      rightColumnElementValue,
-      state.currentSet[tripletIndex].glossary
-    );
-  });
 };
 
-const likeButton = getElement('#likeButton');
+export const likeButton = getElement('#likeButton');
 likeButton.addEventListener('click', function () {
   this.classList.toggle('liked');
 });

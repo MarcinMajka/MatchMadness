@@ -1,5 +1,6 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
+import { addWord } from './favoriteWords.js';
 import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
@@ -10,6 +11,7 @@ import {
   setupRound,
   updateGlossary,
   showLikeButton,
+  likeButton,
 } from './UI.js';
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
@@ -46,6 +48,15 @@ const startGame = (initialState) => {
         ...initialState,
         ...loadGamePreferences(),
       };
+
+      likeButton.addEventListener('click', () => {
+        addWord(
+          state.currentCorrectWord.kanji,
+          state.currentCorrectWord.reading,
+          state.currentCorrectWord.glossary
+        );
+      });
+
       setupRound(state, state.pairsToRender);
       startTimer(state);
     });
