@@ -109,9 +109,9 @@ export const updateGlossary = (state) => {
 };
 
 export const likeButton = getElement('#likeButton');
-likeButton.addEventListener('click', function () {
-  this.classList.toggle('liked');
-});
+export const toggleLike = (element) => {
+  element.classList.toggle('liked');
+};
 
 export const showLikeButton = () => {
   likeButton.style.visibility = 'visible';

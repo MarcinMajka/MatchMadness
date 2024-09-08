@@ -12,6 +12,7 @@ import {
   updateGlossary,
   showLikeButton,
   likeButton,
+  toggleLike,
 } from './UI.js';
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
@@ -50,6 +51,7 @@ const startGame = (initialState) => {
       };
 
       likeButton.addEventListener('click', () => {
+        toggleLike(likeButton);
         addWord(
           state.currentCorrectWord.kanji,
           state.currentCorrectWord.reading,
