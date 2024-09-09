@@ -62,6 +62,25 @@ const getItemBykanji = (kanji) => {
   };
 };
 
+const getItemByReading = (reading) => {
+  const transaction = db.transaction(['favWords'], 'readonly');
+  const objectStore = transaction.objectStore('favWords');
+  const index = objectStore.index('reading');
+  const request = index.get(reading);
+
+  request.onsuccess = (event) => {
+    if (request.result) {
+      console.log('Item found:', request.result);
+    } else {
+      console.log('Item not found');
+    }
+  };
+
+  request.onerror = (event) => {
+    console.error('Error getting item: ' + event.target.error);
+  };
+};
+
 // This makes these functions callable in the console
 window.addWord = function (kanji, reading, glossary) {
   addWord(kanji, reading, glossary);
@@ -69,6 +88,10 @@ window.addWord = function (kanji, reading, glossary) {
 
 window.getItemBykanji = function (kanji) {
   getItemBykanji(kanji);
+};
+
+window.getItemByReading = function (reading) {
+  getItemByReading(reading);
 };
 
 export const getFavoriteWordData = (
