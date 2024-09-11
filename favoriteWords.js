@@ -43,15 +43,15 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
-const getItemBykanji = (kanji) => {
+const getWordByKey = (key, val) => {
   const transaction = db.transaction(['favWords'], 'readonly');
   const objectStore = transaction.objectStore('favWords');
-  const index = objectStore.index('kanji');
-  const request = index.get(kanji);
+  const index = objectStore.index(key);
+  const request = index.get(val);
 
   request.onsuccess = (event) => {
     if (request.result) {
-      console.log('Item found:', request.result);
+      console.log(`Item by {key} found:`, request.result);
     } else {
       console.log('Item not found');
     }
@@ -105,8 +105,8 @@ window.addWord = function (kanji, reading, glossary) {
   addWord(kanji, reading, glossary);
 };
 
-window.getItemBykanji = function (kanji) {
-  getItemBykanji(kanji);
+window.getWordByKey = function (key, val) {
+  getWordByKey(key, val);
 };
 
 window.getItemByReading = function (reading) {
