@@ -1,6 +1,6 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
-import { addWord } from './favoriteWords.js';
+import { addWord, getWordByKey } from './favoriteWords.js';
 import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
@@ -42,6 +42,17 @@ const loadGamePreferences = () => {
   return { currentSet: shuffleArray(currentSet), pairsToRender };
 };
 
+const handleLikeButton = (state) => {
+  likeButton.addEventListener('click', () => {
+    toggleLike(likeButton);
+    addWord(
+      state.currentCorrectWord.kanji,
+      state.currentCorrectWord.reading,
+      state.currentCorrectWord.glossary
+    );
+  });
+};
+
 const startGame = (initialState) => {
   if (typeof window !== 'undefined') {
     window.addEventListener('load', () => {
@@ -50,14 +61,7 @@ const startGame = (initialState) => {
         ...loadGamePreferences(),
       };
 
-      likeButton.addEventListener('click', () => {
-        toggleLike(likeButton);
-        addWord(
-          state.currentCorrectWord.kanji,
-          state.currentCorrectWord.reading,
-          state.currentCorrectWord.glossary
-        );
-      });
+      handleLikeButton(state);
 
       setupRound(state, state.pairsToRender);
       startTimer(state);

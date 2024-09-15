@@ -43,7 +43,7 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
-const getWordByKey = (key, val) => {
+export const getWordByKey = (key, val) => {
   const transaction = db.transaction(['favWords'], 'readonly');
   const objectStore = transaction.objectStore('favWords');
   const index = objectStore.index(key);
