@@ -44,22 +44,27 @@ export const addWord = (kanji, reading, glossary) => {
 };
 
 export const getWordByKey = (key, val) => {
-  const transaction = db.transaction(['favWords'], 'readonly');
-  const objectStore = transaction.objectStore('favWords');
-  const index = objectStore.index(key);
-  const request = index.get(val);
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['favWords'], 'readonly');
+    const objectStore = transaction.objectStore('favWords');
+    const index = objectStore.index(key);
+    const request = index.get(val);
 
-  request.onsuccess = (event) => {
-    if (request.result) {
-      console.log(`Item by {key} found:`, request.result);
-    } else {
-      console.log('Item not found');
-    }
-  };
+    request.onsuccess = (event) => {
+      if (request.result) {
+        console.log(`Item by ${key} found:`, request.result);
+        resolve(request.result);
+      } else {
+        console.log('Item not found');
+        resolve(null);
+      }
+    };
 
-  request.onerror = (event) => {
-    console.error('Error getting item: ' + event.target.error);
-  };
+    request.onerror = (event) => {
+      console.error('Error getting item: ' + event.target.error);
+      reject(event.target.error);
+    };
+  });
 };
 
 // This makes these functions callable in the console

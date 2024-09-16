@@ -44,7 +44,6 @@ const loadGamePreferences = () => {
 
 const handleLikeButton = (state) => {
   likeButton.addEventListener('click', () => {
-    toggleLike(likeButton);
     addWord(
       state.currentCorrectWord.kanji,
       state.currentCorrectWord.reading,

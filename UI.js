@@ -5,7 +5,7 @@ import {
   roundIsFinished,
   getValuesForRound,
 } from './matchMadness.js';
-import { addWord } from './favoriteWords.js';
+import { getWordByKey } from './favoriteWords.js';
 
 export const ANIMATION_DURATION = 250;
 
@@ -102,10 +102,23 @@ export const appendValuesToColumns = (state, columnElementNodes) => {
 };
 
 export const updateGlossary = (state) => {
+  likeButton.classList.remove('liked');
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossaryElement = getElement('#glossary');
   leftValueRightValue.innerHTML = `${state.currentCorrectWord.kanji} - ${state.currentCorrectWord.reading}:`;
   glossaryElement.innerHTML = state.currentCorrectWord.glossary;
+  getWordByKey('kanji', state.currentCorrectWord.kanji)
+    .then((result) => {
+      if (result) {
+        console.log('Found item:', result);
+        likeButton.classList.add('liked');
+      } else {
+        console.log('Item not found');
+      }
+    })
+    .catch((error) => {
+      console.error('An error occurred:', error);
+    });
 };
 
 export const likeButton = getElement('#likeButton');
