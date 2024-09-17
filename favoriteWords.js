@@ -67,6 +67,39 @@ export const getWordByKey = (key, val) => {
   });
 };
 
+export async function compareThreeWords(
+  kanjiValue,
+  readingValue,
+  glossaryValue
+) {
+  try {
+    const [kanjiResult, readingResult, glossaryResult] = await Promise.all([
+      getWordByKey('kanji', kanjiValue),
+      getWordByKey('reading', readingValue),
+      getWordByKey('glossary', glossaryValue),
+    ]);
+
+    if (!kanjiResult) {
+      console.log('Not in the database');
+      return false;
+    }
+
+    if (
+      kanjiResult.kanji === readingResult.kanji &&
+      kanjiResult.kanji === glossaryResult.kanji
+    ) {
+      console.log('Comparison successful, returning true');
+      return true;
+    } else {
+      console.log('Comparison failed, returning false');
+      return false;
+    }
+  } catch (error) {
+    console.error('Error comparing words:', error);
+    return false;
+  }
+}
+
 // This makes these functions callable in the console
 window.addWord = function (kanji, reading, glossary) {
   addWord(kanji, reading, glossary);

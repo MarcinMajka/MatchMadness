@@ -5,7 +5,7 @@ import {
   roundIsFinished,
   getValuesForRound,
 } from './matchMadness.js';
-import { getWordByKey } from './favoriteWords.js';
+import { getWordByKey, compareThreeWords } from './favoriteWords.js';
 
 export const ANIMATION_DURATION = 250;
 
@@ -103,21 +103,26 @@ export const appendValuesToColumns = (state, columnElementNodes) => {
 
 export const updateGlossary = (state) => {
   likeButton.classList.remove('liked');
+
+  const kanji = state.currentCorrectWord.kanji;
+  const reading = state.currentCorrectWord.reading;
+  const glossary = state.currentCorrectWord.glossary;
+
   const leftValueRightValue = getElement('#leftValueRightValue');
   const glossaryElement = getElement('#glossary');
-  leftValueRightValue.innerHTML = `${state.currentCorrectWord.kanji} - ${state.currentCorrectWord.reading}:`;
-  glossaryElement.innerHTML = state.currentCorrectWord.glossary;
-  getWordByKey('kanji', state.currentCorrectWord.kanji)
+  leftValueRightValue.innerHTML = `${kanji} - ${reading}:`;
+  glossaryElement.innerHTML = glossary;
+
+  compareThreeWords(kanji, reading, glossary)
     .then((result) => {
       if (result) {
-        console.log('Found item:', result);
         likeButton.classList.add('liked');
       } else {
-        console.log('Item not found');
+        console.log('Condition not met, liked class not added');
       }
     })
     .catch((error) => {
-      console.error('An error occurred:', error);
+      console.error('Error in compareThreeWords:', error);
     });
 };
 
