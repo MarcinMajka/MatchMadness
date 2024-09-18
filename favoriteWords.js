@@ -43,6 +43,37 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
+const removeWord = (kanjiToRemove) => {
+  const transaction = db.transaction(['favWords'], 'readwrite');
+  const objectStore = transaction.objectStore('favWords');
+  const index = objectStore.index('kanji');
+
+  const request = index.getKey(kanjiToRemove);
+
+  request.onsuccess = (event) => {
+    const key = event.target.result;
+    if (key) {
+      const deleteRequest = objectStore.delete(key);
+      deleteRequest.onsuccess = () => {
+        console.log('Item removed successfully');
+      };
+      deleteRequest.onerror = (event) => {
+        console.error('Error removing item: ' + event.target.error);
+      };
+    } else {
+      console.log('Item with kanji ' + kanji + ' not found');
+    }
+  };
+
+  request.onerror = (event) => {
+    console.error('Error finding item: ' + event.target.error);
+  };
+};
+
+window.removeWord = (kanjiToRemove) => {
+  removeWord(kanjiToRemove);
+};
+
 export const getWordByKey = (key, val) => {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['favWords'], 'readonly');
