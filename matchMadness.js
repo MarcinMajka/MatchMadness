@@ -1,6 +1,6 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
-import { addWord, getWordByKey } from './favoriteWords.js';
+import { addWord, removeWord, getWordByKey } from './favoriteWords.js';
 import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
@@ -43,12 +43,19 @@ const loadGamePreferences = () => {
 };
 
 const handleLikeButton = (state) => {
-  likeButton.addEventListener('click', () => {
-    addWord(
-      state.currentCorrectWord.kanji,
-      state.currentCorrectWord.reading,
-      state.currentCorrectWord.glossary
-    );
+  likeButton.addEventListener('click', (event) => {
+    const wordIsLiked = event.target.classList.contains('liked');
+    if (wordIsLiked) {
+      console.log('REMOVING word');
+      removeWord(state.currentCorrectWord.kanji);
+    } else {
+      console.log('ADDING word');
+      addWord(
+        state.currentCorrectWord.kanji,
+        state.currentCorrectWord.reading,
+        state.currentCorrectWord.glossary
+      );
+    }
   });
 };
 

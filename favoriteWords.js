@@ -43,7 +43,7 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
-const removeWord = (kanjiToRemove) => {
+export const removeWord = (kanjiToRemove) => {
   const transaction = db.transaction(['favWords'], 'readwrite');
   const objectStore = transaction.objectStore('favWords');
   const index = objectStore.index('kanji');
