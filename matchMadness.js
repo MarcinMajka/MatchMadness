@@ -47,9 +47,11 @@ const handleLikeButton = (state) => {
     const wordIsLiked = event.target.classList.contains('liked');
     if (wordIsLiked) {
       console.log('REMOVING word');
+      toggleLike(likeButton);
       removeWord(state.currentCorrectWord.kanji);
     } else {
       console.log('ADDING word');
+      toggleLike(likeButton);
       addWord(
         state.currentCorrectWord.kanji,
         state.currentCorrectWord.reading,
