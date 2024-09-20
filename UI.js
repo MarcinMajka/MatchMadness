@@ -102,8 +102,6 @@ export const appendValuesToColumns = (state, columnElementNodes) => {
 };
 
 export const updateGlossary = (state) => {
-  likeButton.classList.remove('liked');
-
   const kanji = state.currentCorrectWord.kanji;
   const reading = state.currentCorrectWord.reading;
   const glossary = state.currentCorrectWord.glossary;
@@ -118,7 +116,8 @@ export const updateGlossary = (state) => {
       if (result) {
         likeButton.classList.add('liked');
       } else {
-        console.log('Condition not met, liked class not added');
+        likeButton.classList.remove('liked');
+        console.log('unliked');
       }
     })
     .catch((error) => {
