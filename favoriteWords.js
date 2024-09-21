@@ -98,6 +98,34 @@ export const getWordByKey = (key, val) => {
   });
 };
 
+const getAllWordsByKey = (key, val) => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['favWords'], 'readonly');
+    const objectStore = transaction.objectStore('favWords');
+    const index = objectStore.index(key);
+    const request = index.getAll(val);
+
+    request.onsuccess = () => {
+      if (request.result) {
+        console.log(`Item by ${key} found:`, request.result);
+        resolve(request.result);
+      } else {
+        console.log('Item not found');
+        resolve(null);
+      }
+    };
+
+    request.onerror = (event) => {
+      console.error('Error getting item: ' + event.target.error);
+      reject(event.target.error);
+    };
+  });
+};
+
+window.getAllWordsByKey = function (key, val) {
+  getAllWordsByKey(key, val);
+};
+
 export async function compareThreeWords(
   kanjiValue,
   readingValue,
