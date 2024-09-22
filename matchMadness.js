@@ -1,6 +1,11 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
-import { addWord, removeWord, getWordByKey } from './favoriteWords.js';
+import {
+  addWord,
+  removeWord,
+  getWordByKey,
+  deleteRecord,
+} from './favoriteWords.js';
 import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
@@ -48,7 +53,7 @@ const handleLikeButton = (state) => {
     if (wordIsLiked) {
       console.log('REMOVING word');
       toggleLike(likeButton);
-      removeWord(state.currentCorrectWord.kanji);
+      deleteRecord(state);
     } else {
       console.log('ADDING word');
       toggleLike(likeButton);

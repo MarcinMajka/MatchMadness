@@ -126,6 +126,57 @@ window.getAllWordsByKey = function (key, val) {
   getAllWordsByKey(key, val);
 };
 
+export async function deleteRecord(state) {
+  try {
+    // Get all words with the matching kanji
+    const words = await getAllWordsByKey(
+      'kanji',
+      state.currentCorrectWord.kanji
+    );
+
+    if (!words || words.length === 0) {
+      console.log('No words found with the given kanji');
+      return;
+    }
+
+    // Find the specific word that matches all criteria
+    const wordToDelete = words.find(
+      (word) =>
+        word.reading === state.currentCorrectWord.reading &&
+        word.glossary === state.currentCorrectWord.glossary
+    );
+
+    if (!wordToDelete) {
+      console.log('No exact match found');
+      return;
+    }
+
+    // Delete the matching word
+    const transaction = db.transaction(['favWords'], 'readwrite');
+    const objectStore = transaction.objectStore('favWords');
+    const deleteRequest = objectStore.delete(wordToDelete.id);
+
+    return new Promise((resolve, reject) => {
+      deleteRequest.onsuccess = () => {
+        console.log('Word deleted successfully');
+        resolve('Word deleted successfully');
+      };
+
+      deleteRequest.onerror = (event) => {
+        console.error('Error deleting word:', event.target.error);
+        reject(event.target.error);
+      };
+
+      transaction.oncomplete = () => {
+        console.log('Transaction completed');
+      };
+    });
+  } catch (error) {
+    console.error('Error in deleteRecord:', error);
+    throw error;
+  }
+}
+
 export async function compareThreeWords(
   kanjiValue,
   readingValue,
