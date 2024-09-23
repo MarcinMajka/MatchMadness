@@ -126,6 +126,31 @@ window.getAllWordsByKey = function (key, val) {
   getAllWordsByKey(key, val);
 };
 
+const getAllWords = () => {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(['favWords'], 'readonly');
+    const objectStore = transaction.objectStore('favWords');
+    const request = objectStore.getAll();
+
+    request.onsuccess = () => {
+      if (request.result) {
+        console.log(`All items:`, request.result);
+        resolve(request.result);
+      } else {
+        console.log('No item found');
+        resolve(null);
+      }
+    };
+
+    request.onerror = (event) => {
+      console.error('Error getting item: ' + event.target.error);
+      reject(event.target.error);
+    };
+  });
+};
+
+window.getAllWords = getAllWords;
+
 export async function deleteRecord(state) {
   try {
     // Get all words with the matching kanji
