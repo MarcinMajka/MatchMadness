@@ -212,21 +212,78 @@ a {
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='red' d='M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'/%3E%3C/svg%3E") no-repeat center center;
 }
 
+#favWordsPage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #favWordsInputs {
   display: flex;
   flex-direction: column;
-  max-width: 300px;
-  margin: 0 auto;
+  width: 300px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #favWordsInputs>* {
   width: 100%;
   margin-bottom: 10px;
   padding: 8px;
+  box-sizing: border-box;
   text-align: center;
 }
 
 textarea {
   resize: vertical;
   min-height: 40px;
+}
+
+#likeButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#favWordsList {
+  width: 300px;
+  padding: 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  list-style-type: none;
+}
+
+#favWordsList li {
+  background-color: white;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+#favWordsList li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#favWordsList li .kanji {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+}
+
+#favWordsList li .reading {
+  font-size: 0.9em;
+  color: #666;
+  margin-left: 10px;
 }
