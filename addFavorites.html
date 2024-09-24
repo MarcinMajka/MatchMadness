@@ -7,11 +7,15 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="favWordsInputs">
-        <input type="text" id="favKanji" placeholder="Kanji" >
-        <input type="text" id="favReading" placeholder="Reading">
-        <textarea id="favGlossary" placeholder="Glossary"></textarea>
-        <button id="likeButton" class="button">Save</button>
+    <div id="favWordsPage">
+        <div id="favWordsInputs">
+            <input type="text" id="favKanji" placeholder="Kanji">
+            <input type="text" id="favReading" placeholder="Reading">
+            <textarea id="favGlossary" placeholder="Glossary"></textarea>
+            <button id="likeButton" class="button">Save</button>
+        </div>
+        <div id="loadingIndicator" style="display: none;">Loading liked words...</div>
+        <ul id="favWordsList"></ul>
     </div>
 
     <script type="module" src="favoriteWords.js">
