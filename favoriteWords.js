@@ -2,27 +2,33 @@ import { getElement } from './wrappers.js';
 
 let db;
 
-const request = indexedDB.open('FavoriteWords', 1);
+const openDatabase = () => {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('FavoriteWords', 1);
 
-request.onerror = (event) => {
-  console.error('Database error: ' + event.target.error);
-};
+    request.onerror = (event) => {
+      console.error('Database error: ' + event.target.error);
+      reject(event.target.error);
+    };
 
-request.onsuccess = (event) => {
-  db = event.target.result;
-  console.log('Database opened successfully');
-};
+    request.onsuccess = (event) => {
+      db = event.target.result;
+      console.log('Database opened successfully');
+      resolve(db);
+    };
 
-request.onupgradeneeded = (event) => {
-  db = event.target.result;
-  const objectStore = db.createObjectStore('favWords', {
-    keyPath: 'id',
-    autoIncrement: true,
+    request.onupgradeneeded = (event) => {
+      db = event.target.result;
+      const objectStore = db.createObjectStore('favWords', {
+        keyPath: 'id',
+        autoIncrement: true,
+      });
+      objectStore.createIndex('kanji', 'kanji', { unique: false });
+      objectStore.createIndex('reading', 'reading', { unique: false });
+      objectStore.createIndex('glossary', 'glossary', { unique: false });
+      console.log('Object store created');
+    };
   });
-  objectStore.createIndex('kanji', 'kanji', { unique: false });
-  objectStore.createIndex('reading', 'reading', { unique: false });
-  objectStore.createIndex('glossary', 'glossary', { unique: false });
-  console.log('Object store created');
 };
 
 export const addWord = (kanji, reading, glossary) => {
@@ -126,27 +132,40 @@ window.getAllWordsByKey = function (key, val) {
   getAllWordsByKey(key, val);
 };
 
-const getAllWords = () => {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['favWords'], 'readonly');
-    const objectStore = transaction.objectStore('favWords');
-    const request = objectStore.getAll();
+const getAllWords = async () => {
+  try {
+    const db = await openDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(['favWords'], 'readonly');
+      const objectStore = transaction.objectStore('favWords');
+      const request = objectStore.getAll();
 
-    request.onsuccess = () => {
-      if (request.result) {
-        console.log(`All items:`, request.result);
-        resolve(request.result);
-      } else {
-        console.log('No item found');
-        resolve(null);
-      }
-    };
+      request.onsuccess = () => {
+        if (request.result) {
+          console.log(`All items:`, request.result);
+          console.log(`Type of result:`, typeof request.result);
+          console.log(`Is array:`, Array.isArray(request.result));
 
-    request.onerror = (event) => {
-      console.error('Error getting item: ' + event.target.error);
-      reject(event.target.error);
-    };
-  });
+          // Ensure we're always returning an array
+          const resultArray = Array.isArray(request.result)
+            ? request.result
+            : [request.result];
+          resolve(resultArray);
+        } else {
+          console.log('No items found');
+          resolve([]); // Return an empty array if no items found
+        }
+      };
+
+      request.onerror = (event) => {
+        console.error('Error getting items: ' + event.target.error);
+        reject(event.target.error);
+      };
+    });
+  } catch (error) {
+    console.error('Error in getAllWords:', error);
+    throw error;
+  }
 };
 
 window.getAllWords = getAllWords;
@@ -177,6 +196,7 @@ export async function deleteRecord(state) {
     }
 
     // Delete the matching word
+    const db = await openDatabase();
     const transaction = db.transaction(['favWords'], 'readwrite');
     const objectStore = transaction.objectStore('favWords');
     const deleteRequest = objectStore.delete(wordToDelete.id);
@@ -208,6 +228,7 @@ export async function compareThreeWords(
   glossaryValue
 ) {
   try {
+    const db = await openDatabase();
     const [kanjiResult, readingResult, glossaryResult] = await Promise.all([
       getWordByKey('kanji', kanjiValue),
       getWordByKey('reading', readingValue),
@@ -244,6 +265,64 @@ window.getWordByKey = function (key, val) {
   getWordByKey(key, val);
 };
 
+const loadingIndicator = document.getElementById('loadingIndicator');
+
+const showLoadingSpinner = () => {
+  loadingIndicator.style.display = 'block';
+};
+
+const hideLoadingSpinner = () => {
+  loadingIndicator.style.display = 'none';
+};
+
+const showLikedWordsList = async () => {
+  const unorderedList = getElement('#favWordsList');
+
+  try {
+    const likedWords = await getAllWords();
+    console.log('Liked words:', likedWords);
+
+    // Clear the list before adding new items
+    unorderedList.innerHTML = '';
+
+    if (Array.isArray(likedWords)) {
+      likedWords.forEach((word) => {
+        const li = document.createElement('li');
+        const kanjiSpan = document.createElement('span');
+        const readingSpan = document.createElement('span');
+
+        kanjiSpan.textContent = word.kanji;
+        kanjiSpan.className = 'kanji';
+
+        readingSpan.textContent = word.reading;
+        readingSpan.className = 'reading';
+
+        li.appendChild(kanjiSpan);
+        li.appendChild(readingSpan);
+        unorderedList.appendChild(li);
+      });
+    } else {
+      console.error('likedWords is not an array:', likedWords);
+    }
+  } catch (error) {
+    console.error('Error retrieving liked words:', error);
+  } finally {
+    hideLoadingSpinner();
+  }
+};
+
+window.onload = async () => {
+  showLoadingSpinner();
+
+  try {
+    await openDatabase();
+    await showLikedWordsList();
+  } catch (error) {
+    console.error('Failed to show liked words:', error);
+    hideLoadingSpinner();
+  }
+};
+
 export const getFavoriteWordData = (
   kanjiSelector,
   readingSelector,
@@ -268,6 +347,7 @@ export const addClickListenerToLikeButton = (
       glossarySelector
     );
     addWord(kanji, reading, glossary);
+    showLikedWordsList();
   });
 };
 
@@ -287,3 +367,11 @@ function initializeFavoriteWords() {
 }
 
 initializeFavoriteWords();
+window.onload = async () => {
+  try {
+    await openDatabase();
+    await showLikedWordsList();
+  } catch (error) {
+    console.error('Failed to show liked words:', error);
+  }
+};
