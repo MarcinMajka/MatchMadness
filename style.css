@@ -136,6 +136,7 @@ a {
 }
 
 .buttonContainer {
+  background-color: #527324;
   display: flex;
   flex-direction: row;
   font-weight: bold;
@@ -187,10 +188,6 @@ a {
   align-items: center;
 }
 
-.buttonContainer {
-  background-color: #00FF00;
-}
-
 .wordMadnessButtonAndLicenseContainer {
   display: flex;
   justify-content: space-around;
@@ -240,8 +237,6 @@ textarea {
 }
 
 #likeButton {
-  background-color: #4CAF50;
-  color: white;
   border: none;
   padding: 10px;
   text-align: center;
