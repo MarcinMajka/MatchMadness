@@ -265,16 +265,6 @@ window.getWordByKey = function (key, val) {
   getWordByKey(key, val);
 };
 
-const loadingIndicator = document.getElementById('loadingIndicator');
-
-const showLoadingSpinner = () => {
-  loadingIndicator.style.display = 'block';
-};
-
-const hideLoadingSpinner = () => {
-  loadingIndicator.style.display = 'none';
-};
-
 const showLikedWordsList = async () => {
   const unorderedList = getElement('#favWordsList');
 
@@ -308,20 +298,7 @@ const showLikedWordsList = async () => {
     } catch (error) {
       console.error('Error retrieving liked words:', error);
     } finally {
-      hideLoadingSpinner();
     }
-  }
-};
-
-window.onload = async () => {
-  showLoadingSpinner();
-
-  try {
-    await openDatabase();
-    await showLikedWordsList();
-  } catch (error) {
-    console.error('Failed to show liked words:', error);
-    hideLoadingSpinner();
   }
 };
 
@@ -369,6 +346,7 @@ function initializeFavoriteWords() {
 }
 
 initializeFavoriteWords();
+
 window.onload = async () => {
   try {
     await openDatabase();
