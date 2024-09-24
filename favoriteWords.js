@@ -348,10 +348,5 @@ function initializeFavoriteWords() {
 initializeFavoriteWords();
 
 window.onload = async () => {
-  try {
-    await openDatabase();
-    await showLikedWordsList();
-  } catch (error) {
-    console.error('Failed to show liked words:', error);
-  }
+  await showLikedWordsList();
 };
