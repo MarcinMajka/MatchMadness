@@ -278,36 +278,38 @@ const hideLoadingSpinner = () => {
 const showLikedWordsList = async () => {
   const unorderedList = getElement('#favWordsList');
 
-  try {
-    const likedWords = await getAllWords();
-    console.log('Liked words:', likedWords);
+  if (unorderedList) {
+    try {
+      const likedWords = await getAllWords();
+      console.log('Liked words:', likedWords);
 
-    // Clear the list before adding new items
-    unorderedList.innerHTML = '';
+      // Clear the list before adding new items
+      unorderedList.innerHTML = '';
 
-    if (Array.isArray(likedWords)) {
-      likedWords.forEach((word) => {
-        const li = document.createElement('li');
-        const kanjiSpan = document.createElement('span');
-        const readingSpan = document.createElement('span');
+      if (Array.isArray(likedWords)) {
+        likedWords.forEach((word) => {
+          const li = document.createElement('li');
+          const kanjiSpan = document.createElement('span');
+          const readingSpan = document.createElement('span');
 
-        kanjiSpan.textContent = word.kanji;
-        kanjiSpan.className = 'kanji';
+          kanjiSpan.textContent = word.kanji;
+          kanjiSpan.className = 'kanji';
 
-        readingSpan.textContent = word.reading;
-        readingSpan.className = 'reading';
+          readingSpan.textContent = word.reading;
+          readingSpan.className = 'reading';
 
-        li.appendChild(kanjiSpan);
-        li.appendChild(readingSpan);
-        unorderedList.appendChild(li);
-      });
-    } else {
-      console.error('likedWords is not an array:', likedWords);
+          li.appendChild(kanjiSpan);
+          li.appendChild(readingSpan);
+          unorderedList.appendChild(li);
+        });
+      } else {
+        console.error('likedWords is not an array:', likedWords);
+      }
+    } catch (error) {
+      console.error('Error retrieving liked words:', error);
+    } finally {
+      hideLoadingSpinner();
     }
-  } catch (error) {
-    console.error('Error retrieving liked words:', error);
-  } finally {
-    hideLoadingSpinner();
   }
 };
 
