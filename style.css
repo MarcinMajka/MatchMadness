@@ -249,53 +249,43 @@ textarea {
 }
 
 #favWordsList {
-  width: 300px;
+  width: 500px;
   padding: 0;
   background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  list-style-type: none;
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
-#favWordsList li {
+.word-item {
   background-color: white;
-  margin: 10px;
   padding: 15px;
   border-radius: 4px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   align-items: center;
-  position: relative;
 }
 
-#favWordsList li:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  /* Ensure hovered item is above others */
+.kanji,
+.reading {
+  font-size: 30px;
 }
 
-#favWordsList li .kanji,
-#favWordsList li .reading {
-  font-size: 1em;
-  color: #333;
+.reading {
+  text-align: right;
 }
 
-#favWordsList li .glossary {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
+.glossary {
+  grid-column: 1 / -1;
   background-color: #f8f9fa;
+  font-size: 30px;
+  text-align: center;
   padding: 10px;
-  border-radius: 0 0 4px 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 20;
+  border-radius: 10px;
+  margin-top: 20px;
+  display: none;
 }
 
-#favWordsList li:hover .glossary {
+.word-item.expanded .glossary {
   display: block;
 }

@@ -266,19 +266,21 @@ window.getWordByKey = function (key, val) {
 };
 
 const showLikedWordsList = async () => {
-  const unorderedList = getElement('#favWordsList');
+  const favWordList = getElement('#favWordsList');
 
-  if (unorderedList) {
+  if (favWordList) {
     try {
       const likedWords = await getAllWords();
       console.log('Liked words:', likedWords);
 
       // Clear the list before adding new items
-      unorderedList.innerHTML = '';
+      favWordList.innerHTML = '';
 
       if (Array.isArray(likedWords)) {
         likedWords.forEach((word) => {
-          const li = document.createElement('li');
+          const wordItem = document.createElement('div');
+          wordItem.className = 'word-item';
+
           const kanjiSpan = document.createElement('span');
           const readingSpan = document.createElement('span');
           const glossaryDiv = document.createElement('div');
@@ -289,13 +291,22 @@ const showLikedWordsList = async () => {
           readingSpan.textContent = word.reading;
           readingSpan.className = 'reading';
 
-          glossaryDiv.textContent = word.glossary;
+          glossaryDiv.textContent = word.glossary || 'No glossary available';
           glossaryDiv.className = 'glossary';
 
-          li.appendChild(kanjiSpan);
-          li.appendChild(readingSpan);
-          li.appendChild(glossaryDiv);
-          unorderedList.appendChild(li);
+          wordItem.appendChild(kanjiSpan);
+          wordItem.appendChild(readingSpan);
+          wordItem.appendChild(glossaryDiv);
+          favWordList.appendChild(wordItem);
+
+          // Add event listeners for mouse enter and leave
+          wordItem.addEventListener('mouseenter', () => {
+            wordItem.classList.add('expanded');
+          });
+
+          wordItem.addEventListener('mouseleave', () => {
+            wordItem.classList.remove('expanded');
+          });
         });
       } else {
         console.error('likedWords is not an array:', likedWords);
