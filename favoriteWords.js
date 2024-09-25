@@ -281,6 +281,7 @@ const showLikedWordsList = async () => {
           const li = document.createElement('li');
           const kanjiSpan = document.createElement('span');
           const readingSpan = document.createElement('span');
+          const glossaryDiv = document.createElement('div');
 
           kanjiSpan.textContent = word.kanji;
           kanjiSpan.className = 'kanji';
@@ -288,8 +289,12 @@ const showLikedWordsList = async () => {
           readingSpan.textContent = word.reading;
           readingSpan.className = 'reading';
 
+          glossaryDiv.textContent = word.glossary;
+          glossaryDiv.className = 'glossary';
+
           li.appendChild(kanjiSpan);
           li.appendChild(readingSpan);
+          li.appendChild(glossaryDiv);
           unorderedList.appendChild(li);
         });
       } else {
@@ -297,7 +302,6 @@ const showLikedWordsList = async () => {
       }
     } catch (error) {
       console.error('Error retrieving liked words:', error);
-    } finally {
     }
   }
 };
