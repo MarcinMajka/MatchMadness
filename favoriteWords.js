@@ -284,6 +284,7 @@ const showLikedWordsList = async () => {
           const kanjiSpan = document.createElement('span');
           const readingSpan = document.createElement('span');
           const glossaryDiv = document.createElement('div');
+          const glossarySpan = document.createElement('span');
 
           kanjiSpan.textContent = word.kanji;
           kanjiSpan.className = 'kanji';
@@ -291,21 +292,21 @@ const showLikedWordsList = async () => {
           readingSpan.textContent = word.reading;
           readingSpan.className = 'reading';
 
-          glossaryDiv.textContent = word.glossary || 'No glossary available';
+          glossarySpan.textContent = word.glossary || 'No glossary available';
           glossaryDiv.className = 'glossary';
+          glossaryDiv.appendChild(glossarySpan);
 
           wordItem.appendChild(kanjiSpan);
           wordItem.appendChild(readingSpan);
           wordItem.appendChild(glossaryDiv);
           favWordList.appendChild(wordItem);
 
-          // Add event listeners for mouse enter and leave
-          wordItem.addEventListener('mouseenter', () => {
-            wordItem.classList.add('expanded');
-          });
-
-          wordItem.addEventListener('mouseleave', () => {
-            wordItem.classList.remove('expanded');
+          // Toggle expanded class on click
+          wordItem.addEventListener('click', () => {
+            wordItem.classList.toggle('expanded');
+            if (wordItem.classList.contains('expanded')) {
+              fitTextToContainer(glossarySpan);
+            }
           });
         });
       } else {
@@ -316,6 +317,16 @@ const showLikedWordsList = async () => {
     }
   }
 };
+
+function fitTextToContainer(element) {
+  let fontSize = 30;
+  element.style.fontSize = fontSize + 'px';
+
+  while (element.scrollHeight > element.offsetHeight && fontSize > 10) {
+    fontSize--;
+    element.style.fontSize = fontSize + 'px';
+  }
+}
 
 export const getFavoriteWordData = (
   kanjiSelector,

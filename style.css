@@ -291,8 +291,18 @@ textarea {
   border-radius: 10px;
   margin-top: 20px;
   display: none;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+}
+
+.glossary span {
+  font-size: 30px;
+  line-height: 1.2;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .word-item.expanded .glossary {
-  display: block;
+  display: flex;
 }
