@@ -132,7 +132,7 @@ window.getAllWordsByKey = function (key, val) {
   getAllWordsByKey(key, val);
 };
 
-const getAllWords = async () => {
+export const getAllWords = async () => {
   try {
     const db = await openDatabase();
     return new Promise((resolve, reject) => {
