@@ -15,7 +15,12 @@ setPairsToRenderInput.addEventListener('input', (event) => {
 favWordsButton.onclick = async function () {
   try {
     const allFavWords = await getAllWords();
-    console.log(allFavWords);
+    const allFavWordsObjectsInArray = [...allFavWords];
+    console.log(allFavWordsObjectsInArray);
+    localStorage.setItem(
+      'currentSet',
+      JSON.stringify(allFavWordsObjectsInArray)
+    );
   } catch (error) {
     console.log(error);
   }

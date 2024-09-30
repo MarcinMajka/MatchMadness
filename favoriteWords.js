@@ -228,6 +228,7 @@ export async function compareThreeWords(
   glossaryValue
 ) {
   try {
+    console.log('Running compareThreeWords()');
     const db = await openDatabase();
     const [kanjiResult, readingResult, glossaryResult] = await Promise.all([
       getWordByKey('kanji', kanjiValue),
