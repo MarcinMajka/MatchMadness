@@ -354,6 +354,9 @@ export const addClickListenerToLikeButton = (
     );
     addWord(kanji, reading, glossary);
     showLikedWordsList();
+    kanjiSelector.value = '';
+    readingSelector.value = '';
+    glossarySelector.value = '';
   });
 };
 
