@@ -269,53 +269,46 @@ window.getWordByKey = function (key, val) {
 const showLikedWordsList = async () => {
   const favWordList = getElement('#favWordsList');
 
-  if (favWordList) {
-    try {
-      const likedWords = await getAllWords();
-      console.log('Liked words:', likedWords);
+  try {
+    const likedWords = await getAllWords();
+    console.log('Liked words:', likedWords);
 
-      // Clear the list before adding new items
-      favWordList.innerHTML = '';
+    // Clear the list before adding new items
+    favWordList.innerHTML = '';
 
-      if (Array.isArray(likedWords)) {
-        likedWords.forEach((word) => {
-          const wordItem = document.createElement('div');
-          wordItem.className = 'word-item';
+    likedWords.forEach((word) => {
+      const wordItem = document.createElement('div');
+      wordItem.className = 'word-item';
 
-          const kanjiSpan = document.createElement('span');
-          const readingSpan = document.createElement('span');
-          const glossaryDiv = document.createElement('div');
-          const glossarySpan = document.createElement('span');
+      const kanjiSpan = document.createElement('span');
+      const readingSpan = document.createElement('span');
+      const glossaryDiv = document.createElement('div');
+      const glossarySpan = document.createElement('span');
 
-          kanjiSpan.textContent = word.kanji;
-          kanjiSpan.className = 'kanji';
+      kanjiSpan.textContent = word.kanji;
+      kanjiSpan.className = 'kanji';
 
-          readingSpan.textContent = word.reading;
-          readingSpan.className = 'reading';
+      readingSpan.textContent = word.reading;
+      readingSpan.className = 'reading';
 
-          glossarySpan.textContent = word.glossary || 'No glossary available';
-          glossaryDiv.className = 'glossary';
-          glossaryDiv.appendChild(glossarySpan);
+      glossarySpan.textContent = word.glossary || 'No glossary available';
+      glossaryDiv.className = 'glossary';
+      glossaryDiv.appendChild(glossarySpan);
 
-          wordItem.appendChild(kanjiSpan);
-          wordItem.appendChild(readingSpan);
-          wordItem.appendChild(glossaryDiv);
-          favWordList.appendChild(wordItem);
+      wordItem.appendChild(kanjiSpan);
+      wordItem.appendChild(readingSpan);
+      wordItem.appendChild(glossaryDiv);
+      favWordList.appendChild(wordItem);
 
-          // Toggle expanded class on click
-          wordItem.addEventListener('click', () => {
-            wordItem.classList.toggle('expanded');
-            if (wordItem.classList.contains('expanded')) {
-              fitTextToContainer(glossarySpan);
-            }
-          });
-        });
-      } else {
-        console.error('likedWords is not an array:', likedWords);
-      }
-    } catch (error) {
-      console.error('Error retrieving liked words:', error);
-    }
+      wordItem.addEventListener('click', () => {
+        wordItem.classList.toggle('expanded');
+        if (wordItem.classList.contains('expanded')) {
+          fitTextToContainer(glossarySpan);
+        }
+      });
+    });
+  } catch (error) {
+    console.error('Error retrieving liked words:', error);
   }
 };
 
