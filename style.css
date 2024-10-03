@@ -306,3 +306,8 @@ textarea {
 .word-item.expanded .glossary {
   display: flex;
 }
+
+.favWordsAdded {
+  background-color: lightgreen;
+
+}
