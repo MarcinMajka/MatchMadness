@@ -158,6 +158,7 @@ a {
 .menuButtonContainer {
   margin: 5px;
   padding: 10px;
+  width: 200px;
   border-radius: 25px;
 }
 
@@ -309,5 +310,4 @@ textarea {
 
 .favWordsAdded {
   background-color: lightgreen;
-
 }
