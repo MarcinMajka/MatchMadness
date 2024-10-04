@@ -156,10 +156,32 @@ a {
 }
 
 .menuButtonContainer {
-  margin: 5px;
-  padding: 10px;
-  width: 200px;
+  width: 300px;
   border-radius: 25px;
+}
+
+.menuButton {
+  width: 100%;
+  padding: 10px;
+  margin: 5px;
+  text-align: center;
+  /* Makes both <a> and <button> behave the same */
+  display: block;
+  /* Ensures padding and borders are included in width */
+  box-sizing: border-box;
+  font-weight: bold;
+  border-radius: 25px;
+  background-color: antiquewhite;
+  letter-spacing: 4px;
+}
+
+a.menuButton {
+  text-decoration: none;
+}
+
+.menuButton:hover {
+  background-color: #3b4953;
+  color: antiquewhite;
 }
 
 #word {
