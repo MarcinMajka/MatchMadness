@@ -230,21 +230,29 @@ export async function compareThreeWords(
   try {
     console.log('Running compareThreeWords()');
     const db = await openDatabase();
-    const [kanjiResult, readingResult, glossaryResult] = await Promise.all([
-      getWordByKey('kanji', kanjiValue),
-      getWordByKey('reading', readingValue),
-      getWordByKey('glossary', glossaryValue),
+    const [kanjiResults, readingResults, glossaryResults] = await Promise.all([
+      getAllWordsByKey('kanji', kanjiValue),
+      getAllWordsByKey('reading', readingValue),
+      getAllWordsByKey('glossary', glossaryValue),
     ]);
 
-    if (!kanjiResult) {
+    if (!kanjiResults || kanjiResults.length === 0) {
       console.log('Not in the database');
       return false;
     }
 
-    if (
-      kanjiResult.kanji === readingResult.kanji &&
-      kanjiResult.kanji === glossaryResult.kanji
-    ) {
+    // Find a word that matches all three criteria
+    const matchingWord = kanjiResults.find(
+      (word) =>
+        // Check if there's any word in readingResults with the same id
+        readingResults.some((r) => r.id === word.id) &&
+        // AND check if there's any word in glossaryResults with the same id
+        glossaryResults.some((g) => g.id === word.id)
+    );
+    // find() returns the first word that satisfies both conditions,
+    // or undefined if no such word is found
+
+    if (matchingWord) {
       console.log('Comparison successful, returning true');
       return true;
     } else {
