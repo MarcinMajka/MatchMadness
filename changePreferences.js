@@ -15,8 +15,13 @@ setPairsToRenderInput.addEventListener('input', (event) => {
 favWordsButton.onclick = async function () {
   try {
     const allFavWords = await getAllWords();
+
+    if (allFavWords.length === 0) {
+      alert("You don't have any favorite words yet. Like some words first!");
+      return;
+    }
+
     const allFavWordsObjectsInArray = [...allFavWords];
-    console.log(allFavWordsObjectsInArray);
     localStorage.setItem(
       'currentSet',
       JSON.stringify(allFavWordsObjectsInArray)
