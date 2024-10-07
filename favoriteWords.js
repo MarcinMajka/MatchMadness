@@ -49,37 +49,6 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
-export const removeWord = (kanjiToRemove) => {
-  const transaction = db.transaction(['favWords'], 'readwrite');
-  const objectStore = transaction.objectStore('favWords');
-  const index = objectStore.index('kanji');
-
-  const request = index.getKey(kanjiToRemove);
-
-  request.onsuccess = (event) => {
-    const key = event.target.result;
-    if (key) {
-      const deleteRequest = objectStore.delete(key);
-      deleteRequest.onsuccess = () => {
-        console.log('Item removed successfully');
-      };
-      deleteRequest.onerror = (event) => {
-        console.error('Error removing item: ' + event.target.error);
-      };
-    } else {
-      console.log('Item with kanji ' + kanji + ' not found');
-    }
-  };
-
-  request.onerror = (event) => {
-    console.error('Error finding item: ' + event.target.error);
-  };
-};
-
-window.removeWord = (kanjiToRemove) => {
-  removeWord(kanjiToRemove);
-};
-
 export const getWordByKey = (key, val) => {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['favWords'], 'readonly');
@@ -274,6 +243,56 @@ window.getWordByKey = function (key, val) {
   getWordByKey(key, val);
 };
 
+const removeWord = async (word) => {
+  try {
+    const db = await openDatabase();
+    const transaction = db.transaction(['favWords'], 'readwrite');
+    const objectStore = transaction.objectStore('favWords');
+    const index = objectStore.index('kanji');
+
+    // Get all words with the matching kanji
+    const request = index.getAll(word.kanji);
+
+    request.onsuccess = (event) => {
+      const matchingWords = event.target.result;
+
+      if (matchingWords.length === 0) {
+        console.log('No words found with the given kanji');
+        return;
+      }
+
+      // Find the specific word that matches all criteria
+      const wordToDelete = matchingWords.find(
+        (w) => w.reading === word.reading && w.glossary === word.glossary
+      );
+
+      if (!wordToDelete) {
+        console.log('No exact match found');
+        return;
+      }
+
+      // Delete the matching word
+      const deleteRequest = objectStore.delete(wordToDelete.id);
+
+      deleteRequest.onsuccess = () => {
+        console.log('Word deleted successfully');
+        // Refresh the word list after successful deletion
+        showLikedWordsList();
+      };
+
+      deleteRequest.onerror = (event) => {
+        console.error('Error deleting word:', event.target.error);
+      };
+    };
+
+    request.onerror = (event) => {
+      console.error('Error finding words:', event.target.error);
+    };
+  } catch (error) {
+    console.error('Error in removeWord:', error);
+  }
+};
+
 const showLikedWordsList = async () => {
   const favWordList = getElement('#favWordsList');
 
@@ -290,6 +309,7 @@ const showLikedWordsList = async () => {
 
       const kanjiSpan = document.createElement('span');
       const readingSpan = document.createElement('span');
+      const removeWordButton = document.createElement('button');
       const glossaryDiv = document.createElement('div');
       const glossarySpan = document.createElement('span');
 
@@ -299,12 +319,21 @@ const showLikedWordsList = async () => {
       readingSpan.textContent = word.reading;
       readingSpan.className = 'reading';
 
+      removeWordButton.textContent = 'X';
+      removeWordButton.className = 'removeWordButton';
+      removeWordButton.onclick = (e) => {
+        // Prevent triggering wordItem click event
+        e.stopPropagation();
+        removeWord(word);
+      };
+
       glossarySpan.textContent = word.glossary || 'No glossary available';
       glossaryDiv.className = 'glossary';
       glossaryDiv.appendChild(glossarySpan);
 
       wordItem.appendChild(kanjiSpan);
       wordItem.appendChild(readingSpan);
+      wordItem.appendChild(removeWordButton);
       wordItem.appendChild(glossaryDiv);
       favWordList.appendChild(wordItem);
 

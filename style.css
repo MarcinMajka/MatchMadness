@@ -282,12 +282,12 @@ textarea {
 
 .word-item {
   background-color: white;
-  margin: 0 10px 0 10px;
+  margin: 0 10px 10px 10px;
   padding: 15px;
   border: 5px solid transparent;
   border-radius: 40px;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr auto;
   align-items: center;
 }
 
@@ -303,6 +303,21 @@ textarea {
 
 .reading {
   text-align: right;
+}
+
+.removeWordButton {
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
 }
 
 .glossary {
