@@ -1,7 +1,7 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
-import { addWord, getWordByKey, deleteRecord } from './favoriteWords.js';
-import { getElement, addElement, setTimeoutWrapper } from './wrappers.js';
+import { addWord, deleteRecord } from './favoriteWords.js';
+import { addElement, setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
   highlightElements,

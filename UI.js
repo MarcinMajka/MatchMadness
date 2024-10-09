@@ -5,7 +5,7 @@ import {
   roundIsFinished,
   getValuesForRound,
 } from './matchMadness.js';
-import { getWordByKey, compareThreeWords } from './favoriteWords.js';
+import { compareThreeWords } from './favoriteWords.js';
 
 export const ANIMATION_DURATION = 250;
 
