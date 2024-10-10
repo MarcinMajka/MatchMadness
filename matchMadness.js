@@ -38,9 +38,24 @@ const initialState = {
 const loadGamePreferences = () => {
   const currentSet = JSON.parse(localStorage.getItem('currentSet')) || 0;
   let pairsToRender = Math.min(
-    localStorage.getItem('pairsToRender') || 5,
+    Math.max(
+      // Get the value from localStorage, or use '7' if not set
+      Math.min(
+        localStorage.getItem('pairsToRender') || 5,
+        // Ensure the value doesn't exceed 7
+        7
+      ),
+      // Ensure the value is at least 3
+      3
+    ),
+    // Finally, ensure the value doesn't exceed the length of currentSet
     currentSet.length
   );
+
+  // At this point, pairsToRender will be:
+  // 1. Between 3 and 7 (inclusive) if currentSet.length > 7
+  // 2. Between 3 and currentSet.length (inclusive) if 3 <= currentSet.length <= 7
+  // 3. Equal to currentSet.length if currentSet.length < 3
 
   return { currentSet: shuffleArray(currentSet), pairsToRender };
 };
