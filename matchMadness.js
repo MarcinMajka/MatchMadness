@@ -1,7 +1,7 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
 import { addWord, deleteRecord } from './favoriteWords.js';
-import { addElement, setTimeoutWrapper } from './wrappers.js';
+import { setTimeoutWrapper } from './wrappers.js';
 import {
   ANIMATION_DURATION,
   highlightElements,
@@ -93,40 +93,6 @@ const startGame = (initialState) => {
       startTimer(state);
     });
   }
-};
-
-export const getValuesForRound = (state, pairRenderLimitIndex) => {
-  const columnElementNodes = {
-    left: [],
-    right: [],
-  };
-
-  const prepareNodeForGame = (text) => {
-    const node = addElement('div');
-    node.classList.add('box');
-    node.innerText = text;
-
-    return node;
-  };
-
-  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
-    const leftColumnElement = prepareNodeForGame(
-      state.currentSet[state.lastUsedTripletIndex].kanji
-    );
-    const rightColumnElement = prepareNodeForGame(
-      state.currentSet[state.lastUsedTripletIndex].reading
-    );
-
-    columnElementNodes.left.push(leftColumnElement);
-    columnElementNodes.right.push(rightColumnElement);
-
-    state.lastUsedTripletIndex++;
-  }
-
-  shuffleArray(columnElementNodes.left);
-  shuffleArray(columnElementNodes.right);
-
-  return columnElementNodes;
 };
 
 const handleColumnElementClick = (state, clickedElement, selectedColumn) => {

@@ -1,21 +1,80 @@
-import { getElement } from './wrappers.js';
+import { addElement, getElement } from './wrappers.js';
 import { stopTimer } from './timer.js';
-import {
-  checkIfMatch,
-  roundIsFinished,
-  getValuesForRound,
-} from './matchMadness.js';
+import { checkIfMatch, roundIsFinished } from './matchMadness.js';
 import { compareThreeWords } from './favoriteWords.js';
+import { shuffleArray } from './utils.js';
 
 export const ANIMATION_DURATION = 250;
 
-/**
- * Dynamically create the divs for leftColumnValues and rightColumnValues and append them to the HTML.
- * @param  pairRenderLimitIndex - index of the last pair to render + 1
- */
+// Helper function to create an empty box
+const createEmptyBox = () => {
+  const node = addElement('div');
+  node.classList.add('box');
+  return node;
+};
+
+const createEmptyBoxes = (state, pairRenderLimitIndex) => {
+  const columnElementNodes = {
+    left: [],
+    right: [],
+  };
+
+  const boxCount = pairRenderLimitIndex - state.lastUsedTripletIndex;
+
+  for (let i = 0; i < boxCount; i++) {
+    columnElementNodes.left.push(createEmptyBox());
+    columnElementNodes.right.push(createEmptyBox());
+  }
+
+  return columnElementNodes;
+};
+
+const appendBoxesToColumns = (state, columnElementNodes) => {
+  const columns = {
+    left: getElement('.leftColumn'),
+    right: getElement('.rightColumn'),
+  };
+
+  for (let i = 0; i < columnElementNodes.left.length; i++) {
+    columns.left.appendChild(columnElementNodes.left[i]);
+    columns.right.appendChild(columnElementNodes.right[i]);
+
+    columnElementNodes.left[i].addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    );
+    columnElementNodes.right[i].addEventListener('click', (event) =>
+      checkIfMatch(event, state)
+    );
+  }
+};
+
+const fillBoxesWithValues = (
+  state,
+  columnElementNodes,
+  pairRenderLimitIndex
+) => {
+  const leftValues = [];
+  const rightValues = [];
+
+  while (state.lastUsedTripletIndex < pairRenderLimitIndex) {
+    leftValues.push(state.currentSet[state.lastUsedTripletIndex].kanji);
+    rightValues.push(state.currentSet[state.lastUsedTripletIndex].reading);
+    state.lastUsedTripletIndex++;
+  }
+
+  shuffleArray(leftValues);
+  shuffleArray(rightValues);
+
+  for (let i = 0; i < columnElementNodes.left.length; i++) {
+    columnElementNodes.left[i].innerText = leftValues[i];
+    columnElementNodes.right[i].innerText = rightValues[i];
+  }
+};
+
 export const setupRound = (state, pairRenderLimitIndex) => {
-  const columnElementNodes = getValuesForRound(state, pairRenderLimitIndex);
-  appendValuesToColumns(state, columnElementNodes);
+  const columnElementNodes = createEmptyBoxes(state, pairRenderLimitIndex);
+  appendBoxesToColumns(state, columnElementNodes);
+  fillBoxesWithValues(state, columnElementNodes, pairRenderLimitIndex);
 };
 
 /**
