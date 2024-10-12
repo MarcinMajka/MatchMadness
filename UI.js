@@ -77,6 +77,12 @@ export const setupRound = (state, pairRenderLimitIndex) => {
   fillBoxesWithValues(state, columnElementNodes, pairRenderLimitIndex);
 };
 
+const clearUpAfterRound = (elements) => {
+  elements.forEach((element) => {
+    element.innerHTML = '';
+  });
+};
+
 /**
  * Highlight the elements for a short period of time by adding a class to them and then removing it after a timeout.
  * @param elements - an array of DOM elements
@@ -98,13 +104,13 @@ export const highlightElements = (elements, className) => {
 
 /**
  *
- * @param elements - array of elements to remove, or to remove the "selected" class
- * @param correctOrWrong - string of the class name of the element to remove -> "correct" or "wrong"
+ * @param elements - array of elements to grey out, or to remove the "selected" class
+ * @param correctOrWrong - string of the class name of the element to update1 -> "correct" or "wrong"
  */
 
-export const removeElements = (elements, correctOrWrong) => {
+export const updateElements = (elements, correctOrWrong) => {
   if (correctOrWrong === 'correct') {
-    elements.forEach((element) => element.remove());
+    elements.forEach((element) => element.classList.add('done'));
   } else {
     elements.forEach((element) => element.classList.remove('selected'));
   }
@@ -127,6 +133,9 @@ export const updateUIIfRoundFinished = (state) => {
   const shouldSetupNextRound = isCurrentRoundOver && !isWin;
 
   if (shouldSetupNextRound) {
+    const elements = [getElement('.leftColumn'), getElement('.rightColumn')];
+    clearUpAfterRound(elements);
+
     const remainingPairs = setLength - state.lastUsedTripletIndex;
     const nextPairsToRender = Math.min(state.pairsToRender, remainingPairs);
 

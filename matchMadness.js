@@ -6,7 +6,7 @@ import {
   ANIMATION_DURATION,
   highlightElements,
   selectElement,
-  removeElements,
+  updateElements,
   updateUIIfRoundFinished,
   setupRound,
   updateGlossary,
@@ -136,7 +136,7 @@ const handleCorrectAnswer = (state) => {
 
   // Remove the elements after a short delay.
   setTimeoutWrapper(() => {
-    removeElements([leftElementToRemove, rightElementToRemove], 'correct');
+    updateElements([leftElementToRemove, rightElementToRemove], 'correct');
 
     state.foundPairs++;
 
@@ -151,7 +151,7 @@ const handleIncorrectAnswer = (state) => {
   );
 
   // Reset the "selected" styles on the unmached elements...
-  removeElements(
+  updateElements(
     [state.clickedColumnElements.left, state.clickedColumnElements.right],
     'wrong'
   );

@@ -63,6 +63,12 @@ body {
   color: #ff6b6b;
 }
 
+.done {
+  border-color: #1d282d;
+  color: #3b4953;
+  pointer-events: none;
+}
+
 #glossaryContainer {
   display: flex;
   flex-direction: column;
