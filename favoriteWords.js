@@ -295,6 +295,10 @@ const removeWord = async (word) => {
 
 const showLikedWordsList = async () => {
   const favWordList = getElement('#favWordsList');
+  // Safety net for not throwing errors when not on addFavorites.html
+  if (!favWordList) {
+    return;
+  }
 
   try {
     const likedWords = await getAllWords();
