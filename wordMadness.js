@@ -12,7 +12,11 @@ let wrongCountInSet = 0;
 
 function validateInput(e) {
   if (e.code === 'Space' || e.code === 'Enter') {
-    if (wordMadnessInput.value.trim() === wordMadnessWord.innerText) {
+    const inputMatchesReading =
+      wordMadnessInput.value.trim() === data[wordIndex - 1].reading;
+    const inputMatchesKanji =
+      wordMadnessInput.value.trim() === data[wordIndex - 1].kanji;
+    if (inputMatchesReading || inputMatchesKanji) {
       currentSetMatchCount++;
       updateGlossary();
       updateWord();
@@ -26,6 +30,7 @@ function validateInput(e) {
 }
 
 function updateWord() {
+  console.log(data[wordIndex]);
   displayMatches();
   if (wordIndex < data.length) {
     wordMadnessWord.innerText = data[wordIndex].kanji;
