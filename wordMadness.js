@@ -6,6 +6,36 @@ const wrongCountInSetButton = document.getElementById('wrong');
 
 const data = JSON.parse(localStorage.getItem('currentSet'));
 
+/*
+  Plan:
+    1. get an object with kanjis that appear multiple times in one set
+    2. get an object with kanjis and their readings in an array as values
+    3. get an object with ALL kanjis from JMdict used
+    4. find a way to store the object from #3 in the browser for further usage
+*/
+
+const getSameKanjiInSetObject = () => {
+  const sameKanjiObject = {};
+
+  // Count all occurrences
+  data.forEach((element) => {
+    const k = element.kanji;
+    sameKanjiObject[k] = sameKanjiObject[k] + 1 || 1;
+  });
+
+  // Delete records with occurrences of 1
+  data.forEach((element) => {
+    const k = element.kanji;
+    if (sameKanjiObject[k] === 1) {
+      delete sameKanjiObject[k];
+    }
+  });
+
+  return sameKanjiObject;
+};
+
+window.getSameKanjiInSetObject = getSameKanjiInSetObject;
+
 let wordIndex = 0;
 let currentSetMatchCount = 0;
 let wrongCountInSet = 0;
