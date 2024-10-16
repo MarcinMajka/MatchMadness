@@ -15,18 +15,28 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
 */
 
 const getSameKanjiInSetObject = () => {
+  const sameKanjiObjectCounter = {};
   const sameKanjiObject = {};
 
-  // Count all occurrences
+  // Count all occurrences and collect readings
   data.forEach((element) => {
     const k = element.kanji;
-    sameKanjiObject[k] = sameKanjiObject[k] + 1 || 1;
+
+    if (sameKanjiObjectCounter[k]) {
+      sameKanjiObjectCounter[k] += 1;
+      // Add subsequent readings
+      sameKanjiObject[k].push(element.reading);
+    } else {
+      // Initialize counter
+      sameKanjiObjectCounter[k] = 1;
+      // Add first reading
+      sameKanjiObject[k] = [element.reading];
+    }
   });
 
-  // Delete records with occurrences of 1
-  data.forEach((element) => {
-    const k = element.kanji;
-    if (sameKanjiObject[k] === 1) {
+  // Filter out kanji that appear only once
+  Object.keys(sameKanjiObjectCounter).forEach((k) => {
+    if (sameKanjiObjectCounter[k] === 1) {
       delete sameKanjiObject[k];
     }
   });
