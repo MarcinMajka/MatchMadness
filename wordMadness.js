@@ -1,8 +1,10 @@
-const wordMadnessWord = document.getElementById('word');
-const wordMadnessInput = document.getElementById('userInput');
-const wordMadnessGlossary = document.getElementById('glossary');
-const matchesInSetButton = document.getElementById('matches');
-const wrongCountInSetButton = document.getElementById('wrong');
+import { getElement } from './wrappers.js';
+
+const wordMadnessWord = getElement('#word');
+const wordMadnessInput = getElement('#userInput');
+const wordMadnessGlossary = getElement('#glossary');
+const matchesInSetButton = getElement('#matches');
+const wrongCountInSetButton = getElement('#wrong');
 
 const data = JSON.parse(localStorage.getItem('currentSet'));
 
