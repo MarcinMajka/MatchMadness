@@ -160,6 +160,8 @@ const handleIncorrectAnswer = (state) => {
   clearClickedElements(state);
 };
 
+// NOTE; current implementation works for Match Madness, because if there are multiple
+// readings for the same kanji present, all the readings are present too.
 // TODO: maybe could be changed now to check keyVal pairs instead of this loop?
 const getTripletIndex = (
   state,
