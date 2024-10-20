@@ -90,9 +90,9 @@ function updateWord() {
 }
 
 function updateGlossary() {
-  wordMadnessGlossary.innerText = `${data[wordIndex - 1][0]} - ${
-    data[wordIndex - 1][0]
-  }\n ${data[wordIndex - 1][2]}\n ${data[wordIndex - 1][2]}`;
+  wordMadnessGlossary.innerText = `${data[wordIndex - 1].kanji} - ${
+    data[wordIndex - 1].reading
+  }\n ${data[wordIndex - 1].glossary}`;
 }
 
 function displayMatches() {
