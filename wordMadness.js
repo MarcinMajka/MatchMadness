@@ -16,6 +16,10 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
     4. find a way to store the object from #3 in the browser for further usage
 */
 
+const displayHint = () => {
+  wordMadnessInput.value = data[wordIndex - 1].reading[0];
+};
+
 const getSameKanjiInSetObject = () => {
   const sameKanjiObjectCounter = {};
   const sameKanjiObject = {};
@@ -65,6 +69,7 @@ function validateInput(e) {
     } else {
       //   If input is blank, let's not count it towards fails
       if (wordMadnessInput.value === '') return;
+      displayHint();
       wrongCountInSet++;
       displayFailedTries();
     }
