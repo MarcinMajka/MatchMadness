@@ -13,7 +13,6 @@ const openDatabase = () => {
 
     request.onsuccess = (event) => {
       db = event.target.result;
-      console.log('Database opened successfully');
       resolve(db);
     };
 
@@ -26,7 +25,6 @@ const openDatabase = () => {
       objectStore.createIndex('kanji', 'kanji', { unique: false });
       objectStore.createIndex('reading', 'reading', { unique: false });
       objectStore.createIndex('glossary', 'glossary', { unique: false });
-      console.log('Object store created');
     };
   });
 };
@@ -39,10 +37,6 @@ export const addWord = (kanji, reading, glossary) => {
     reading,
     glossary,
   });
-
-  request.onsuccess = () => {
-    console.log('Item added successfully');
-  };
 
   request.onerror = (event) => {
     console.error('Error adding item: ' + event.target.error);
@@ -58,10 +52,8 @@ export const getWordByKey = (key, val) => {
 
     request.onsuccess = (event) => {
       if (request.result) {
-        console.log(`Item by ${key} found:`, request.result);
         resolve(request.result);
       } else {
-        console.log('Item not found');
         resolve(null);
       }
     };
@@ -82,10 +74,8 @@ const getAllWordsByKey = (key, val) => {
 
     request.onsuccess = () => {
       if (request.result) {
-        console.log(`Item by ${key} found:`, request.result);
         resolve(request.result);
       } else {
-        console.log('Item not found');
         resolve(null);
       }
     };
@@ -111,17 +101,12 @@ export const getAllWords = async () => {
 
       request.onsuccess = () => {
         if (request.result) {
-          console.log(`All items:`, request.result);
-          console.log(`Type of result:`, typeof request.result);
-          console.log(`Is array:`, Array.isArray(request.result));
-
           // Ensure we're always returning an array
           const resultArray = Array.isArray(request.result)
             ? request.result
             : [request.result];
           resolve(resultArray);
         } else {
-          console.log('No items found');
           resolve([]); // Return an empty array if no items found
         }
       };
@@ -148,7 +133,6 @@ export async function deleteRecord(state) {
     );
 
     if (!words || words.length === 0) {
-      console.log('No words found with the given kanji');
       return;
     }
 
@@ -160,7 +144,6 @@ export async function deleteRecord(state) {
     );
 
     if (!wordToDelete) {
-      console.log('No exact match found');
       return;
     }
 
@@ -172,17 +155,12 @@ export async function deleteRecord(state) {
 
     return new Promise((resolve, reject) => {
       deleteRequest.onsuccess = () => {
-        console.log('Word deleted successfully');
         resolve('Word deleted successfully');
       };
 
       deleteRequest.onerror = (event) => {
         console.error('Error deleting word:', event.target.error);
         reject(event.target.error);
-      };
-
-      transaction.oncomplete = () => {
-        console.log('Transaction completed');
       };
     });
   } catch (error) {
@@ -197,7 +175,6 @@ export async function compareThreeWords(
   glossaryValue
 ) {
   try {
-    console.log('Running compareThreeWords()');
     const db = await openDatabase();
     const [kanjiResults, readingResults, glossaryResults] = await Promise.all([
       getAllWordsByKey('kanji', kanjiValue),
@@ -206,7 +183,6 @@ export async function compareThreeWords(
     ]);
 
     if (!kanjiResults || kanjiResults.length === 0) {
-      console.log('Not in the database');
       return false;
     }
 
@@ -222,10 +198,8 @@ export async function compareThreeWords(
     // or undefined if no such word is found
 
     if (matchingWord) {
-      console.log('Comparison successful, returning true');
       return true;
     } else {
-      console.log('Comparison failed, returning false');
       return false;
     }
   } catch (error) {
@@ -257,7 +231,6 @@ const removeWord = async (word) => {
       const matchingWords = event.target.result;
 
       if (matchingWords.length === 0) {
-        console.log('No words found with the given kanji');
         return;
       }
 
@@ -267,7 +240,6 @@ const removeWord = async (word) => {
       );
 
       if (!wordToDelete) {
-        console.log('No exact match found');
         return;
       }
 
@@ -275,7 +247,6 @@ const removeWord = async (word) => {
       const deleteRequest = objectStore.delete(wordToDelete.id);
 
       deleteRequest.onsuccess = () => {
-        console.log('Word deleted successfully');
         // Refresh the word list after successful deletion
         showLikedWordsList();
       };
@@ -302,7 +273,6 @@ const showLikedWordsList = async () => {
 
   try {
     const likedWords = await getAllWords();
-    console.log('Liked words:', likedWords);
 
     // Clear the list before adding new items
     favWordList.innerHTML = '';
