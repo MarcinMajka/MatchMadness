@@ -33,7 +33,6 @@ favWordsButton.onclick = async function () {
       favWordsButton.innerText = 'Use Favorite Words!';
       const currentSetNumber =
         setIndexInput.value == '' ? 0 : setIndexInput.value - 1;
-      console.log(currentSetNumber);
       initializeSet(currentSetNumber);
     }
   } catch (error) {
