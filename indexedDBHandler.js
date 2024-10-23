@@ -66,26 +66,26 @@ export async function fetchFile(url) {
   }
 }
 
-export async function loadDicIn50WordSets(dbName, storeName, url) {
+export async function loadDicIn50WordSets({ DB_NAME, STORE_NAME, FILE_URL }) {
   try {
-    const db = await openDatabase(dbName, storeName);
+    const db = await openDatabase(DB_NAME, STORE_NAME);
 
     // Check if data is already in IndexedDB
     let fileData = await getFromIndexedDB(
       db,
-      storeName,
+      STORE_NAME,
       'dicIn50WordSets.json'
     );
 
     if (!fileData) {
-      // If not in IndexedDB, fetch from URL
-      fileData = await fetchFile(url);
+      // If not in IndexedDB, fetch from FILE_URL
+      fileData = await fetchFile(FILE_URL);
       if (!fileData) {
         throw new Error('Failed to fetch the file');
       }
 
       // Save the blob to IndexedDB
-      await saveToIndexedDB(db, storeName, 'AllWordSetsBlob', fileData);
+      await saveToIndexedDB(db, STORE_NAME, 'AllWordSetsBlob', fileData);
     }
 
     // Convert Blob to JSON

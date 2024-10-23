@@ -1,10 +1,6 @@
 import { loadDicIn50WordSets } from './indexedDBHandler.js';
 import { getAllWords } from './favoriteWords.js';
 
-const DB_NAME = 'AllWordSets';
-const STORE_NAME = 'WordSets';
-const FILE_URL = './dicIn50WordSets.json';
-
 const parseAsTriplets = (listOfTripletsData) => {
   return listOfTripletsData.map((tripletData) => ({
     kanji: tripletData[0],
@@ -15,7 +11,11 @@ const parseAsTriplets = (listOfTripletsData) => {
 
 async function initializeSet(setIndex) {
   try {
-    const wordSets = await loadDicIn50WordSets(DB_NAME, STORE_NAME, FILE_URL);
+    const wordSets = await loadDicIn50WordSets({
+      DB_NAME: 'AllWordSets',
+      STORE_NAME: 'WordSets',
+      FILE_URL: './dicIn50WordSets.json',
+    });
     const currentSet = parseAsTriplets(wordSets[setIndex]);
 
     localStorage.setItem('currentSet', JSON.stringify(currentSet));
