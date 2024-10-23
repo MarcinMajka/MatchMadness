@@ -15,6 +15,8 @@ async function initializeSet(setIndex) {
       DB_NAME: 'AllWordSets',
       STORE_NAME: 'WordSets',
       FILE_URL: './dicIn50WordSets.json',
+      key: 'dicIn50WordSets.json',
+      data: 'AllWordSetsBlob',
     });
     const currentSet = parseAsTriplets(wordSets[setIndex]);
 
