@@ -93,16 +93,17 @@ export async function fetchFile(url) {
 }
 
 /**
- * Loads data from a file and saves it in IndexedDB in sets of 50 words.
+ * Loads JSON data from a file and saves it in IndexedDB if not already stored.
+ * If the data is not found in IndexedDB, it fetches the file from a URL, saves it, and parses the Blob into JSON.
  * @param {Object} params - The parameters for loading data.
  * @param {string} params.DB_NAME - The name of the IndexedDB database.
  * @param {string} params.STORE_NAME - The name of the object store.
- * @param {string} params.FILE_URL - The URL of the file to fetch.
+ * @param {string} params.FILE_URL - The URL of the file to fetch if not found in IndexedDB.
  * @param {string} params.key - The key to use for storing/retrieving the data in IndexedDB.
  * @param {any} params.data - The data to store if not already in IndexedDB.
- * @returns {Promise<any[]>} A promise that resolves to an array of word sets (each containing up to 50 words).
+ * @returns {Promise<any>} A promise that resolves to the parsed JSON data from the Blob.
  */
-export async function loadDicIn50WordSets({
+export async function loadDataWithFallback({
   DB_NAME,
   STORE_NAME,
   FILE_URL,
@@ -137,7 +138,7 @@ export async function loadDicIn50WordSets({
 
     return jsonData;
   } catch (error) {
-    console.error('Error loading AllWordSetsBlob:', error);
+    console.error('Error loading data with fallback:', error);
     throw error;
   }
 }

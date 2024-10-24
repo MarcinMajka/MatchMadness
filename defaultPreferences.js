@@ -1,4 +1,4 @@
-import { loadDicIn50WordSets } from './indexedDBHandler.js';
+import { loadDataWithFallback } from './indexedDBHandler.js';
 import { getAllWords } from './favoriteWords.js';
 
 const parseAsTriplets = (listOfTripletsData) => {
@@ -11,7 +11,7 @@ const parseAsTriplets = (listOfTripletsData) => {
 
 async function initializeSet(setIndex) {
   try {
-    const wordSets = await loadDicIn50WordSets({
+    const wordSets = await loadDataWithFallback({
       DB_NAME: 'AllWordSets',
       STORE_NAME: 'WordSets',
       FILE_URL: './dicIn50WordSets.json',
