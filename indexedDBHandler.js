@@ -1,3 +1,9 @@
+/**
+ * Opens an IndexedDB database and creates an object store if necessary.
+ * @param {string} dbName - The name of the database to open.
+ * @param {string} storeName - The name of the object store to create.
+ * @returns {Promise<IDBDatabase>} A promise that resolves to the opened database.
+ */
 export function openDatabase(dbName, storeName) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(dbName, 1);
@@ -18,6 +24,14 @@ export function openDatabase(dbName, storeName) {
   });
 }
 
+/**
+ * Saves data to an object store in IndexedDB.
+ * @param {IDBDatabase} db - The database object.
+ * @param {string} storeName - The name of the object store.
+ * @param {any} key - The key to associate with the stored data.
+ * @param {any} data - The data to store.
+ * @returns {Promise<void>} A promise that resolves when the data is saved.
+ */
 export function saveToIndexedDB(db, storeName, key, data) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
@@ -35,6 +49,13 @@ export function saveToIndexedDB(db, storeName, key, data) {
   });
 }
 
+/**
+ * Retrieves data from an object store in IndexedDB.
+ * @param {IDBDatabase} db - The database object.
+ * @param {string} storeName - The name of the object store.
+ * @param {any} key - The key associated with the stored data.
+ * @returns {Promise<any>} A promise that resolves with the retrieved data.
+ */
 export function getFromIndexedDB(db, storeName, key) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readonly');
@@ -52,6 +73,11 @@ export function getFromIndexedDB(db, storeName, key) {
   });
 }
 
+/**
+ * Fetches a file from a given URL.
+ * @param {string} url - The URL of the file to fetch.
+ * @returns {Promise<Blob|null>} A promise that resolves with the file as a Blob, or null if there was an error.
+ */
 export async function fetchFile(url) {
   try {
     const response = await fetch(url);
@@ -66,6 +92,16 @@ export async function fetchFile(url) {
   }
 }
 
+/**
+ * Loads data from a file and saves it in IndexedDB in sets of 50 words.
+ * @param {Object} params - The parameters for loading data.
+ * @param {string} params.DB_NAME - The name of the IndexedDB database.
+ * @param {string} params.STORE_NAME - The name of the object store.
+ * @param {string} params.FILE_URL - The URL of the file to fetch.
+ * @param {string} params.key - The key to use for storing/retrieving the data in IndexedDB.
+ * @param {any} params.data - The data to store if not already in IndexedDB.
+ * @returns {Promise<any[]>} A promise that resolves to an array of word sets (each containing up to 50 words).
+ */
 export async function loadDicIn50WordSets({
   DB_NAME,
   STORE_NAME,
