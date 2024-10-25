@@ -1,3 +1,4 @@
+import { getElement } from './wrappers.js';
 import { loadDataWithFallback } from './indexedDBHandler.js';
 import { getAllWords } from './favoriteWords.js';
 
@@ -26,9 +27,9 @@ async function initializeSet(setIndex) {
   }
 }
 
-const setIndexInput = document.getElementById('setIndexInput');
-const setPairsToRenderInput = document.getElementById('setPairsToRenderInput');
-const favWordsButton = document.getElementById('favWordsButton');
+const setIndexInput = getElement('#setIndexInput');
+const setPairsToRenderInput = getElement('#setPairsToRenderInput');
+const favWordsButton = getElement('#favWordsButton');
 setIndexInput.addEventListener('input', (event) => {
   const input = event.target.value;
   const index = input ? Number(input) - 1 : 0;
