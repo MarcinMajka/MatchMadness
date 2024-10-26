@@ -32,7 +32,10 @@ const setPairsToRenderInput = getElement('#setPairsToRenderInput');
 const favWordsButton = getElement('#favWordsButton');
 setIndexInput.addEventListener('input', (event) => {
   const input = event.target.value;
-  const index = input ? Number(input) - 1 : 0;
+  // Check if the input is there. If it is, make it an index, else just use 0
+  let index = input ? input - 1 : 0;
+  // Check if the index is out of bounds. If it is, use 0
+  index = index < 0 || index > 2762 ? 0 : index;
   initializeSet(index);
 });
 setPairsToRenderInput.addEventListener('input', (event) => {
