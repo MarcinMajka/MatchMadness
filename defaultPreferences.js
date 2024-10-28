@@ -69,4 +69,6 @@ favWordsButton.onclick = async function () {
   }
 };
 
-initializeSet(0);
+window.onload = () => {
+  initializeSet(0);
+};
