@@ -12,6 +12,16 @@ export const shuffleArray = (array) => {
   return array;
 };
 
+export const fitTextToContainer = (element) => {
+  let fontSize = 30;
+  element.style.fontSize = fontSize + 'px';
+
+  while (element.scrollHeight > element.offsetHeight && fontSize > 10) {
+    fontSize--;
+    element.style.fontSize = fontSize + 'px';
+  }
+};
+
 // module.exports = {
 //   shuffleArray,
 // };

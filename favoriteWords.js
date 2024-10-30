@@ -1,4 +1,5 @@
 import { getElement } from './wrappers.js';
+import { fitTextToContainer } from './utils.js';
 
 let db;
 
@@ -322,16 +323,6 @@ const showLikedWordsList = async () => {
     console.error('Error retrieving liked words:', error);
   }
 };
-
-function fitTextToContainer(element) {
-  let fontSize = 30;
-  element.style.fontSize = fontSize + 'px';
-
-  while (element.scrollHeight > element.offsetHeight && fontSize > 10) {
-    fontSize--;
-    element.style.fontSize = fontSize + 'px';
-  }
-}
 
 export const getFavoriteWordData = (
   kanjiSelector,
