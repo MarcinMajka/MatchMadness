@@ -247,11 +247,6 @@ const removeWord = async (word) => {
       // Delete the matching word
       const deleteRequest = objectStore.delete(wordToDelete.id);
 
-      deleteRequest.onsuccess = () => {
-        // Refresh the word list after successful deletion
-        showLikedWordsList();
-      };
-
       deleteRequest.onerror = (event) => {
         console.error('Error deleting word:', event.target.error);
       };
@@ -300,6 +295,7 @@ const showLikedWordsList = async () => {
         // Prevent triggering wordItem click event
         e.stopPropagation();
         removeWord(word);
+        showLikedWordsList();
       };
 
       glossarySpan.textContent = word.glossary || 'No glossary available';
