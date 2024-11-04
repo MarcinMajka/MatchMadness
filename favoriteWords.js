@@ -88,10 +88,6 @@ const getAllWordsByKey = (key, val) => {
   });
 };
 
-window.getAllWordsByKey = function (key, val) {
-  getAllWordsByKey(key, val);
-};
-
 export const getAllWords = async () => {
   try {
     const db = await openDatabase();
@@ -122,8 +118,6 @@ export const getAllWords = async () => {
     throw error;
   }
 };
-
-window.getAllWords = getAllWords;
 
 export async function deleteRecord(state) {
   try {
@@ -208,15 +202,6 @@ export async function compareThreeWords(
     return false;
   }
 }
-
-// This makes these functions callable in the console
-window.addWord = function (kanji, reading, glossary) {
-  addWord(kanji, reading, glossary);
-};
-
-window.getWordByKey = function (key, val) {
-  getWordByKey(key, val);
-};
 
 const removeWord = async (word) => {
   try {
