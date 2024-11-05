@@ -1,16 +1,32 @@
 /**
- * Opens an IndexedDB database and creates an object store if necessary.
+ * Opens an IndexedDB database and creates an object store with optional indexes if necessary.
  * @param {string} dbName - The name of the database to open.
  * @param {string} storeName - The name of the object store to create.
+ * @param {Object} [options] - Additional options for the object store
+ * @param {string} [options.keyPath] - The key path for the object store
+ * @param {boolean} [options.autoIncrement] - Whether to auto increment the key
+ * @param {Array<{name: string, keyPath: string, options: Object}>} [options.indexes] - Indexes to create
  * @returns {Promise<IDBDatabase>} A promise that resolves to the opened database.
  */
-export function openDatabase(dbName, storeName) {
+export function openDatabase(dbName, storeName, options = {}) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(dbName, 1);
 
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      db.createObjectStore(storeName);
+      const storeOptions = {};
+      if (options.keyPath) storeOptions.keyPath = options.keyPath;
+      if (options.autoIncrement)
+        storeOptions.autoIncrement = options.autoIncrement;
+
+      const store = db.createObjectStore(storeName, storeOptions);
+
+      // Create indexes if specified
+      if (options.indexes) {
+        options.indexes.forEach(({ name, keyPath, options = {} }) => {
+          store.createIndex(name, keyPath, options);
+        });
+      }
     };
 
     request.onsuccess = (event) => {
