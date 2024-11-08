@@ -8,6 +8,20 @@ const wrongCountInSetButton = getElement('#wrong');
 
 const data = JSON.parse(localStorage.getItem('currentSet'));
 
+// TODO: Bug fix:
+/**
+ * 1. Switch to Japanese keyboard
+ * 2. Input hiragana
+ * 3. Select a correct option from the dictionary dropdown
+ * 4. Tap any key
+ *
+ * Expected result:
+ *  The tapped key is displayed in the input
+ *
+ * Actual result:
+ *  The previously selected option is displayed before the currently pressed key
+ */
+
 /*
   Plan:
     1. get an object with kanjis that appear multiple times in one set
@@ -17,6 +31,9 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
 */
 
 const displayHint = () => {
+  // This is one place where the input value is manipulated
+  console.log('displayHint');
+  console.log(data[wordIndex - 1].reading[0]);
   wordMadnessInput.value = data[wordIndex - 1].reading[0];
 };
 
