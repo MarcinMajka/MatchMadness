@@ -73,19 +73,26 @@ let wordIndex = 0;
 let currentSetMatchCount = 0;
 let wrongCountInSet = 0;
 
+// Helper function to get current input element - created to avoid conflicts with imported getElement wrapper
+// and to ensure we always get the most current reference to the input element, even after replacing it
+const getCurrentInput = (selector) => document.querySelector(selector);
+
 function validateInput(e) {
+  // Get fresh reference to input element since it may have been replaced
+  const currentInput = getCurrentInput('#userInput');
+
   if (e.code === 'Space' || e.code === 'Enter') {
     const inputMatchesReading =
-      wordMadnessInput.value.trim() === data[wordIndex - 1].reading;
+      currentInput.value.trim() === data[wordIndex - 1].reading;
     const inputMatchesKanji =
-      wordMadnessInput.value.trim() === data[wordIndex - 1].kanji;
+      currentInput.value.trim() === data[wordIndex - 1].kanji;
     if (inputMatchesReading || inputMatchesKanji) {
       currentSetMatchCount++;
       updateGlossary();
       updateWord();
     } else {
-      //   If input is blank, let's not count it towards fails
-      if (wordMadnessInput.value === '') return;
+      // If input is blank, let's not count it towards fails
+      if (currentInput.value === '') return;
       displayHint();
       wrongCountInSet++;
       displayFailedTries();
@@ -98,7 +105,27 @@ function updateWord() {
   displayMatches();
   if (wordIndex < data.length) {
     wordMadnessWord.innerText = data[wordIndex].kanji;
-    wordMadnessInput.value = '';
+
+    // Create fresh input element to fix IME (Input Method Editor) persistence issues
+    // This prevents Japanese input method from reappearing when it should be cleared
+    const newInput = document.createElement('input');
+    newInput.type = 'text';
+    newInput.id = 'userInput';
+
+    // Add event listeners to new input since they don't carry over from old element
+    newInput.addEventListener('keyup', validateInput);
+    newInput.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+      }
+    });
+
+    // Replace old input with new one while maintaining exact position in DOM
+    getCurrentInput('#userInput').replaceWith(newInput);
+
+    // Focus new input to allow immediate typing
+    newInput.focus();
+
     wordIndex++;
   } else {
     wordIndex = 0;
