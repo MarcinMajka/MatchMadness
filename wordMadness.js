@@ -16,12 +16,8 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
     4. find a way to store the object from #3 in the browser for further usage
 */
 
-// TODO: this functionality has stopped working
-const displayHint = () => {
-  // This is one place where the input value is manipulated
-  console.log('displayHint');
-  console.log(data[wordIndex - 1].reading[0]);
-  wordMadnessInput.value = data[wordIndex - 1].reading[0];
+const displayHint = (currentInputElement) => {
+  currentInputElement.value = data[wordIndex - 1].reading[0];
 };
 
 const getSameKanjiInSetObject = () => {
@@ -80,7 +76,7 @@ function validateInput(e) {
     } else {
       // If input is blank, let's not count it towards fails
       if (currentInput.value === '') return;
-      displayHint();
+      displayHint(getCurrentInput('#userInput'));
       wrongCountInSet++;
       displayFailedTries();
     }
