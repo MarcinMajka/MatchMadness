@@ -18,3 +18,7 @@ export const clearIntervalWrapper = (timerInterval) => {
 export const setTimeoutWrapper = (cb, timeoutDuration) => {
   setTimeout(cb, timeoutDuration);
 };
+
+export const createUIElement = (element) => {
+  return document.createElement(element);
+};

@@ -1,4 +1,4 @@
-import { getElement } from './wrappers.js';
+import { getElement, createUIElement } from './wrappers.js';
 
 const wordMadnessWord = getElement('#word');
 const wordMadnessInput = getElement('#userInput');
@@ -94,7 +94,7 @@ function updateWord() {
 
     // Create fresh input element to fix IME (Input Method Editor) persistence issues
     // This prevents Japanese input method from reappearing when it should be cleared
-    const newInput = document.createElement('input');
+    const newInput = createUIElement('input');
     newInput.type = 'text';
     newInput.id = 'userInput';
 
