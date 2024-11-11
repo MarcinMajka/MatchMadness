@@ -16,6 +16,7 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
     4. find a way to store the object from #3 in the browser for further usage
 */
 
+// TODO: this functionality has stopped working
 const displayHint = () => {
   // This is one place where the input value is manipulated
   console.log('displayHint');
