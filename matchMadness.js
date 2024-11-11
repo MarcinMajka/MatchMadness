@@ -64,11 +64,9 @@ const handleLikeButton = (state) => {
   likeButton.addEventListener('click', (event) => {
     const wordIsLiked = event.target.classList.contains('liked');
     if (wordIsLiked) {
-      console.log('REMOVING word');
       toggleLike(likeButton);
       deleteRecord(state);
     } else {
-      console.log('ADDING word');
       toggleLike(likeButton);
       addWord(
         state.currentCorrectWord.kanji,
