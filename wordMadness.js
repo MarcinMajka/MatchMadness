@@ -56,13 +56,9 @@ let wordIndex = 0;
 let currentSetMatchCount = 0;
 let wrongCountInSet = 0;
 
-// Helper function to get current input element - created to avoid conflicts with imported getElement wrapper
-// and to ensure we always get the most current reference to the input element, even after replacing it
-const getCurrentInput = (selector) => document.querySelector(selector);
-
 function validateInput(e) {
   // Get fresh reference to input element since it may have been replaced
-  const currentInput = getCurrentInput('#userInput');
+  const currentInput = getElement('#userInput');
 
   if (e.code === 'Space' || e.code === 'Enter') {
     const inputMatchesReading =
@@ -76,7 +72,7 @@ function validateInput(e) {
     } else {
       // If input is blank, let's not count it towards fails
       if (currentInput.value === '') return;
-      displayHint(getCurrentInput('#userInput'));
+      displayHint(getElement('#userInput'));
       wrongCountInSet++;
       displayFailedTries();
     }
@@ -104,7 +100,7 @@ function updateWord() {
     });
 
     // Replace old input with new one while maintaining exact position in DOM
-    getCurrentInput('#userInput').replaceWith(newInput);
+    getElement('#userInput').replaceWith(newInput);
 
     // Focus new input to allow immediate typing
     newInput.focus();
