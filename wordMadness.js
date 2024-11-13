@@ -17,6 +17,13 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
 */
 
 const displayHint = (currentInputElement) => {
+  /*
+    Currently the function just shows the first character of reading, which could be NOT helpful.
+    If the first character was input correctly eg. 嫌に　ー　いやに, if input was いかに, currently would show い.
+    Case like　悪どい　ー　あくどい, if the input was あきどい, we'd like the hint to be あく,
+    adding く as the next correct character, because あ was already input correctly.
+  */
+  // TODO: change to display the first incorrectly input character instead of just the first character
   currentInputElement.value = data[wordIndex - 1].reading[0];
 };
 
