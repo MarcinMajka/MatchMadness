@@ -68,18 +68,19 @@ function validateInput(e) {
   const currentInput = getElement('#userInput');
 
   if (e.code === 'Space' || e.code === 'Enter') {
-    const inputMatchesReading =
-      currentInput.value.trim() === data[wordIndex - 1].reading;
-    const inputMatchesKanji =
-      currentInput.value.trim() === data[wordIndex - 1].kanji;
+    const inputValue = currentInput.value.trim();
+    const currentWord = data[wordIndex - 1];
+    const inputMatchesReading = inputValue === currentWord.reading;
+    const inputMatchesKanji = inputValue === currentWord.kanji;
+
     if (inputMatchesReading || inputMatchesKanji) {
       currentSetMatchCount++;
       updateGlossary();
       updateWord();
     } else {
       // If input is blank, let's not count it towards fails
-      if (currentInput.value === '') return;
-      displayHint(getElement('#userInput'));
+      if (inputValue === '') return;
+      displayHint(currentInput);
       wrongCountInSet++;
       displayFailedTries();
     }
