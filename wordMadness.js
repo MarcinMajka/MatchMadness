@@ -24,7 +24,18 @@ const displayHint = (currentInputElement) => {
     adding く as the next correct character, because あ was already input correctly.
   */
   // TODO: change to display the first incorrectly input character instead of just the first character
-  currentInputElement.value = data[wordIndex - 1].reading[0];
+  let hint = '';
+  let word = data[wordIndex - 1].reading;
+  let input = currentInputElement.value;
+  console.log('word: ' + word + ' input: ' + input);
+  let i = 0;
+
+  while (word[i] === input[i]) {
+    hint += word[i];
+    i++;
+  }
+
+  currentInputElement.value = hint.length > 0 ? hint : word[0];
 };
 
 const getSameKanjiInSetObject = () => {
