@@ -18,12 +18,30 @@ const data = JSON.parse(localStorage.getItem('currentSet'));
 
 const displayHint = (currentInputElement) => {
   /*
-    Currently the function just shows the first character of reading, which could be NOT helpful.
-    If the first character was input correctly eg. 嫌に　ー　いやに, if input was いかに, currently would show い.
-    Case like　悪どい　ー　あくどい, if the input was あきどい, we'd like the hint to be あく,
-    adding く as the next correct character, because あ was already input correctly.
+    Currently the function shows:
+    - the first character of reading, for incorrect first character.
+    - correctly guessed characters, without additional hint character
+    
+    TODO: do we want this behaviour?
+
+    We could give a hint character after each next incorrect guess.
+
+    So, if reading to guess is qwerty and the input is qw:
+    - Current behaviour:
+      After first try - qw
+      After second try - qw
+      After third try - qw
+      ...
+    - Proposed behaviour:
+      After first try - qw
+      After second try - qwe
+      After third try - qwer
+      After fourth try - qwert
+      After fifth try - qwery <- this input finally wins current word
+    
+    This would make it possible to win every word, while accruing many failed attempts.
+    Seems in line with the idea behind the app :)
   */
-  // TODO: change to display the first incorrectly input character instead of just the first character
   let hint = '';
   let word = data[wordIndex - 1].reading;
   let input = currentInputElement.value;
