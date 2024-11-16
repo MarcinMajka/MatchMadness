@@ -37,7 +37,7 @@ const displayHint = (currentInputElement) => {
       After second try - qwe
       After third try - qwer
       After fourth try - qwert
-      After fifth try - qwery <- this input finally wins current word
+      After fifth try - qwerty <- this input finally wins current word
     
     This would make it possible to win every word, while accruing many failed attempts.
     Seems in line with the idea behind the app :)
