@@ -169,13 +169,6 @@ function displayFailedTries() {
   wrongCountInSetButton.innerText = `Fails: ${wrongCountInSet}`;
 }
 
-wordMadnessInput.addEventListener('keyup', validateInput);
-wordMadnessInput.addEventListener('keydown', (e) => {
-  if (e.code === 'Space') {
-    e.preventDefault();
-  }
-});
-
 window.addEventListener('load', () => {
   updateWord();
   wordMadnessInput.focus();
