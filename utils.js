@@ -131,6 +131,39 @@ const hiraganaToRomajiMap = {
   ぴょ: 'pyo',
 };
 
+function hiraganaToRomaji(hiragana) {
+  let result = '';
+  let buffer = '';
+
+  for (let i = 0; i < hiragana.length; i++) {
+    const char = hiragana[i];
+
+    // Handle long vowel marker "ー"
+    if (char === 'ー') {
+      if (result.length > 0) {
+        const lastRomaji = result[result.length - 1];
+        result += lastRomaji; // Extend the last vowel
+      }
+      continue;
+    }
+
+    buffer += char;
+
+    if (hiraganaToRomajiMap[buffer]) {
+      result += hiraganaToRomajiMap[buffer];
+      buffer = ''; // Reset buffer
+    } else if (buffer.length > 1) {
+      result += buffer[0]; // Add unmatched character
+      buffer = buffer.slice(1);
+    }
+  }
+
+  // Add remaining unmatched characters
+  if (buffer) result += buffer;
+
+  return result;
+}
+
 // module.exports = {
 //   shuffleArray,
 // };
