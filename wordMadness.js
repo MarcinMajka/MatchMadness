@@ -54,7 +54,8 @@ const displayHint = (currentInputElement) => {
     i++;
   }
 
-  currentInputElement.value = hint.length > 0 ? hint : word[0];
+  currentInputElement.value = '';
+  currentInputElement.placeholder = hint.length > 0 ? hint : word[0];
 };
 
 const getSameKanjiInSetObject = () => {
