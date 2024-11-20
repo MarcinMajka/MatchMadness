@@ -58,38 +58,6 @@ const displayHint = (currentInputElement) => {
   currentInputElement.placeholder = hint.length > 0 ? hint : word[0];
 };
 
-const getSameKanjiInSetObject = () => {
-  const sameKanjiObjectCounter = {};
-  const sameKanjiObject = {};
-
-  // Count all occurrences and collect readings
-  data.forEach((element) => {
-    const k = element.kanji;
-
-    if (sameKanjiObjectCounter[k]) {
-      sameKanjiObjectCounter[k] += 1;
-      // Add subsequent readings
-      sameKanjiObject[k].push(element.reading);
-    } else {
-      // Initialize counter
-      sameKanjiObjectCounter[k] = 1;
-      // Add first reading
-      sameKanjiObject[k] = [element.reading];
-    }
-  });
-
-  // Filter out kanji that appear only once
-  Object.keys(sameKanjiObjectCounter).forEach((k) => {
-    if (sameKanjiObjectCounter[k] === 1) {
-      delete sameKanjiObject[k];
-    }
-  });
-
-  return sameKanjiObject;
-};
-
-window.getSameKanjiInSetObject = getSameKanjiInSetObject;
-
 let wordIndex = 0;
 let currentSetMatchCount = 0;
 let wrongCountInSet = 0;
