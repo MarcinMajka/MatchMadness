@@ -44,7 +44,7 @@ const displayHint = (currentInputElement) => {
     Seems in line with the idea behind the app :)
   */
   let hint = '';
-  let word = data[wordIndex - 1].reading;
+  let word = hiraganaToRomaji(data[wordIndex - 1].reading);
   let input = currentInputElement.value;
   console.log('word: ' + word + ' input: ' + input);
   let i = 0;
@@ -102,9 +102,8 @@ function validateInput(e) {
     const currentWord = data[wordIndex - 1];
     const inputMatchesReading =
       inputValue === hiraganaToRomaji(currentWord.reading);
-    const inputMatchesKanji = inputValue === currentWord.kanji;
 
-    if (inputMatchesReading || inputMatchesKanji) {
+    if (inputMatchesReading) {
       currentSetMatchCount++;
       updateGlossary();
       updateWord();
