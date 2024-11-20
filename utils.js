@@ -131,7 +131,7 @@ const hiraganaToRomajiMap = {
   ぴょ: 'pyo',
 };
 
-function hiraganaToRomaji(hiragana) {
+export function hiraganaToRomaji(hiragana) {
   let result = '';
   let buffer = '';
 

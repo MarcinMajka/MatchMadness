@@ -1,4 +1,5 @@
 import { getElement, createUIElement } from './wrappers.js';
+import { hiraganaToRomaji } from './utils.js';
 
 const wordMadnessWord = getElement('#word');
 const wordMadnessInput = getElement('#userInput');
@@ -99,7 +100,8 @@ function validateInput(e) {
   if (e.code === 'Space' || e.code === 'Enter') {
     const inputValue = currentInput.value.trim();
     const currentWord = data[wordIndex - 1];
-    const inputMatchesReading = inputValue === currentWord.reading;
+    const inputMatchesReading =
+      inputValue === hiraganaToRomaji(currentWord.reading);
     const inputMatchesKanji = inputValue === currentWord.kanji;
 
     if (inputMatchesReading || inputMatchesKanji) {
