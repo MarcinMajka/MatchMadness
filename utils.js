@@ -170,6 +170,18 @@ export function hiraganaToRomaji(hiragana) {
   for (let i = 0; i < hiragana.length; i++) {
     const char = hiragana[i];
 
+    // Handle small っ (sokuon)
+    if (char === 'っ') {
+      if (i + 1 < hiragana.length) {
+        const nextHiragana = hiragana[i + 1];
+        const nextRomaji = hiraganaToRomajiMap[nextHiragana];
+        if (nextRomaji) {
+          result += nextRomaji[0]; // Double the first consonant of the next syllable
+        }
+      }
+      continue; // Skip processing this character further
+    }
+
     // Handle long vowel marker "ー"
     if (char === 'ー') {
       if (result.length > 0) {
