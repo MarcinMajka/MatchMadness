@@ -172,48 +172,61 @@ const smallYVowels = new Set(['ゃ', 'ゅ', 'ょ']);
 
 export function hiraganaToRomaji(hiragana) {
   let result = '';
-  let buffer = '';
+  let i = 0;
 
-  for (let i = 0; i < hiragana.length; i++) {
-    const char = hiragana[i];
+  while (i < hiragana.length) {
+    let char = hiragana[i];
+    let nextChar = hiragana[i + 1];
 
-    // Handle small っ (sokuon)
+    // Handle sokuon (っ)
     if (char === 'っ') {
       if (i + 1 < hiragana.length) {
-        const nextHiragana = hiragana[i + 1];
-        const nextRomaji = hiraganaToRomajiMap[nextHiragana];
+        const nextRomaji = hiraganaToRomajiMap[nextChar];
         if (nextRomaji) {
-          result += nextRomaji[0]; // Double the first consonant of the next syllable
+          // Double the first consonant
+          result += nextRomaji[0];
         }
       }
-      continue; // Skip processing this character further
-    }
-
-    // Handle long vowel marker "ー"
-    if (char === 'ー') {
-      if (result.length > 0) {
-        const lastRomaji = result[result.length - 1];
-        result += lastRomaji; // Extend the last vowel
-      }
+      i++;
       continue;
     }
 
-    buffer += char;
-
-    if (hiraganaToRomajiMap[buffer]) {
-      result += hiraganaToRomajiMap[buffer];
-      buffer = ''; // Reset buffer
-    } else if (buffer.length > 1) {
-      result += buffer[0]; // Add unmatched character
-      buffer = buffer.slice(1);
+    // Handle long vowel marker (ー)
+    if (char === 'ー') {
+      if (result.length > 0) {
+        const lastChar = result[result.length - 1];
+        if ('aiueo'.includes(lastChar)) {
+          result += lastChar;
+        }
+      }
+      i++;
+      continue;
     }
-  }
 
-  // Add remaining unmatched characters
-  if (buffer) result += buffer;
+    // Handle digraphs (よう音, youon)
+    if (nextChar && smallYVowels.has(nextChar)) {
+      const digraph = char + nextChar;
+      if (hiraganaToRomajiMap[digraph]) {
+        result += hiraganaToRomajiMap[digraph];
+        i += 2;
+        continue;
+      }
+    }
+
+    // Handle single characters
+    if (hiraganaToRomajiMap[char]) {
+      result += hiraganaToRomajiMap[char];
+    } else {
+      // Pass through unknown characters
+      result += char;
+    }
+    i++;
+  }
 
   return result;
 }
+
+window.hirToRom = hiraganaToRomaji;
 
 // module.exports = {
 //   shuffleArray,
