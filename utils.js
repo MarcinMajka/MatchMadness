@@ -54,8 +54,9 @@ const getSameKanjiInSetObject = () => {
 
 window.getSameKanjiInSetObject = getSameKanjiInSetObject;
 
-// I'm thinking about ditching the Japanese input, because of the issues wrt IME.
-// Simple map could translate word.reading to romaji, so input will be in romaji. #simple
+// If I'd like to make more games like this, it'd be easier to just use an existing library.
+// This one looks good: https://www.npmjs.com/package/wanakana
+// It'd also clean up utils proportionately to how many types of translations I'd finally like to have...
 const hiraganaToRomajiMap = {
   // Basic hiragana
   あ: 'a',
