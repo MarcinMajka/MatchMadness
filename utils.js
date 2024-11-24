@@ -168,6 +168,8 @@ const hiraganaToRomajiMap = {
   ぽ: 'po',
 };
 
+const smallYVowels = new Set(['ゃ', 'ゅ', 'ょ']);
+
 export function hiraganaToRomaji(hiragana) {
   let result = '';
   let buffer = '';
