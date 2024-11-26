@@ -1,5 +1,5 @@
 import { getElement, createUIElement } from './wrappers.js';
-import { hiraganaToRomaji } from './utils.js';
+import { toRomaji } from './node_modules/wanakana/esm/index.js';
 
 const wordMadnessWord = getElement('#word');
 const wordMadnessInput = getElement('#userInput');
@@ -44,7 +44,7 @@ const displayHint = (currentInputElement) => {
     Seems in line with the idea behind the app :)
   */
   let hint = '';
-  let word = hiraganaToRomaji(data[wordIndex - 1].reading);
+  let word = toRomaji(data[wordIndex - 1].reading);
   let input = currentInputElement.value;
   console.log('word: ' + word + ' input: ' + input);
   let i = 0;
@@ -69,8 +69,7 @@ function validateInput(e) {
   if (e.code === 'Space' || e.code === 'Enter') {
     const inputValue = currentInput.value.trim();
     const currentWord = data[wordIndex - 1];
-    const inputMatchesReading =
-      inputValue === hiraganaToRomaji(currentWord.reading);
+    const inputMatchesReading = inputValue === toRomaji(currentWord.reading);
 
     if (inputMatchesReading) {
       currentSetMatchCount++;
