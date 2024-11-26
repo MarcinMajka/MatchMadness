@@ -1,5 +1,6 @@
 import { getElement, createUIElement } from './wrappers.js';
-import { toRomaji } from 'wanakana';
+// In Vanilla JS the full path is needed
+import { toRomaji } from './node_modules/wanakana/esm/index.js';
 
 const wordMadnessWord = getElement('#word');
 const wordMadnessInput = getElement('#userInput');
