@@ -31,5 +31,8 @@
       "html"
     ]
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "wanakana": "^5.3.1"
+  }
 }

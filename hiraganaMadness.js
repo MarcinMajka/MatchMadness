@@ -1,5 +1,5 @@
 import { getElement, createUIElement } from './wrappers.js';
-import { hiraganaToRomaji } from './utils.js';
+import { toRomaji } from 'wanakana';
 
 const wordMadnessWord = getElement('#word');
 const wordMadnessInput = getElement('#userInput');
@@ -16,7 +16,7 @@ let wrongCountInSet = 0;
 function updateWord() {
   console.log(data[wordIndex]);
   if (wordIndex < data.length) {
-    console.log(hiraganaToRomaji(data[wordIndex].reading));
+    console.log(toRomaji(data[wordIndex].reading));
   }
 
   displayMatches();
@@ -62,8 +62,7 @@ function validateInput(e) {
   if (e.code === 'Space' || e.code === 'Enter') {
     const inputValue = currentInput.value.trim();
     const currentWord = data[wordIndex - 1];
-    const inputMatchesReading =
-      inputValue === hiraganaToRomaji(currentWord.reading);
+    const inputMatchesReading = inputValue === toRomaji(currentWord.reading);
 
     if (inputMatchesReading) {
       currentSetMatchCount++;
