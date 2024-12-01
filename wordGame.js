@@ -133,18 +133,10 @@ class WordGame {
 }
 
 export const selectGame = () => {
-  const page = window.location.href;
-  if (page.endsWith('katakanaMadness.html')) {
-    new WordGame({
-      gameType: 'katakana',
-    });
-  } else if (page.endsWith('hiraganaMadness.html')) {
-    new WordGame({
-      gameType: 'reading',
-    });
-  } else {
-    new WordGame({
-      gameType: 'kanji',
-    });
-  }
+  const page = window.location.pathname.split('/').pop();
+  const gameType = page.replace('Madness.html', '').toLowerCase();
+  new WordGame({
+    gameType:
+      gameType === 'katakana' || gameType === 'hiragana' ? gameType : 'kanji',
+  });
 };
