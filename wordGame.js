@@ -132,7 +132,7 @@ class WordGame {
   }
 }
 
-export const selectGame = () => {
+const selectGame = () => {
   const page = window.location.pathname.split('/').pop();
   const gameType = page.replace('Madness.html', '').toLowerCase();
   new WordGame({
@@ -140,3 +140,5 @@ export const selectGame = () => {
       gameType === 'katakana' || gameType === 'hiragana' ? gameType : 'kanji',
   });
 };
+
+selectGame();
