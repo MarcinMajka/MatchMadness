@@ -5,8 +5,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css" />
     <link rel="stylesheet" href="style.css" />
-    <script type="module" src="wrappers.js"></script>
-    <script type="module" src="katakanaMadness.js"></script>
 </head>
 
 <body style="display:flex; justify-content:center; align-content:center">
@@ -33,6 +31,10 @@
                 class="license">This
                 app uses JMdict</a>
         </div>
+        <script type="module">
+            import { selectGame } from './wordGame.js';
+            selectGame();
+        </script>
 </body>
 
 </html>

@@ -75,7 +75,6 @@ class WordGame {
 
   updateWord() {
     this.displayMatches();
-    console.log('Game Type:', this.config.gameType);
 
     if (this.wordIndex < this.data.length) {
       const currentWord = this.data[this.wordIndex];
@@ -133,17 +132,19 @@ class WordGame {
   }
 }
 
-// Updated game variations
-const KanjiToReadingGame = new WordGame({
-  gameType: 'kanji',
-});
-
-const ReadingToRomajiGame = new WordGame({
-  gameType: 'reading',
-});
-
-const ReadingToKatakanaGame = new WordGame({
-  gameType: 'katakana',
-});
-
-export { WordGame };
+export const selectGame = () => {
+  const page = window.location.href;
+  if (page.endsWith('katakanaMadness.html')) {
+    new WordGame({
+      gameType: 'katakana',
+    });
+  } else if (page.endsWith('hiraganaMadness.html')) {
+    new WordGame({
+      gameType: 'reading',
+    });
+  } else {
+    new WordGame({
+      gameType: 'kanji',
+    });
+  }
+};
