@@ -104,7 +104,7 @@ class WordGame {
       this.elements.word.innerText = displayValue;
 
       // Replacing input element removes all IME issues
-      replaceInputElement();
+      this.replaceInputElement();
       // Focus on new input element
       getElement('#userInput').focus();
 
