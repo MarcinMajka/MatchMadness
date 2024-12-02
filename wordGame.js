@@ -1,5 +1,8 @@
 import { getElement, createUIElement } from './wrappers.js';
-import { toRomaji, toKatakana } from './node_modules/wanakana/esm/index.js';
+import {
+  toRomaji,
+  toKatakana,
+} from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { displayHint } from './utils.js';
 
 class WordGame {

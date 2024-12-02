@@ -1,4 +1,4 @@
-import { toRomaji } from './node_modules/wanakana/esm/index.js';
+import { toRomaji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 
 /**
  * Shuffle (randomize the order of) an array of leftColumnValues.
