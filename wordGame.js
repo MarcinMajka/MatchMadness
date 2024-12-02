@@ -2,24 +2,6 @@ import { getElement, createUIElement } from './wrappers.js';
 import { toRomaji, toKatakana } from './node_modules/wanakana/esm/index.js';
 import { displayHint } from './utils.js';
 
-const replaceInput = (inputElement, listenerFunction) => {
-  const newInput = createUIElement('input');
-  newInput.type = 'text';
-  newInput.id = 'userInput';
-
-  newInput.addEventListener('keydown', (e) => {
-    if (e.code === 'Space') {
-      e.preventDefault();
-    }
-  });
-
-  newInput.addEventListener('keyup', listenerFunction);
-
-  getElement(inputElement).replaceWith(newInput);
-
-  return getElement(inputElement);
-};
-
 class WordGame {
   constructor(config) {
     // Configuration options with defaults
@@ -91,6 +73,22 @@ class WordGame {
     }
   }
 
+  replaceInputElement() {
+    const newInput = createUIElement('input');
+    newInput.type = 'text';
+    newInput.id = 'userInput';
+
+    newInput.addEventListener('keydown', (e) => {
+      if (e.code === 'Space') {
+        e.preventDefault();
+      }
+    });
+
+    newInput.addEventListener('keyup', this.validateInput);
+
+    getElement('#userInput').replaceWith(newInput);
+  }
+
   updateWord() {
     this.displayMatches();
 
@@ -105,7 +103,10 @@ class WordGame {
 
       this.elements.word.innerText = displayValue;
 
-      replaceInput('#userInput', this.validateInput).focus();
+      // Replacing input element removes all IME issues
+      replaceInputElement();
+      // Focus on new input element
+      getElement('#userInput').focus();
 
       this.wordIndex++;
     } else {
