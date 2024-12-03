@@ -3,7 +3,7 @@ import {
   toRomaji,
   toKatakana,
 } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
-import { displayHint } from './utils.js';
+import { displayHint, shuffleArray } from './utils.js';
 
 class WordGame {
   constructor(config) {
@@ -25,7 +25,7 @@ class WordGame {
     };
 
     // Game State
-    this.data = JSON.parse(localStorage.getItem('currentSet'));
+    this.data = shuffleArray(JSON.parse(localStorage.getItem('currentSet')));
     this.wordIndex = 0;
     this.currentSetMatchCount = 0;
     this.wrongCountInSet = 0;
