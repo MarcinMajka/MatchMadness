@@ -32,7 +32,7 @@ class WordGame {
 
     // Bind methods to maintain context
     this.validateInput = this.validateInput.bind(this);
-    this.updateWord = this.updateWord.bind(this);
+    this.nextWord = this.nextWord.bind(this);
 
     this.setupEventListeners();
   }
@@ -40,7 +40,7 @@ class WordGame {
   setupEventListeners() {
     // Initial game setup
     window.addEventListener('load', () => {
-      this.updateWord();
+      this.nextWord();
       this.elements.input.focus();
       this.displayMatches();
       this.displayFailedTries();
@@ -49,7 +49,7 @@ class WordGame {
     // Optional next button
     const nextButton = document.getElementById(this.config.nextButtonId);
     if (nextButton) {
-      nextButton.onclick = this.updateWord;
+      nextButton.onclick = this.nextWord;
     }
   }
 
@@ -67,7 +67,7 @@ class WordGame {
       if (inputMatchesReading) {
         this.currentSetMatchCount++;
         this.updateGlossary();
-        this.updateWord();
+        this.nextWord();
       } else {
         this.config.hintFunction(currentInput, this.data, this.wordIndex);
         this.wrongCountInSet++;
@@ -92,7 +92,7 @@ class WordGame {
     getElement('#userInput').replaceWith(newInput);
   }
 
-  updateWord() {
+  nextWord() {
     this.displayMatches();
 
     if (this.wordIndex == this.data.length) {
