@@ -95,34 +95,27 @@ class WordGame {
   updateWord() {
     this.displayMatches();
 
-    if (this.wordIndex < this.data.length) {
-      const currentWord = this.data[this.wordIndex];
-      const displayValue =
-        this.config.gameType === 'kanji'
-          ? currentWord.kanji
-          : this.config.gameType === 'katakana'
-          ? toKatakana(currentWord.reading)
-          : currentWord.reading;
-
-      this.elements.word.innerText = displayValue;
-
-      // Replacing input element removes all IME issues
-      this.replaceInputElement();
-      // Focus on new input element
-      getElement('#userInput').focus();
-
-      this.wordIndex++;
-    } else {
-      // Reset or complete game logic
-      this.wordIndex = 0;
-      this.currentSetMatchCount = 0;
-
-      if (this.wordIndex === this.data.length) {
-        this.updateWord();
-      } else {
-        alert('Congrats!');
-      }
+    if (this.wordIndex == this.data.length) {
+      alert('Congrats!');
+      return;
     }
+
+    const currentWord = this.data[this.wordIndex];
+    const displayValue =
+      this.config.gameType === 'kanji'
+        ? currentWord.kanji
+        : this.config.gameType === 'katakana'
+        ? toKatakana(currentWord.reading)
+        : currentWord.reading;
+
+    this.elements.word.innerText = displayValue;
+
+    // Replacing input element removes all IME issues
+    this.replaceInputElement();
+    // Focus on new input element
+    getElement('#userInput').focus();
+
+    this.wordIndex++;
   }
 
   updateGlossary() {
