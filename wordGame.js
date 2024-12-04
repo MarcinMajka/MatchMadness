@@ -92,14 +92,7 @@ class WordGame {
     getElement('#userInput').replaceWith(newInput);
   }
 
-  nextWord() {
-    this.displayMatches();
-
-    if (this.wordIndex == this.data.length) {
-      alert('Congrats!');
-      return;
-    }
-
+  updateDisplayedWord() {
     const currentWord = this.data[this.wordIndex];
     const displayValue =
       this.config.gameType === 'kanji'
@@ -109,6 +102,17 @@ class WordGame {
         : currentWord.reading;
 
     this.elements.word.innerText = displayValue;
+  }
+
+  nextWord() {
+    this.displayMatches();
+
+    if (this.wordIndex == this.data.length) {
+      alert('Congrats!');
+      return;
+    }
+
+    this.updateDisplayedWord();
 
     // Replacing input element removes all IME issues
     this.replaceInputElement();
