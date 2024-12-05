@@ -92,16 +92,17 @@ class WordGame {
     getElement('#userInput').replaceWith(newInput);
   }
 
-  updateDisplayedWord() {
+  getDisplayValue() {
     const currentWord = this.data[this.wordIndex];
-    const displayValue =
-      this.config.gameType === 'kanji'
-        ? currentWord.kanji
-        : this.config.gameType === 'katakana'
-        ? toKatakana(currentWord.reading)
-        : currentWord.reading;
+    return this.config.gameType === 'kanji'
+      ? currentWord.kanji
+      : this.config.gameType === 'katakana'
+      ? toKatakana(currentWord.reading)
+      : currentWord.reading;
+  }
 
-    this.elements.word.innerText = displayValue;
+  updateDisplayedWord() {
+    this.elements.word.innerText = this.getDisplayValue();
   }
 
   nextWord() {
