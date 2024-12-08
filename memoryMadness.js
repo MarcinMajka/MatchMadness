@@ -1,16 +1,29 @@
 // script.js
 const gameBoard = document.getElementById('game-board');
 
-// Card data (can be customized)
 const symbols = ['🍎', '🍌', '🍒', '🍇', '🍍', '🥝', '🍓', '🍉'];
 let cards = [...symbols, ...symbols]; // Duplicates for matching pairs
 
-// Track flipped cards and matched pairs
-let flippedCards = [];
+// Card data (can be customized)
+const data = JSON.parse(localStorage.getItem('currentSet'));
+const kanjis = [];
+const readings = [];
+const kanjiToReading = {};
+data.map((word) => {
+  const kanji = word.kanji;
+  const reading = word.reading;
+  kanjis.push(kanji);
+  readings.push(reading);
+  kanjiToReading[kanji] = reading;
+});
+let cardsJap = [...kanjis, ...readings];
+
+// Track flipped cardsJap and matched pairs
+let flippedCardsJap = [];
 let matchedPairs = 0;
 
-// Create and display cards
-cards.forEach((symbol) => {
+// Create and display cardsJap
+cardsJap.forEach((symbol) => {
   const card = document.createElement('div');
   card.classList.add('card');
   card.dataset.symbol = symbol; // Store symbol as data attribute
@@ -22,7 +35,7 @@ cards.forEach((symbol) => {
 function handleCardClick(event) {
   const card = event.target;
 
-  // Ignore already matched or flipped cards
+  // Ignore already matched or flipped cardsJap
   if (
     card.classList.contains('flipped') ||
     card.classList.contains('matched')
@@ -33,17 +46,17 @@ function handleCardClick(event) {
   // Flip the card
   card.textContent = card.dataset.symbol;
   card.classList.add('flipped');
-  flippedCards.push(card);
+  flippedCardsJap.push(card);
 
-  // Check for a match if two cards are flipped
-  if (flippedCards.length === 2) {
+  // Check for a match if two cardsJap are flipped
+  if (flippedCardsJap.length === 2) {
     checkForMatch();
   }
 }
 
-// Check if two flipped cards match
+// Check if two flipped cardsJap match
 function checkForMatch() {
-  const [card1, card2] = flippedCards;
+  const [card1, card2] = flippedCardsJap;
 
   if (card1.dataset.symbol === card2.dataset.symbol) {
     // Match found
@@ -56,7 +69,7 @@ function checkForMatch() {
       setTimeout(() => alert('You Win!'), 500);
     }
   } else {
-    // No match, flip cards back after a delay
+    // No match, flip cardsJap back after a delay
     setTimeout(() => {
       card1.textContent = '';
       card2.textContent = '';
@@ -65,6 +78,6 @@ function checkForMatch() {
     }, 1000);
   }
 
-  // Reset flipped cards array
-  flippedCards = [];
+  // Reset flipped cardsJap array
+  flippedCardsJap = [];
 }
