@@ -1,4 +1,6 @@
 // script.js
+import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
+
 const gameBoard = document.getElementById('game-board');
 
 const symbols = ['🍎', '🍌', '🍒', '🍇', '🍍', '🥝', '🍓', '🍉'];
@@ -54,9 +56,20 @@ function handleCardClick(event) {
   }
 }
 
+const isCardKanji = (card) => {
+  const word = card.dataset.symbol;
+  const wordChars = word.split('');
+  const isCardKanji = wordChars.some((char) => isKanji(char));
+  return isCardKanji;
+};
+
 // Check if two flipped cardsJap match
 function checkForMatch() {
   const [card1, card2] = flippedCardsJap;
+  console.log(card1);
+  console.log(card2);
+  console.log(isCardKanji(card1));
+  console.log(isCardKanji(card2));
 
   if (card1.dataset.symbol === card2.dataset.symbol) {
     // Match found
