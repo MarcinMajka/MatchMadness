@@ -70,6 +70,21 @@ const isPotentialCardPair = (card1, card2) => {
   );
 };
 
+const isMatch = (card1, card2) => {
+  if (isPotentialCardPair(card1, card2)) {
+    if (isCardKanji(card1)) {
+      const kanji = card1.dataset.symbol;
+      const reading = card2.dataset.symbol;
+      return kanjiToReading[kanji] === reading;
+    } else {
+      const kanji = card2.dataset.symbol;
+      const reading = card1.dataset.symbol;
+      return kanjiToReading[kanji] === reading;
+    }
+  }
+  return false;
+};
+
 // Check if two flipped cardsJap match
 function checkForMatch() {
   const [card1, card2] = flippedCardsJap;
@@ -78,6 +93,7 @@ function checkForMatch() {
   console.log(isCardKanji(card1));
   console.log(isCardKanji(card2));
   console.log(isPotentialCardPair(card1, card2));
+  console.log(isMatch(card1, card2));
 
   if (card1.dataset.symbol === card2.dataset.symbol) {
     // Match found
