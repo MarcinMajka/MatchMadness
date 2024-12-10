@@ -63,6 +63,13 @@ const isCardKanji = (card) => {
   return isCardKanji;
 };
 
+const isPotentialCardPair = (card1, card2) => {
+  return (
+    (isCardKanji(card1) && !isCardKanji(card2)) ||
+    (isCardKanji(card2) && !isCardKanji(card1))
+  );
+};
+
 // Check if two flipped cardsJap match
 function checkForMatch() {
   const [card1, card2] = flippedCardsJap;
@@ -70,6 +77,7 @@ function checkForMatch() {
   console.log(card2);
   console.log(isCardKanji(card1));
   console.log(isCardKanji(card2));
+  console.log(isPotentialCardPair(card1, card2));
 
   if (card1.dataset.symbol === card2.dataset.symbol) {
     // Match found
