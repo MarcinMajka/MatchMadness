@@ -88,14 +88,8 @@ const isMatch = (card1, card2) => {
 // Check if two flipped cardsJap match
 function checkForMatch() {
   const [card1, card2] = flippedCardsJap;
-  console.log(card1);
-  console.log(card2);
-  console.log(isCardKanji(card1));
-  console.log(isCardKanji(card2));
-  console.log(isPotentialCardPair(card1, card2));
-  console.log(isMatch(card1, card2));
 
-  if (card1.dataset.symbol === card2.dataset.symbol) {
+  if (isMatch(card1, card2)) {
     // Match found
     card1.classList.add('matched');
     card2.classList.add('matched');
