@@ -3,7 +3,6 @@ import { shuffleArray } from './utils.js';
 import { addWord, deleteRecord } from './favoriteWords.js';
 import { setTimeoutWrapper } from './wrappers.js';
 import {
-  ANIMATION_DURATION,
   highlightElements,
   selectElement,
   updateElements,
@@ -33,6 +32,7 @@ const initialState = {
     reading: null,
     glossary: null,
   },
+  animationDuration: 250,
 };
 
 const loadGamePreferences = () => {
@@ -119,7 +119,8 @@ export const clearClickedElements = (state) => {
 const handleCorrectAnswer = (state) => {
   highlightElements(
     [state.clickedColumnElements.left, state.clickedColumnElements.right],
-    'correct'
+    'correct',
+    state.animationDuration
   );
 
   updateGlossary(state);
@@ -139,13 +140,14 @@ const handleCorrectAnswer = (state) => {
     state.foundPairs++;
 
     updateUIIfRoundFinished(state);
-  }, ANIMATION_DURATION);
+  }, state.animationDuration);
 };
 
 const handleIncorrectAnswer = (state) => {
   highlightElements(
     [state.clickedColumnElements.left, state.clickedColumnElements.right],
-    'wrong'
+    'wrong',
+    state.animationDuration
   );
 
   // Reset the "selected" styles on the unmached elements...
