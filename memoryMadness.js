@@ -90,8 +90,13 @@ function checkForMatch() {
 
   if (isMatch(card1, card2)) {
     // Match found
-    card1.classList.add('matched');
-    card2.classList.add('matched');
+    highlightElements([card1, card2], 'correct', ANIMATION_DURATION);
+
+    setTimeout(() => {
+      card1.classList.add('matched');
+      card2.classList.add('matched');
+    }, ANIMATION_DURATION);
+
     matchedPairs++;
 
     // Check if the game is won

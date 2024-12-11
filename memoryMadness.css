@@ -47,6 +47,13 @@ body {
     color: white;
 }
 
+.card.correct {
+    background-color: #527324;
+    border-color: #527324;
+    color: white;
+
+}
+
 .card.matched {
     background-color: #141b21;
     border-color: #323c45;
