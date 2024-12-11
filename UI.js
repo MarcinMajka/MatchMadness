@@ -4,8 +4,6 @@ import { checkIfMatch, roundIsFinished } from './matchMadness.js';
 import { compareThreeWords } from './favoriteWords.js';
 import { shuffleArray } from './utils.js';
 
-export const ANIMATION_DURATION = 250;
-
 // Helper function to create an empty box
 const createEmptyBox = () => {
   const node = addElement('div');
@@ -87,8 +85,9 @@ const clearUpAfterRound = (elements) => {
  * Highlight the elements for a short period of time by adding a class to them and then removing it after a timeout.
  * @param elements - an array of DOM elements
  * @param className - the class to add and then remove
+ * @param animationDuration - highlight duration
  */
-export const highlightElements = (elements, className) => {
+export const highlightElements = (elements, className, animationDuration) => {
   // Highlighted elements should be disabled during the animation
   elements.forEach((element) => {
     element.classList.add(className);
@@ -99,7 +98,7 @@ export const highlightElements = (elements, className) => {
       element.classList.remove(className);
       element.style.pointerEvents = '';
     });
-  }, ANIMATION_DURATION);
+  }, animationDuration);
 };
 
 /**
