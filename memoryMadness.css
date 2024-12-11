@@ -42,9 +42,9 @@ body {
 }
 
 .card.matched {
-    background-color: #527324;
-    border-color: #527324;
-    color: #527324;
+    background-color: #141b21;
+    border-color: #323c45;
+    color: #323c45;
     pointer-events: none;
 }
 
