@@ -72,15 +72,11 @@ const isPotentialCardPair = (card1, card2) => {
 
 const isMatch = (card1, card2) => {
   if (isPotentialCardPair(card1, card2)) {
-    if (isCardKanji(card1)) {
-      const kanji = card1.dataset.symbol;
-      const reading = card2.dataset.symbol;
-      return kanjiToReading[kanji] === reading;
-    } else {
-      const kanji = card2.dataset.symbol;
-      const reading = card1.dataset.symbol;
-      return kanjiToReading[kanji] === reading;
-    }
+    // One of these is a kanji
+    const s1 = card1.dataset.symbol;
+    const s2 = card2.dataset.symbol;
+    // One will be undefined, the other will check if it's match
+    return kanjiToReading[s1] === s2 || kanjiToReading[s2] === s1;
   }
   return false;
 };
