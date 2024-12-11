@@ -41,6 +41,12 @@ body {
     color: white;
 }
 
+.card.wrong {
+    background-color: #ff6b6b;
+    border-color: #ff6b6b;
+    color: white;
+}
+
 .card.matched {
     background-color: #141b21;
     border-color: #323c45;

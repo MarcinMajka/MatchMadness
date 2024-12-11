@@ -1,5 +1,8 @@
 // script.js
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
+import { highlightElements } from './UI.js';
+
+const ANIMATION_DURATION = 1000;
 
 const gameBoard = document.getElementById('game-board');
 
@@ -96,13 +99,15 @@ function checkForMatch() {
       setTimeout(() => alert('You Win!'), 500);
     }
   } else {
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
+    highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
+
     // No match, flip cardsJap back after a delay
     setTimeout(() => {
       card1.textContent = '';
       card2.textContent = '';
-      card1.classList.remove('flipped');
-      card2.classList.remove('flipped');
-    }, 1000);
+    }, ANIMATION_DURATION);
   }
 
   // Reset flipped cardsJap array
