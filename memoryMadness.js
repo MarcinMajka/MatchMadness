@@ -1,6 +1,7 @@
 // script.js
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { highlightElements } from './UI.js';
+import { setTimeoutWrapper } from './wrappers.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -92,7 +93,7 @@ function checkForMatch() {
     // Match found
     highlightElements([card1, card2], 'correct', ANIMATION_DURATION);
 
-    setTimeout(() => {
+    setTimeoutWrapper(() => {
       card1.classList.add('matched');
       card2.classList.add('matched');
     }, ANIMATION_DURATION);
@@ -101,7 +102,7 @@ function checkForMatch() {
 
     // Check if the game is won
     if (matchedPairs === symbols.length) {
-      setTimeout(() => alert('You Win!'), 500);
+      setTimeoutWrapper(() => alert('You Win!'), 500);
     }
   } else {
     card1.classList.remove('flipped');
@@ -109,7 +110,7 @@ function checkForMatch() {
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
 
     // No match, flip cardsJap back after a delay
-    setTimeout(() => {
+    setTimeoutWrapper(() => {
       card1.textContent = '';
       card2.textContent = '';
     }, ANIMATION_DURATION);
