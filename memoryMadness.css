@@ -30,7 +30,7 @@ body {
     border-radius: 6px;
     background-color: #1d282d;
     color: antiquewhite;
-    font-size: calc(2vw + 2vh);
+    font-size: 1.5em;
     cursor: pointer;
     transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
