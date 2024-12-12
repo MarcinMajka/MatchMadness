@@ -1,4 +1,4 @@
-import { addElement, getElement } from './wrappers.js';
+import { addElement, getElement, setTimeoutWrapper } from './wrappers.js';
 import { stopTimer } from './timer.js';
 import { checkIfMatch, roundIsFinished } from './matchMadness.js';
 import { compareThreeWords } from './favoriteWords.js';
@@ -93,7 +93,7 @@ export const highlightElements = (elements, className, animationDuration) => {
     element.classList.add(className);
     element.style.pointerEvents = 'none';
   });
-  setTimeout(() => {
+  setTimeoutWrapper(() => {
     elements.forEach((element) => {
       element.classList.remove(className);
       element.style.pointerEvents = '';
