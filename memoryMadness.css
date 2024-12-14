@@ -6,11 +6,12 @@ body {
 }
 
 #glossary {
+    margin: 20px 100px;
     font-size: 50px;
     padding: 20px;
     margin-bottom: 20px;
     background-color: #1d282d;
-    border-radius: 10px;
+    border-radius: 25px;
 }
 
 #game-board {
