@@ -189,6 +189,10 @@ export const updateGlossary = (state) => {
     });
 };
 
+export const displayMatches = (matchesElement, matchCount) => {
+  matchesElement.innerText = `${matchCount}`;
+};
+
 export const likeButton = getElement('#likeButton');
 export const toggleLike = (element) => {
   element.classList.toggle('liked');
