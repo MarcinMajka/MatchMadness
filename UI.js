@@ -142,9 +142,6 @@ export const updateUIIfRoundFinished = (state) => {
   }
 
   if (isWin) {
-    // Make buttons visible and actionable
-    const buttons = getElement('.buttonContainer');
-    buttons.style.visibility = 'visible';
     stopTimer(state);
   }
 };
