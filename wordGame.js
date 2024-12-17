@@ -1,4 +1,5 @@
 import { getElement, createUIElement } from './wrappers.js';
+import { displayMatches } from './UI.js';
 import {
   toRomaji,
   toKatakana,
@@ -129,8 +130,7 @@ class WordGame {
   }
 
   displayMatches() {
-    const currentSetLength = this.data.length;
-    this.elements.matches.innerText = `${this.currentSetMatchCount}/${currentSetLength}`;
+    displayMatches(this.elements.matches, this.currentSetMatchCount);
   }
 
   displayFailedTries() {
