@@ -1,7 +1,7 @@
 import { startTimer } from './timer.js';
 import { shuffleArray } from './utils.js';
 import { addWord, deleteRecord } from './favoriteWords.js';
-import { setTimeoutWrapper } from './wrappers.js';
+import { setTimeoutWrapper, getElement } from './wrappers.js';
 import {
   highlightElements,
   selectElement,
@@ -12,6 +12,7 @@ import {
   showLikeButton,
   likeButton,
   toggleLike,
+  displayMatches,
 } from './UI.js';
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
@@ -88,6 +89,7 @@ const startGame = (initialState) => {
       handleLikeButton(state);
 
       setupRound(state, state.pairsToRender);
+      displayMatches(getElement('#matches'), state.foundPairs);
       startTimer(state);
     });
   }
@@ -138,6 +140,7 @@ const handleCorrectAnswer = (state) => {
     updateElements([leftElementToRemove, rightElementToRemove], 'correct');
 
     state.foundPairs++;
+    displayMatches(getElement('#matches'), state.foundPairs);
 
     updateUIIfRoundFinished(state);
   }, state.animationDuration);
