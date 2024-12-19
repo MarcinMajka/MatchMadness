@@ -193,6 +193,10 @@ export const displayMatches = (matchesElement, matchCount) => {
   matchesElement.innerText = `${matchCount}`;
 };
 
+export const displayFailedTries = (failsElement, failCount) => {
+  failsElement.innerText = `${failCount}`;
+};
+
 export const likeButton = getElement('#likeButton');
 export const toggleLike = (element) => {
   element.classList.toggle('liked');

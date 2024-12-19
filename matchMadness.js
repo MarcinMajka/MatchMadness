@@ -13,6 +13,7 @@ import {
   likeButton,
   toggleLike,
   displayMatches,
+  displayFailedTries,
 } from './UI.js';
 
 // NOTE: we are storing the clicked divs in an object, so we have the reactiveness of the object - the values will be updated in the object, even if we pass the object to a function.
@@ -24,6 +25,7 @@ const initialState = {
   // keep track of the last used pair
   lastUsedTripletIndex: 0,
   foundPairs: 0,
+  failedTries: 0,
   gameStartTime: null,
   timerInterval: null,
   currentSet: null,
@@ -90,6 +92,7 @@ const startGame = (initialState) => {
 
       setupRound(state, state.pairsToRender);
       displayMatches(getElement('#matches'), state.foundPairs);
+      displayFailedTries(getElement('#fails'), state.failedTries);
       startTimer(state);
     });
   }
@@ -158,6 +161,8 @@ const handleIncorrectAnswer = (state) => {
     [state.clickedColumnElements.left, state.clickedColumnElements.right],
     'wrong'
   );
+
+  displayFailedTries(getElement('#fails'), ++state.failedTries);
 
   // And reset the references
   clearClickedElements(state);
