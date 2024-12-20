@@ -194,7 +194,7 @@ export const displayMatches = (matchesElement, matchCount) => {
 };
 
 export const displayFailedTries = (failsElement, failCount) => {
-  failsElement.innerText = `${failCount}`;
+  failsElement.innerText = `Fails: ${failCount}`;
 };
 
 export const likeButton = getElement('#likeButton');
