@@ -1,5 +1,5 @@
 import { getElement, createUIElement } from './wrappers.js';
-import { displayMatches } from './UI.js';
+import { displayMatches, displayFailedTries } from './UI.js';
 import {
   toRomaji,
   toKatakana,
@@ -134,7 +134,7 @@ class WordGame {
   }
 
   displayFailedTries() {
-    this.elements.wrong.innerText = `Fails: ${this.wrongCountInSet}`;
+    displayFailedTries(this.elements.wrong, this.wrongCountInSet);
   }
 }
 
