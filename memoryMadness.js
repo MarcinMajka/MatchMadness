@@ -7,9 +7,6 @@ const ANIMATION_DURATION = 1000;
 
 const gameBoard = document.getElementById('game-board');
 
-const symbols = ['🍎', '🍌', '🍒', '🍇', '🍍', '🥝', '🍓', '🍉'];
-let cards = [...symbols, ...symbols]; // Duplicates for matching pairs
-
 // Card data (can be customized)
 const data = JSON.parse(localStorage.getItem('currentSet'));
 const kanjis = [];
