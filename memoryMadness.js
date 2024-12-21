@@ -21,7 +21,6 @@ data.map((word) => {
 });
 let cards = [...kanjis, ...readings];
 
-// Track flipped cards and matched pairs
 let flippedCards = [];
 let matchedPairs = 0;
 
@@ -102,17 +101,17 @@ function checkForMatch() {
       setTimeoutWrapper(() => alert('You Win!'), 500);
     }
   } else {
+    // No match
     card1.classList.remove('flipped');
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
 
-    // No match, flip cards back after a delay
+    // Flip cards back after a delay
     setTimeoutWrapper(() => {
       card1.textContent = '';
       card2.textContent = '';
     }, ANIMATION_DURATION);
   }
 
-  // Reset flipped cards array
   flippedCards = [];
 }
