@@ -19,14 +19,14 @@ data.map((word) => {
   readings.push(reading);
   kanjiToReading[kanji] = reading;
 });
-let cardsJap = [...kanjis, ...readings];
+let cards = [...kanjis, ...readings];
 
-// Track flipped cardsJap and matched pairs
-let flippedCardsJap = [];
+// Track flipped cards and matched pairs
+let flippedCards = [];
 let matchedPairs = 0;
 
-// Create and display cardsJap
-cardsJap.forEach((symbol) => {
+// Create and display cards
+cards.forEach((symbol) => {
   const card = document.createElement('div');
   card.classList.add('card');
   card.dataset.symbol = symbol; // Store symbol as data attribute
@@ -38,7 +38,7 @@ cardsJap.forEach((symbol) => {
 function handleCardClick(event) {
   const card = event.target;
 
-  // Ignore already matched or flipped cardsJap
+  // Ignore already matched or flipped cards
   if (
     card.classList.contains('flipped') ||
     card.classList.contains('matched')
@@ -49,10 +49,10 @@ function handleCardClick(event) {
   // Flip the card
   card.textContent = card.dataset.symbol;
   card.classList.add('flipped');
-  flippedCardsJap.push(card);
+  flippedCards.push(card);
 
-  // Check for a match if two cardsJap are flipped
-  if (flippedCardsJap.length === 2) {
+  // Check for a match if two cards are flipped
+  if (flippedCards.length === 2) {
     checkForMatch();
   }
 }
@@ -82,9 +82,9 @@ const isMatch = (card1, card2) => {
   return false;
 };
 
-// Check if two flipped cardsJap match
+// Check if two flipped cards match
 function checkForMatch() {
-  const [card1, card2] = flippedCardsJap;
+  const [card1, card2] = flippedCards;
 
   if (isMatch(card1, card2)) {
     // Match found
@@ -106,13 +106,13 @@ function checkForMatch() {
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
 
-    // No match, flip cardsJap back after a delay
+    // No match, flip cards back after a delay
     setTimeoutWrapper(() => {
       card1.textContent = '';
       card2.textContent = '';
     }, ANIMATION_DURATION);
   }
 
-  // Reset flipped cardsJap array
-  flippedCardsJap = [];
+  // Reset flipped cards array
+  flippedCards = [];
 }
