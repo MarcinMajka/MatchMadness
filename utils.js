@@ -93,7 +93,6 @@ export const displayHint = (currentInputElement, currentSet, wordIndex) => {
   let hint = '';
   let word = toRomaji(currentSet[wordIndex - 1].reading);
   let input = currentInputElement.value;
-  console.log('word: ' + word + ' input: ' + input);
   let i = 0;
 
   while (word[i] === input[i]) {

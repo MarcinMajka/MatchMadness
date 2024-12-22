@@ -181,7 +181,6 @@ export const updateGlossary = (state) => {
         likeButton.classList.add('liked');
       } else {
         likeButton.classList.remove('liked');
-        console.log('unliked');
       }
     })
     .catch((error) => {
