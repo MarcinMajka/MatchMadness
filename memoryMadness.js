@@ -115,3 +115,18 @@ function checkForMatch() {
 
   flippedCards = [];
 }
+
+// Returns kanji: [hiragana1, hiragana2, hiragana3, ...] Object
+const generateKanjisToHiraganasMap = (currentSet) => {
+  const kanjiToHiraganas = {};
+  for (const triplet of currentSet) {
+    const kanji = triplet.kanji;
+    const hiragana = triplet.reading;
+
+    if (kanjiToHiraganas[kanji]) {
+      kanjiToHiraganas[kanji].push(hiragana);
+    } else {
+      kanjiToHiraganas[kanji] = [hiragana];
+    }
+  }
+};
