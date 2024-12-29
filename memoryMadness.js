@@ -129,4 +129,11 @@ const generateKanjisToHiraganasMap = (currentSet) => {
       kanjiToHiraganas[kanji] = [hiragana];
     }
   }
+
+  return kanjiToHiraganas;
 };
+
+const currentSetMap = JSON.stringify(generateKanjisToHiraganasMap(data));
+localStorage.setItem('currentSetMap', currentSetMap);
+
+console.log(localStorage.getItem('currentSetMap'));
