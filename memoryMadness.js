@@ -51,7 +51,8 @@ function handleCardClick(event) {
 
   // Check for a match if two cards are flipped
   if (flippedCards.length === 2) {
-    checkForMatch();
+    const [card1, card2] = flippedCards;
+    checkForMatch(card1, card2);
   }
 }
 
@@ -85,9 +86,7 @@ const isMatch = (card1, card2) => {
 };
 
 // Check if two flipped cards match
-function checkForMatch() {
-  const [card1, card2] = flippedCards;
-
+function checkForMatch(card1, card2) {
   if (isMatch(card1, card2)) {
     // Match found
     highlightElements([card1, card2], 'correct', ANIMATION_DURATION);
