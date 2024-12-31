@@ -69,13 +69,17 @@ const isPotentialCardPair = (card1, card2) => {
   );
 };
 
+// To be used after checking isPotentialCardPair
+const getKanjiAndReading = (card1, card2) => {
+  return isCardKanji(card1) ? [card1, card2] : [card2, card1];
+};
+
 const isMatch = (card1, card2) => {
   if (isPotentialCardPair(card1, card2)) {
-    // One of these is a kanji
-    const s1 = card1.dataset.symbol;
-    const s2 = card2.dataset.symbol;
-    // One will be undefined, the other will check if it's match
-    return kanjiToReading[s1] === s2 || kanjiToReading[s2] === s1;
+    let [kanji, reading] = getKanjiAndReading(card1, card2);
+    kanji = kanji.dataset.symbol;
+    reading = reading.dataset.symbol;
+    return kanjiToReadings[kanji].some((el) => el === reading);
   }
   return false;
 };
@@ -96,7 +100,7 @@ function checkForMatch() {
     matchedPairs++;
 
     // Check if the game is won
-    if (matchedPairs === symbols.length) {
+    if (matchedPairs === data.length) {
       setTimeoutWrapper(() => alert('You Win!'), 500);
     }
   } else {
