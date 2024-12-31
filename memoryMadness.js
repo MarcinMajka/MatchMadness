@@ -11,13 +11,12 @@ const gameBoard = document.getElementById('game-board');
 const data = JSON.parse(localStorage.getItem('currentSet'));
 const kanjis = [];
 const readings = [];
-const kanjiToReading = {};
+const kanjiToReadings = generateKanjisToHiraganasMap(data);
 data.map((word) => {
   const kanji = word.kanji;
   const reading = word.reading;
   kanjis.push(kanji);
   readings.push(reading);
-  kanjiToReading[kanji] = reading;
 });
 let cards = [...kanjis, ...readings];
 
@@ -117,7 +116,7 @@ function checkForMatch() {
 }
 
 // Returns kanji: [hiragana1, hiragana2, hiragana3, ...] Object
-const generateKanjisToHiraganasMap = (currentSet) => {
+function generateKanjisToHiraganasMap(currentSet) {
   const kanjiToHiraganas = {};
   for (const triplet of currentSet) {
     const kanji = triplet.kanji;
@@ -131,7 +130,7 @@ const generateKanjisToHiraganasMap = (currentSet) => {
   }
 
   return kanjiToHiraganas;
-};
+}
 
 const currentSetMap = JSON.stringify(generateKanjisToHiraganasMap(data));
 localStorage.setItem('currentSetMap', currentSetMap);
