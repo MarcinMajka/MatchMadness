@@ -1,5 +1,6 @@
 import { getElement } from './wrappers.js';
 import { fitTextToContainer } from './utils.js';
+import { getFromIndexedDB } from './indexedDBHandler.js';
 
 let db;
 
@@ -44,6 +45,14 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
+export const getAllWordsByKey = (key, val) => {
+  return getFromIndexedDB(db, 'favWords', key, (objectStore) => {
+    const index = objectStore.index(key);
+    const request = index.getAll(val);
+    return request;
+  });
+};
+
 export const getWordByKey = (key, val) => {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(['favWords'], 'readonly');
@@ -52,28 +61,6 @@ export const getWordByKey = (key, val) => {
     const request = index.get(val);
 
     request.onsuccess = (event) => {
-      if (request.result) {
-        resolve(request.result);
-      } else {
-        resolve(null);
-      }
-    };
-
-    request.onerror = (event) => {
-      console.error('Error getting item: ' + event.target.error);
-      reject(event.target.error);
-    };
-  });
-};
-
-const getAllWordsByKey = (key, val) => {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['favWords'], 'readonly');
-    const objectStore = transaction.objectStore('favWords');
-    const index = objectStore.index(key);
-    const request = index.getAll(val);
-
-    request.onsuccess = () => {
       if (request.result) {
         resolve(request.result);
       } else {
