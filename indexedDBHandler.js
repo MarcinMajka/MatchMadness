@@ -131,7 +131,6 @@ export async function loadDataWithFallback({
     // Check if data is already in IndexedDB
     let fileData = await getFromIndexedDB(db, STORE_NAME, (objectStore) => {
       const request = objectStore.get(key);
-      console.log(request);
       return request;
     });
 
