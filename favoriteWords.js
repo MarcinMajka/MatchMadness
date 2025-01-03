@@ -1,34 +1,21 @@
 import { getElement } from './wrappers.js';
 import { fitTextToContainer } from './utils.js';
-import { getFromIndexedDB } from './indexedDBHandler.js';
+import { getFromIndexedDB, openDatabase } from './indexedDBHandler.js';
 
 let db;
 
-const openDatabase = () => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open('FavoriteWords', 1);
-
-    request.onerror = (event) => {
-      console.error('Database error: ' + event.target.error);
-      reject(event.target.error);
-    };
-
-    request.onsuccess = (event) => {
-      db = event.target.result;
-      resolve(db);
-    };
-
-    request.onupgradeneeded = (event) => {
-      db = event.target.result;
-      const objectStore = db.createObjectStore('favWords', {
-        keyPath: 'id',
-        autoIncrement: true,
-      });
-      objectStore.createIndex('kanji', 'kanji', { unique: false });
-      objectStore.createIndex('reading', 'reading', { unique: false });
-      objectStore.createIndex('glossary', 'glossary', { unique: false });
-    };
+const openFavWordsDatabase = async () => {
+  const database = await openDatabase('FavoriteWords', 'favWords', {
+    keyPath: 'id',
+    autoIncrement: true,
+    indexes: [
+      { name: 'kanji', keyPath: 'kanji', options: { unique: false } },
+      { name: 'reading', keyPath: 'reading', options: { unique: false } },
+      { name: 'glossary', keyPath: 'glossary', options: { unique: false } },
+    ],
   });
+  db = database;
+  return db;
 };
 
 export const addWord = (kanji, reading, glossary) => {
@@ -77,7 +64,7 @@ export const getWordByKey = (key, val) => {
 
 export const getAllWords = async () => {
   try {
-    const db = await openDatabase();
+    const db = await openFavWordsDatabase();
     return new Promise((resolve, reject) => {
       const transaction = db.transaction(['favWords'], 'readonly');
       const objectStore = transaction.objectStore('favWords');
@@ -130,7 +117,7 @@ export async function deleteRecord(state) {
     }
 
     // Delete the matching word
-    const db = await openDatabase();
+    const db = await openFavWordsDatabase();
     const transaction = db.transaction(['favWords'], 'readwrite');
     const objectStore = transaction.objectStore('favWords');
     const deleteRequest = objectStore.delete(wordToDelete.id);
@@ -157,7 +144,7 @@ export async function compareThreeWords(
   glossaryValue
 ) {
   try {
-    const db = await openDatabase();
+    const db = await openFavWordsDatabase();
     const [kanjiResults, readingResults, glossaryResults] = await Promise.all([
       getAllWordsByKey('kanji', kanjiValue),
       getAllWordsByKey('reading', readingValue),
@@ -192,7 +179,7 @@ export async function compareThreeWords(
 
 const removeWord = async (word) => {
   try {
-    const db = await openDatabase();
+    const db = await openFavWordsDatabase();
     const transaction = db.transaction(['favWords'], 'readwrite');
     const objectStore = transaction.objectStore('favWords');
     const index = objectStore.index('kanji');
