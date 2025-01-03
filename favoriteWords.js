@@ -46,7 +46,7 @@ export const addWord = (kanji, reading, glossary) => {
 };
 
 export const getAllWordsByKey = (key, val) => {
-  return getFromIndexedDB(db, 'favWords', key, (objectStore) => {
+  return getFromIndexedDB(db, 'favWords', (objectStore) => {
     const index = objectStore.index(key);
     const request = index.getAll(val);
     return request;
