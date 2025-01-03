@@ -40,28 +40,6 @@ export const getAllWordsByKey = (key, val) => {
   });
 };
 
-export const getWordByKey = (key, val) => {
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(['favWords'], 'readonly');
-    const objectStore = transaction.objectStore('favWords');
-    const index = objectStore.index(key);
-    const request = index.get(val);
-
-    request.onsuccess = (event) => {
-      if (request.result) {
-        resolve(request.result);
-      } else {
-        resolve(null);
-      }
-    };
-
-    request.onerror = (event) => {
-      console.error('Error getting item: ' + event.target.error);
-      reject(event.target.error);
-    };
-  });
-};
-
 export const getAllWords = async () => {
   try {
     const db = await openFavWordsDatabase();
