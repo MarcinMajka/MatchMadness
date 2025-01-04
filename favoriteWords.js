@@ -145,48 +145,6 @@ export async function compareThreeWords(
   }
 }
 
-const removeWord = async (word) => {
-  try {
-    const db = await openFavWordsDatabase();
-    const transaction = db.transaction(['favWords'], 'readwrite');
-    const objectStore = transaction.objectStore('favWords');
-    const index = objectStore.index('kanji');
-
-    // Get all words with the matching kanji
-    const request = index.getAll(word.kanji);
-
-    request.onsuccess = (event) => {
-      const matchingWords = event.target.result;
-
-      if (matchingWords.length === 0) {
-        return;
-      }
-
-      // Find the specific word that matches all criteria
-      const wordToDelete = matchingWords.find(
-        (w) => w.reading === word.reading && w.glossary === word.glossary
-      );
-
-      if (!wordToDelete) {
-        return;
-      }
-
-      // Delete the matching word
-      const deleteRequest = objectStore.delete(wordToDelete.id);
-
-      deleteRequest.onerror = (event) => {
-        console.error('Error deleting word:', event.target.error);
-      };
-    };
-
-    request.onerror = (event) => {
-      console.error('Error finding words:', event.target.error);
-    };
-  } catch (error) {
-    console.error('Error in removeWord:', error);
-  }
-};
-
 const showLikedWordsList = async () => {
   const favWordList = getElement('#favWordsList');
   // Safety net for not throwing errors when not on addFavorites.html
