@@ -73,19 +73,20 @@ export const getAllWords = async () => {
 
 export async function deleteRecord(word) {
   try {
-    db = await openFavWordsDatabase();
+    const db = await openFavWordsDatabase();
 
-    const words = await getAllWordsByKey('kanji', word.kanji);
+    const matchingWords = await getAllWordsByKey('kanji', word.kanji);
 
-    if (!words || words.length === 0) {
+    if (!matchingWords || matchingWords.length === 0) {
       return null;
     }
 
-    const wordToDelete = words.find(
+    const wordToDelete = matchingWords.find(
       (w) => w.reading === word.reading && w.glossary === word.glossary
     );
 
     if (!wordToDelete) {
+      console.log('No specific word match found');
       return null;
     }
 
@@ -217,10 +218,10 @@ const showLikedWordsList = async () => {
 
       removeWordButton.textContent = 'X';
       removeWordButton.className = 'removeWordButton';
-      removeWordButton.onclick = (e) => {
+      removeWordButton.onclick = async function (e) {
         // Prevent triggering wordItem click event
         e.stopPropagation();
-        removeWord(word);
+        await deleteRecord(word);
         showLikedWordsList();
       };
 
