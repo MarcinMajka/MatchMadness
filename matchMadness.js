@@ -68,7 +68,7 @@ const handleLikeButton = (state) => {
     const wordIsLiked = event.target.classList.contains('liked');
     if (wordIsLiked) {
       toggleLike(likeButton);
-      deleteRecord(state);
+      deleteRecord(state.currentCorrectWord);
     } else {
       toggleLike(likeButton);
       addWord(

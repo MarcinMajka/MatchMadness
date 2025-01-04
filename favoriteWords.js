@@ -71,47 +71,36 @@ export const getAllWords = async () => {
   }
 };
 
-export async function deleteRecord(state) {
+export async function deleteRecord(word) {
   try {
-    // Get all words with the matching kanji
-    const words = await getAllWordsByKey(
-      'kanji',
-      state.currentCorrectWord.kanji
-    );
+    db = await openFavWordsDatabase();
+
+    const words = await getAllWordsByKey('kanji', word.kanji);
 
     if (!words || words.length === 0) {
-      return;
+      return null;
     }
 
-    // Find the specific word that matches all criteria
     const wordToDelete = words.find(
-      (word) =>
-        word.reading === state.currentCorrectWord.reading &&
-        word.glossary === state.currentCorrectWord.glossary
+      (w) => w.reading === word.reading && w.glossary === word.glossary
     );
 
     if (!wordToDelete) {
-      return;
+      return null;
     }
 
-    // Delete the matching word
-    const db = await openFavWordsDatabase();
+    // Create a new transaction and get the object store for deletion
     const transaction = db.transaction(['favWords'], 'readwrite');
     const objectStore = transaction.objectStore('favWords');
-    const deleteRequest = objectStore.delete(wordToDelete.id);
 
+    // Delete the matching word
     return new Promise((resolve, reject) => {
-      deleteRequest.onsuccess = () => {
-        resolve('Word deleted successfully');
-      };
-
-      deleteRequest.onerror = (event) => {
-        console.error('Error deleting word:', event.target.error);
-        reject(event.target.error);
-      };
+      const deleteRequest = objectStore.delete(wordToDelete.id);
+      deleteRequest.onsuccess = () => resolve('Word deleted successfully');
+      deleteRequest.onerror = () => reject(deleteRequest.error);
     });
   } catch (error) {
-    console.error('Error in deleteRecord:', error);
+    console.error('Error in deleteWord:', error);
     throw error;
   }
 }
