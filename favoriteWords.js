@@ -108,7 +108,6 @@ export async function compareThreeWords(
   glossaryValue
 ) {
   try {
-    const db = await openFavWordsDatabase();
     const [kanjiResults, readingResults, glossaryResults] = await Promise.all([
       getAllWordsByKey('kanji', kanjiValue),
       getAllWordsByKey('reading', readingValue),
