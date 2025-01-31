@@ -71,11 +71,11 @@ export function saveToIndexedDB(db, storeName, key, data) {
  * @param {string} storeName - The name of the object store.
  * @returns {Promise<any>} A promise that resolves with the retrieved data.
  */
-export function getFromIndexedDB(db, storeName, requestClosure) {
+export function getFromIndexedDB(db, storeName, key) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readonly');
     const store = transaction.objectStore(storeName);
-    const request = requestClosure(store);
+    const request = store.get(key);
 
     request.onsuccess = (event) => {
       resolve(event.target.result);
@@ -153,10 +153,7 @@ export async function loadDataWithFallback({
     const db = await openDatabase(DB_NAME, STORE_NAME);
 
     // Check if data is already in IndexedDB
-    let fileData = await getFromIndexedDB(db, STORE_NAME, (objectStore) => {
-      const request = objectStore.get(key);
-      return request;
-    });
+    let fileData = await getFromIndexedDB(db, STORE_NAME, key);
 
     if (!fileData) {
       // If not in IndexedDB, fetch from FILE_URL

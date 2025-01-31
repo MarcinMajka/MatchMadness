@@ -32,7 +32,8 @@ export const addWord = (kanji, reading, glossary) => {
   };
 };
 
-export const getAllWordsByKey = (key, val) => {
+export const getAllWordsByKey = async (key, val) => {
+  db = await openFavWordsDatabase();
   return getAllWithIndex({ db, storeName: 'favWords', index: key, val });
 };
 
