@@ -1,6 +1,6 @@
 import { getElement } from './wrappers.js';
 import { fitTextToContainer } from './utils.js';
-import { getFromIndexedDB, openDatabase } from './indexedDBHandler.js';
+import { getAllWithIndex, openDatabase } from './indexedDBHandler.js';
 
 let db;
 
@@ -33,11 +33,7 @@ export const addWord = (kanji, reading, glossary) => {
 };
 
 export const getAllWordsByKey = (key, val) => {
-  return getFromIndexedDB(db, 'favWords', (objectStore) => {
-    const index = objectStore.index(key);
-    const request = index.getAll(val);
-    return request;
-  });
+  return getAllWithIndex({ db, storeName: 'favWords', index: key, val });
 };
 
 export const getAllWords = async () => {

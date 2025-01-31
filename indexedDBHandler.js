@@ -89,6 +89,30 @@ export function getFromIndexedDB(db, storeName, requestClosure) {
 }
 
 /**
+ * Retrieves data from an object store in IndexedDB.
+ * @param {IDBDatabase} db - The database object.
+ * @param {string} storeName - The name of the object store.
+ * @returns {Promise<any>} A promise that resolves with the retrieved data.
+ */
+export function getAllWithIndex({ db, storeName, index, val }) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, 'readonly');
+    const store = transaction.objectStore(storeName);
+    const indexed = store.index(index);
+    const request = indexed.getAll(val);
+
+    request.onsuccess = (event) => {
+      resolve(event.target.result);
+    };
+
+    request.onerror = (event) => {
+      console.error('Get from IndexedDB error:', event.target.error);
+      reject(event.target.error);
+    };
+  });
+}
+
+/**
  * Fetches a file from a given URL.
  * @param {string} url - The URL of the file to fetch.
  * @returns {Promise<Blob|null>} A promise that resolves with the file as a Blob, or null if there was an error.
