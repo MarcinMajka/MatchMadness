@@ -98,8 +98,8 @@ export function getAllWithIndex({ db, storeName, index, val }) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readonly');
     const store = transaction.objectStore(storeName);
-    const indexed = store.index(index);
-    const request = indexed.getAll(val);
+    const indexedStore = store.index(index);
+    const request = indexedStore.getAll(val);
 
     request.onsuccess = (event) => {
       resolve(event.target.result);
