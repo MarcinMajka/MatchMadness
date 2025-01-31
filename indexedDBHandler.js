@@ -88,6 +88,17 @@ export function getFromIndexedDB(db, storeName, key) {
   });
 }
 
+export function deleteRecordDB(db, storeName, key) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.delete(key);
+
+    request.onsuccess = () => resolve('Word deleted successfully');
+    request.onerror = () => reject(request.error);
+  });
+}
+
 /**
  * Retrieves data from an object store in IndexedDB.
  * @param {IDBDatabase} db - The database object.

@@ -1,6 +1,10 @@
 import { getElement } from './wrappers.js';
 import { fitTextToContainer } from './utils.js';
-import { getAllWithIndex, openDatabase } from './indexedDBHandler.js';
+import {
+  getAllWithIndex,
+  openDatabase,
+  deleteRecordDB,
+} from './indexedDBHandler.js';
 
 const openFavWordsDatabase = async () => {
   const database = await openDatabase('FavoriteWords', 'favWords', {
@@ -86,16 +90,7 @@ export async function deleteRecord(word) {
       return null;
     }
 
-    // Create a new transaction and get the object store for deletion
-    const transaction = db.transaction(['favWords'], 'readwrite');
-    const objectStore = transaction.objectStore('favWords');
-
-    // Delete the matching word
-    return new Promise((resolve, reject) => {
-      const deleteRequest = objectStore.delete(wordToDelete.id);
-      deleteRequest.onsuccess = () => resolve('Word deleted successfully');
-      deleteRequest.onerror = () => reject(deleteRequest.error);
-    });
+    return deleteRecordDB(db, 'favWords', wordToDelete.id);
   } catch (error) {
     console.error('Error in deleteWord:', error);
     throw error;
