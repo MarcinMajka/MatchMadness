@@ -2,8 +2,6 @@ import { getElement } from './wrappers.js';
 import { fitTextToContainer } from './utils.js';
 import { getAllWithIndex, openDatabase } from './indexedDBHandler.js';
 
-let db;
-
 const openFavWordsDatabase = async () => {
   const database = await openDatabase('FavoriteWords', 'favWords', {
     keyPath: 'id',
@@ -14,11 +12,12 @@ const openFavWordsDatabase = async () => {
       { name: 'glossary', keyPath: 'glossary', options: { unique: false } },
     ],
   });
-  db = database;
-  return db;
+
+  return database;
 };
 
-export const addWord = (kanji, reading, glossary) => {
+export const addWord = async (kanji, reading, glossary) => {
+  const db = await openFavWordsDatabase();
   const transaction = db.transaction(['favWords'], 'readwrite');
   const objectStore = transaction.objectStore('favWords');
   const request = objectStore.add({
@@ -33,7 +32,7 @@ export const addWord = (kanji, reading, glossary) => {
 };
 
 export const getAllWordsByKey = async (key, val) => {
-  db = await openFavWordsDatabase();
+  const db = await openFavWordsDatabase();
   return getAllWithIndex({ db, storeName: 'favWords', index: key, val });
 };
 
