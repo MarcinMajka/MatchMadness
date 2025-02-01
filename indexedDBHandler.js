@@ -65,6 +65,23 @@ export function putToIndexedDB(db, storeName, key, data) {
   });
 }
 
+export function saveToIndexedDB(db, storeName, data) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.add(data);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = (event) => {
+      console.error('Save to IndexedDB error:', event.target.error);
+      reject(event.target.error);
+    };
+  });
+}
+
 /**
  * Retrieves data from an object store in IndexedDB.
  * @param {IDBDatabase} db - The database object.

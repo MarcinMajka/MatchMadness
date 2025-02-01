@@ -4,6 +4,7 @@ import {
   getAllWithIndex,
   openDatabase,
   deleteRecordDB,
+  saveToIndexedDB,
 } from './indexedDBHandler.js';
 
 const openFavWordsDatabase = async () => {
@@ -22,17 +23,12 @@ const openFavWordsDatabase = async () => {
 
 export const addWord = async (kanji, reading, glossary) => {
   const db = await openFavWordsDatabase();
-  const transaction = db.transaction(['favWords'], 'readwrite');
-  const objectStore = transaction.objectStore('favWords');
-  const request = objectStore.add({
+
+  saveToIndexedDB(db, 'favWords', {
     kanji,
     reading,
     glossary,
   });
-
-  request.onerror = (event) => {
-    console.error('Error adding item: ' + event.target.error);
-  };
 };
 
 export const getAllWordsByKey = async (key, val) => {
