@@ -5,6 +5,7 @@ import {
   openDatabase,
   deleteRecordDB,
   saveToIndexedDB,
+  getAllAsAnArray,
 } from './indexedDBHandler.js';
 
 const openFavWordsDatabase = async () => {
@@ -39,28 +40,7 @@ export const getAllWordsByKey = async (key, val) => {
 export const getAllWords = async () => {
   try {
     const db = await openFavWordsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = db.transaction(['favWords'], 'readonly');
-      const objectStore = transaction.objectStore('favWords');
-      const request = objectStore.getAll();
-
-      request.onsuccess = () => {
-        if (request.result) {
-          // Ensure we're always returning an array
-          const resultArray = Array.isArray(request.result)
-            ? request.result
-            : [request.result];
-          resolve(resultArray);
-        } else {
-          resolve([]); // Return an empty array if no items found
-        }
-      };
-
-      request.onerror = (event) => {
-        console.error('Error getting items: ' + event.target.error);
-        reject(event.target.error);
-      };
-    });
+    return getAllAsAnArray(db, 'favWords');
   } catch (error) {
     console.error('Error in getAllWords:', error);
     throw error;

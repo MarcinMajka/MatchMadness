@@ -82,6 +82,30 @@ export function saveToIndexedDB(db, storeName, data) {
   });
 }
 
+export function getAllAsAnArray(db, storeName) {
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+
+    request.onsuccess = () => {
+      if (request.result) {
+        // Ensure we're always returning an array
+        const resultArray = Array.isArray(request.result)
+          ? request.result
+          : [request.result];
+        resolve(resultArray);
+      } else {
+        resolve([]); // Return an empty array if no items found
+      }
+    };
+
+    request.onerror = (event) => {
+      console.error('Error getting items: ' + event.target.error);
+      reject(event.target.error);
+    };
+  });
+}
 /**
  * Retrieves data from an object store in IndexedDB.
  * @param {IDBDatabase} db - The database object.
