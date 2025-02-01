@@ -48,7 +48,7 @@ export function openDatabase(dbName, storeName, options = {}) {
  * @param {any} data - The data to store.
  * @returns {Promise<void>} A promise that resolves when the data is saved.
  */
-export function saveToIndexedDB(db, storeName, key, data) {
+export function putToIndexedDB(db, storeName, key, data) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
     const store = transaction.objectStore(storeName);
@@ -174,7 +174,7 @@ export async function loadDataWithFallback({
       }
 
       // Save the blob to IndexedDB
-      await saveToIndexedDB(db, STORE_NAME, data, fileData);
+      await putToIndexedDB(db, STORE_NAME, data, fileData);
     }
 
     // Convert Blob to JSON
