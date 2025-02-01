@@ -38,13 +38,8 @@ export const getAllWordsByKey = async (key, val) => {
 };
 
 export const getAllWords = async () => {
-  try {
-    const db = await openFavWordsDatabase();
-    return getAllAsAnArray(db, 'favWords');
-  } catch (error) {
-    console.error('Error in getAllWords:', error);
-    throw error;
-  }
+  const db = await openFavWordsDatabase();
+  return getAllAsAnArray(db, 'favWords');
 };
 
 export async function deleteRecord(word) {
