@@ -91,6 +91,12 @@ export function saveToIndexedDB(db, storeName, data) {
   });
 }
 
+/**
+ * Retrieves all records from an object store in IndexedDB as an array.
+ * @param {IDBDatabase} db - The database object.
+ * @param {string} storeName - The name of the object store.
+ * @returns {Promise<any[]>} A promise that resolves with an array of all records.
+ */
 export function getAllAsAnArray(db, storeName) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
@@ -115,6 +121,7 @@ export function getAllAsAnArray(db, storeName) {
     };
   });
 }
+
 /**
  * Retrieves data from an object store in IndexedDB.
  * @param {IDBDatabase} db - The database object.
