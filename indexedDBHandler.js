@@ -145,6 +145,13 @@ export function getFromIndexedDB(db, storeName, key) {
   });
 }
 
+/**
+ * Deletes a record from an object store in IndexedDB.
+ * @param {IDBDatabase} db - The database object.
+ * @param {string} storeName - The name of the object store.
+ * @param {any} key - The key of the record to delete.
+ * @returns {Promise<string>} A promise that resolves with a success message when the record is deleted.
+ */
 export function deleteRecordDB(db, storeName, key) {
   return new Promise((resolve, reject) => {
     const transaction = db.transaction(storeName, 'readwrite');
