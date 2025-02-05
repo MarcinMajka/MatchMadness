@@ -24,6 +24,7 @@ export const fitTextToContainer = (element) => {
   }
 };
 
+// TODO
 const getSameKanjiInSetObject = () => {
   const sameKanjiObjectCounter = {};
   const sameKanjiObject = {};
