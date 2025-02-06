@@ -141,14 +141,6 @@ a {
   margin-bottom: 0;
 }
 
-.buttonContainer {
-  background-color: #527324;
-  display: flex;
-  flex-direction: row;
-  font-weight: bold;
-  visibility: hidden;
-}
-
 .button {
   display: flex;
   justify-content: center;
