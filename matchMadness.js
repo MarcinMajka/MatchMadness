@@ -9,8 +9,7 @@ import {
   updateUIIfRoundFinished,
   setupRound,
   updateGlossary,
-  showLikeButton,
-  likeButton,
+  showElement,
   toggleLike,
   displayMatches,
   displayFailedTries,
@@ -64,6 +63,7 @@ const loadGamePreferences = () => {
 };
 
 const handleLikeButton = (state) => {
+  const likeButton = getElement('#likeButton');
   likeButton.addEventListener('click', (event) => {
     const wordIsLiked = event.target.classList.contains('liked');
     if (wordIsLiked) {
@@ -130,7 +130,8 @@ const handleCorrectAnswer = (state) => {
 
   updateGlossary(state);
 
-  showLikeButton();
+  // Show #likeButton
+  showElement(getElement('#likeButton'));
 
   // assigning left and right to different values, so that the User can select other divs during the animation
   const leftElementToRemove = state.clickedColumnElements.left;

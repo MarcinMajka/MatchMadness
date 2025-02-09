@@ -177,6 +177,8 @@ export const updateGlossary = (state) => {
 
   compareThreeWords(kanji, reading, glossary)
     .then((result) => {
+      const likeButton = getElement('#likeButton');
+
       if (result) {
         likeButton.classList.add('liked');
       } else {
@@ -196,11 +198,10 @@ export const displayFailedTries = (failsElement, failCount) => {
   failsElement.innerText = `Fails: ${failCount}`;
 };
 
-export const likeButton = getElement('#likeButton');
 export const toggleLike = (element) => {
   element.classList.toggle('liked');
 };
 
-export const showLikeButton = () => {
-  likeButton.style.visibility = 'visible';
+export const showElement = (element) => {
+  element.style.visibility = 'visible';
 };
