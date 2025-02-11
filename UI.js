@@ -177,7 +177,7 @@ export const updateGlossary = (state) => {
 
   compareThreeWords(kanji, reading, glossary)
     .then((result) => {
-      const likeButton = getElement('#likeButton');
+      const likeButton = getElement('#matchMadnessLikeButton');
 
       if (result) {
         likeButton.classList.add('liked');

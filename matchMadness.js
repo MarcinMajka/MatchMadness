@@ -63,14 +63,14 @@ const loadGamePreferences = () => {
 };
 
 const handleLikeButton = (state) => {
-  const likeButton = getElement('#likeButton');
-  likeButton.addEventListener('click', (event) => {
+  const matchMadnessLikeButton = getElement('#matchMadnessLikeButton');
+  matchMadnessLikeButton.addEventListener('click', (event) => {
     const wordIsLiked = event.target.classList.contains('liked');
     if (wordIsLiked) {
-      toggleLike(likeButton);
+      toggleLike(matchMadnessLikeButton);
       deleteRecord(state.currentCorrectWord);
     } else {
-      toggleLike(likeButton);
+      toggleLike(matchMadnessLikeButton);
       addWord(
         state.currentCorrectWord.kanji,
         state.currentCorrectWord.reading,
@@ -130,8 +130,8 @@ const handleCorrectAnswer = (state) => {
 
   updateGlossary(state);
 
-  // Show #likeButton
-  showElement(getElement('#likeButton'));
+  // Show #matchMadnessLikeButton
+  showElement(getElement('#matchMadnessLikeButton'));
 
   // assigning left and right to different values, so that the User can select other divs during the animation
   const leftElementToRemove = state.clickedColumnElements.left;
