@@ -2,6 +2,7 @@
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { highlightElements } from './UI.js';
 import { setTimeoutWrapper } from './wrappers.js';
+import { shuffleArray } from './utils.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -18,7 +19,7 @@ data.map((word) => {
   kanjis.push(kanji);
   readings.push(reading);
 });
-let cards = [...kanjis, ...readings];
+let cards = shuffleArray([...kanjis, ...readings]);
 
 let flippedCards = [];
 let matchedPairs = 0;
