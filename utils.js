@@ -47,7 +47,7 @@ export const countKanjiOccurrences = (data) => {
   return { sameKanjiObjectCounter, sameKanjiObject };
 };
 
-export const getNonUniqueKanji = (sameKanjiObject, sameKanjiObjectCounter) => {
+export const getNonUniqueKanji = (sameKanjiObjectCounter, sameKanjiObject) => {
   // Filter out kanji that appear only once
   Object.keys(sameKanjiObjectCounter).forEach((k) => {
     if (sameKanjiObjectCounter[k] === 1) {
