@@ -24,6 +24,17 @@ export const fitTextToContainer = (element) => {
   }
 };
 
+const getNonUniqueKanji = (sameKanjiObject, sameKanjiObjectCounter) => {
+  // Filter out kanji that appear only once
+  Object.keys(sameKanjiObjectCounter).forEach((k) => {
+    if (sameKanjiObjectCounter[k] === 1) {
+      delete sameKanjiObject[k];
+    }
+  });
+
+  return sameKanjiObject;
+};
+
 // TODO
 const getSameKanjiInSetObject = (data) => {
   const sameKanjiObjectCounter = {};
@@ -45,14 +56,7 @@ const getSameKanjiInSetObject = (data) => {
     }
   });
 
-  // Filter out kanji that appear only once
-  Object.keys(sameKanjiObjectCounter).forEach((k) => {
-    if (sameKanjiObjectCounter[k] === 1) {
-      delete sameKanjiObject[k];
-    }
-  });
-
-  return sameKanjiObject;
+  return getNonUniqueKanji(sameKanjiObject, sameKanjiObjectCounter);
 };
 
 window.getSameKanjiInSetObject = getSameKanjiInSetObject;
