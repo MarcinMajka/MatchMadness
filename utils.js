@@ -24,6 +24,22 @@ export const fitTextToContainer = (element) => {
   }
 };
 
+const countKanjiOccurrences = (data) => {
+  const kanjiCounter = {};
+  const kanjiReadings = {};
+
+  data.forEach(({ kanji, reading }) => {
+    kanjiCounter[kanji] = (kanjiCounter[kanji] || 0) + 1;
+
+    if (!kanjiReadings[kanji]) {
+      kanjiReadings[kanji] = [];
+    }
+    kanjiReadings[kanji].push(reading);
+  });
+
+  return { kanjiCounter, kanjiReadings };
+};
+
 const getNonUniqueKanji = (sameKanjiObject, sameKanjiObjectCounter) => {
   // Filter out kanji that appear only once
   Object.keys(sameKanjiObjectCounter).forEach((k) => {
