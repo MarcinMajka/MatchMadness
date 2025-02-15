@@ -1,0 +1,56 @@
+import { loadDataWithFallback } from './indexedDBHandler.js';
+import { countKanjiOccurrences, getNonUniqueKanji } from './utils.js';
+
+const parseAsTriplets = (listOfTripletsData) => {
+  return listOfTripletsData.map((tripletData) => ({
+    kanji: tripletData[0],
+    reading: tripletData[1],
+    glossary: tripletData[2],
+  }));
+};
+
+let cnt = 0;
+
+async function getAllWordsAsObject() {
+  try {
+    const wordSets = await loadDataWithFallback({
+      DB_NAME: 'AllWordSets',
+      STORE_NAME: 'WordSets',
+      FILE_URL: './dicIn50WordSets.json',
+      key: 'dicIn50WordSets.json',
+      data: 'AllWordSetsBlob',
+    });
+
+    const accumulatedKanjiCounter = {};
+    const accumulatedKanjiReadings = {};
+
+    for (const set of wordSets) {
+      const parsedSet = parseAsTriplets(set);
+      const { sameKanjiObjectCounter, sameKanjiObject } =
+        countKanjiOccurrences(parsedSet);
+
+      // Merge the counters
+      for (const kanji in sameKanjiObjectCounter) {
+        accumulatedKanjiCounter[kanji] =
+          (accumulatedKanjiCounter[kanji] || 0) + sameKanjiObjectCounter[kanji];
+      }
+
+      // Merge the readings
+      for (const kanji in sameKanjiObject) {
+        if (!accumulatedKanjiReadings[kanji]) {
+          accumulatedKanjiReadings[kanji] = [];
+        }
+        accumulatedKanjiReadings[kanji].push(...sameKanjiObject[kanji]);
+      }
+
+      console.log(accumulatedKanjiReadings);
+
+      if (cnt === 10) break;
+      cnt++;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+window.getAllWordsAsObject = getAllWordsAsObject;
