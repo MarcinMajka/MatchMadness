@@ -36,6 +36,8 @@ const getNonUniqueKanji = (sameKanjiObject, sameKanjiObjectCounter) => {
 };
 
 // TODO
+// Data is an array of kanji, reading and glossary objects
+// [{kanji: '漢字', reading: 'かんじ', glossary: 'kanji'}, ...]
 const getSameKanjiInSetObject = (data) => {
   const sameKanjiObjectCounter = {};
   const sameKanjiObject = {};
