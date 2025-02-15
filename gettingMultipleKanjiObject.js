@@ -9,8 +9,6 @@ const parseAsTriplets = (listOfTripletsData) => {
   }));
 };
 
-let cnt = 0;
-
 async function getAllWordsAsObject() {
   try {
     const wordSets = await loadDataWithFallback({
@@ -42,15 +40,21 @@ async function getAllWordsAsObject() {
         }
         accumulatedKanjiReadings[kanji].push(...sameKanjiObject[kanji]);
       }
-
-      console.log(accumulatedKanjiReadings);
-
-      if (cnt === 10) break;
-      cnt++;
     }
+    return { accumulatedKanjiCounter, accumulatedKanjiReadings };
   } catch (error) {
     console.log(error);
   }
 }
+
+const { accumulatedKanjiCounter, accumulatedKanjiReadings } =
+  await getAllWordsAsObject();
+
+const uniqueKanjis = getNonUniqueKanji(
+  accumulatedKanjiCounter,
+  accumulatedKanjiReadings
+);
+
+console.log(uniqueKanjis);
 
 window.getAllWordsAsObject = getAllWordsAsObject;
