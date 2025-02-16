@@ -24,6 +24,8 @@ export const fitTextToContainer = (element) => {
   }
 };
 
+// Data is an array of kanji, reading and glossary objects
+// [{kanji: '漢字', reading: 'かんじ', glossary: 'kanji'}, ...]
 export const countKanjiOccurrences = (data) => {
   const sameKanjiObjectCounter = {};
   const sameKanjiObject = {};
