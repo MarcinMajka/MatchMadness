@@ -60,18 +60,6 @@ export const getNonUniqueKanji = (sameKanjiObjectCounter, sameKanjiObject) => {
   return sameKanjiObject;
 };
 
-// TODO
-// Data is an array of kanji, reading and glossary objects
-// [{kanji: '漢字', reading: 'かんじ', glossary: 'kanji'}, ...]
-const getSameKanjiInSetObject = (data) => {
-  const { sameKanjiObjectCounter, sameKanjiObject } =
-    countKanjiOccurrences(data);
-
-  return getNonUniqueKanji(sameKanjiObject, sameKanjiObjectCounter);
-};
-
-window.getSameKanjiInSetObject = getSameKanjiInSetObject;
-
 /*
   Plan:
     1. get an object with kanjis that appear multiple times in one set
