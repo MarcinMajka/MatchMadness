@@ -75,7 +75,7 @@ export const setupRound = (state, pairRenderLimitIndex) => {
   fillBoxesWithValues(state, columnElementNodes, pairRenderLimitIndex);
 };
 
-const clearUpAfterRound = (elements) => {
+const cleanUpAfterRound = (elements) => {
   elements.forEach((element) => {
     element.innerHTML = '';
   });
@@ -133,7 +133,7 @@ export const updateUIIfRoundFinished = (state) => {
 
   if (shouldSetupNextRound) {
     const elements = [getElement('.leftColumn'), getElement('.rightColumn')];
-    clearUpAfterRound(elements);
+    cleanUpAfterRound(elements);
 
     const remainingPairs = setLength - state.lastUsedTripletIndex;
     const nextPairsToRender = Math.min(state.pairsToRender, remainingPairs);
