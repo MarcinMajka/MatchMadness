@@ -58,3 +58,16 @@ const uniqueKanjis = getNonUniqueKanji(
 console.log(uniqueKanjis);
 
 window.getAllWordsAsObject = getAllWordsAsObject;
+
+function saveToFile(filename, content) {
+  const blob = new Blob([content], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// Save the data in the browser
+saveToFile('uniqueKanjis.json', JSON.stringify(uniqueKanjis, null, 2));
