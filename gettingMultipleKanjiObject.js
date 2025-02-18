@@ -50,12 +50,13 @@ async function getAllWordsAsObject() {
 const { accumulatedKanjiCounter, accumulatedKanjiReadings } =
   await getAllWordsAsObject();
 
-const uniqueKanjis = getNonUniqueKanji(
+// polyphonic - having multiple sounds (redings in this case)
+const polyphonicKanjis = getNonUniqueKanji(
   accumulatedKanjiCounter,
   accumulatedKanjiReadings
 );
 
-console.log(uniqueKanjis);
+console.log(polyphonicKanjis);
 
 window.getAllWordsAsObject = getAllWordsAsObject;
 
@@ -70,4 +71,4 @@ function saveToFile(filename, content) {
 }
 
 // Save the data in the browser
-saveToFile('uniqueKanjis.json', JSON.stringify(uniqueKanjis, null, 2));
+saveToFile('polyphonicKanjis.json', JSON.stringify(polyphonicKanjis, null, 2));
