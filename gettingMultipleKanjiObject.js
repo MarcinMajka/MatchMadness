@@ -56,10 +56,6 @@ const polyphonicKanjis = getNonUniqueKanji(
   accumulatedKanjiReadings
 );
 
-console.log(polyphonicKanjis);
-
-window.getAllWordsAsObject = getAllWordsAsObject;
-
 function saveToFile(filename, content) {
   const blob = new Blob([content], { type: 'application/json' });
   const a = document.createElement('a');
