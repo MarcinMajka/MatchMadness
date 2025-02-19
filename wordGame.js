@@ -23,6 +23,8 @@ class WordGame {
       glossary: getElement('#glossary'),
       matches: getElement('#matches'),
       wrong: getElement('#wrong'),
+      glossaryWordAndReading: getElement('#leftValueRightValue'),
+      likeButton: getElement('#wordMadnessLikeButton'),
     };
 
     // Game State
@@ -34,6 +36,7 @@ class WordGame {
     // Bind methods to maintain context
     this.validateInput = this.validateInput.bind(this);
     this.nextWord = this.nextWord.bind(this);
+    this.toggleLike = this.toggleLike.bind(this);
 
     this.setupEventListeners();
   }
@@ -66,6 +69,8 @@ class WordGame {
       const inputMatchesReading = inputValue === toRomaji(currentWord.reading);
 
       if (inputMatchesReading) {
+        this.elements.likeButton.style.visibility = 'visible';
+        this.elements.likeButton.addEventListener('click', this.toggleLike);
         this.currentSetMatchCount++;
         this.updateGlossary();
         this.nextWord();
@@ -135,6 +140,11 @@ class WordGame {
 
   displayFailedTries() {
     displayFailedTries(this.elements.wrong, this.wrongCountInSet);
+  }
+
+  toggleLike() {
+    console.log('Like button clicked');
+    this.elements.likeButton.classList.toggle('liked');
   }
 }
 
