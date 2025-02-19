@@ -71,6 +71,7 @@ class WordGame {
 
       if (inputMatchesReading) {
         const lb = this.elements.likeButton;
+        // Need to check how the liked status works in Match Madness
         lb.style.visibility = 'visible';
         lb.addEventListener('click', (event) => {
           const wordIsLiked = event.target.classList.contains('liked');
