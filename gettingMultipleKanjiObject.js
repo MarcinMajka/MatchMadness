@@ -71,4 +71,4 @@ function saveToFile(filename, content) {
 }
 
 // Save the data in the browser
-saveToFile('polyphonicKanjis.json', JSON.stringify(polyphonicKanjis, null, 2));
+// saveToFile('polyphonicKanjis.json', JSON.stringify(polyphonicKanjis, null, 2));
