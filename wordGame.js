@@ -5,6 +5,7 @@ import {
   toKatakana,
 } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { displayHint, shuffleArray } from './utils.js';
+import { addWord, deleteRecord } from './favoriteWords.js';
 
 class WordGame {
   constructor(config) {
@@ -69,8 +70,22 @@ class WordGame {
       const inputMatchesReading = inputValue === toRomaji(currentWord.reading);
 
       if (inputMatchesReading) {
-        this.elements.likeButton.style.visibility = 'visible';
-        this.elements.likeButton.addEventListener('click', this.toggleLike);
+        const lb = this.elements.likeButton;
+        lb.style.visibility = 'visible';
+        lb.addEventListener('click', (event) => {
+          const wordIsLiked = event.target.classList.contains('liked');
+          if (wordIsLiked) {
+            this.toggleLike(lb);
+            deleteRecord(currentWord);
+          } else {
+            this.toggleLike(lb);
+            addWord(
+              currentWord.kanji,
+              currentWord.reading,
+              currentWord.glossary
+            );
+          }
+        });
         this.currentSetMatchCount++;
         this.updateGlossary();
         this.nextWord();
