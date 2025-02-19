@@ -131,7 +131,9 @@ class WordGame {
 
   updateGlossary() {
     const currentWord = this.data[this.wordIndex - 1];
-    this.elements.glossary.innerText = `${currentWord.kanji} - ${currentWord.reading}\n${currentWord.glossary}`;
+
+    this.elements.glossaryWordAndReading.innerText = `${currentWord.kanji} - ${currentWord.reading}`;
+    this.elements.glossary.innerText = currentWord.glossary;
   }
 
   displayMatches() {
