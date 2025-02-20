@@ -67,16 +67,15 @@ const handleLikeButton = (state) => {
   matchMadnessLikeButton.addEventListener('click', (event) => {
     const wordIsLiked = event.target.classList.contains('liked');
     if (wordIsLiked) {
-      toggleLike(matchMadnessLikeButton);
       deleteRecord(state.currentCorrectWord);
     } else {
-      toggleLike(matchMadnessLikeButton);
       addWord(
         state.currentCorrectWord.kanji,
         state.currentCorrectWord.reading,
         state.currentCorrectWord.glossary
       );
     }
+    toggleLike(matchMadnessLikeButton);
   });
 };
 
