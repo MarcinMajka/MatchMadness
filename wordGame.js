@@ -71,7 +71,6 @@ class WordGame {
 
       if (inputMatchesReading) {
         const lb = this.elements.likeButton;
-        // TODO: check how the liked status works in Match Madness
         lb.style.visibility = 'visible';
 
         compareThreeWords(
