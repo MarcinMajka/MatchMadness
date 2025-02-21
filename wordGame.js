@@ -5,7 +5,7 @@ import {
   toKatakana,
 } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { displayHint, shuffleArray } from './utils.js';
-import { addWord, deleteRecord } from './favoriteWords.js';
+import { addWord, deleteRecord, compareThreeWords } from './favoriteWords.js';
 
 class WordGame {
   constructor(config) {
@@ -73,6 +73,19 @@ class WordGame {
         const lb = this.elements.likeButton;
         // TODO: check how the liked status works in Match Madness
         lb.style.visibility = 'visible';
+
+        compareThreeWords(
+          currentWord.kanji,
+          currentWord.reading,
+          currentWord.glossary
+        ).then((result) => {
+          if (result) {
+            lb.classList.add('liked');
+          } else {
+            lb.classList.remove('liked');
+          }
+        });
+
         lb.addEventListener('click', (event) => {
           const wordIsLiked = event.target.classList.contains('liked');
           if (wordIsLiked) {
