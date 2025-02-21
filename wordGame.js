@@ -89,16 +89,15 @@ class WordGame {
         lb.addEventListener('click', (event) => {
           const wordIsLiked = event.target.classList.contains('liked');
           if (wordIsLiked) {
-            this.toggleLike(lb);
             deleteRecord(currentWord);
           } else {
-            this.toggleLike(lb);
             addWord(
               currentWord.kanji,
               currentWord.reading,
               currentWord.glossary
             );
           }
+          this.toggleLike(lb);
         });
         this.currentSetMatchCount++;
         this.updateGlossary();
