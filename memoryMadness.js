@@ -140,3 +140,7 @@ const currentSetMap = JSON.stringify(generateKanjisToHiraganasMap(data));
 localStorage.setItem('currentSetMap', currentSetMap);
 
 console.log(localStorage.getItem('currentSetMap'));
+
+// TODO: implement glossary logic
+// TODO: implement stats logic
+// TODO: does this game even finish when all tiles are matched?
