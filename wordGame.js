@@ -25,7 +25,7 @@ class WordGame {
       matches: getElement('#matches'),
       wrong: getElement('#wrong'),
       glossaryWordAndReading: getElement('#leftValueRightValue'),
-      likeButton: getElement('#wordMadnessLikeButton'),
+      likeButton: getElement('#wordGameLikeButton'),
     };
 
     // Game State
