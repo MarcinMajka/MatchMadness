@@ -172,7 +172,6 @@ class WordGame {
   }
 
   toggleLike() {
-    console.log('Like button clicked');
     this.elements.likeButton.classList.toggle('liked');
   }
 }
