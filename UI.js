@@ -179,6 +179,8 @@ export const updateGlossary = (state) => {
     .then((result) => {
       const likeButton = getElement('#matchMadnessLikeButton');
 
+      // This looks like it could be toggled, but the idea is to change the button's appearance based on the result
+      // not to toggle the result itself
       if (result) {
         likeButton.classList.add('liked');
       } else {
