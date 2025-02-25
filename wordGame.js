@@ -1,5 +1,9 @@
 import { getElement, createUIElement } from './wrappers.js';
-import { displayMatches, displayFailedTries } from './UI.js';
+import {
+  displayMatches,
+  displayFailedTries,
+  handleCompareThreeWordsResult,
+} from './UI.js';
 import {
   toRomaji,
   toKatakana,
@@ -78,11 +82,7 @@ class WordGame {
           currentWord.reading,
           currentWord.glossary
         ).then((result) => {
-          if (result) {
-            lb.classList.add('liked');
-          } else {
-            lb.classList.remove('liked');
-          }
+          handleCompareThreeWordsResult(result, lb);
         });
 
         lb.addEventListener('click', (event) => {

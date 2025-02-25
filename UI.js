@@ -187,7 +187,7 @@ export const updateGlossary = (state) => {
     });
 };
 
-const handleCompareThreeWordsResult = (result, likeButton) => {
+export const handleCompareThreeWordsResult = (result, likeButton) => {
   // This looks like it could be toggled, but the idea is to change the button's appearance based on the result
   // not to toggle the result itself
   if (result) {
