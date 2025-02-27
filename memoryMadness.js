@@ -6,7 +6,9 @@ import { shuffleArray } from './utils.js';
 
 const ANIMATION_DURATION = 1000;
 
-const gameBoard = getElement('#game-board');
+const elements = {
+  gameBoard: getElement('#game-board'),
+};
 
 // Card data (can be customized)
 const data = JSON.parse(localStorage.getItem('currentSet'));
@@ -31,7 +33,7 @@ cards.forEach((symbol) => {
   card.classList.add('card');
   card.dataset.symbol = symbol; // Store symbol as data attribute
   card.addEventListener('click', handleCardClick);
-  gameBoard.appendChild(card);
+  elements.gameBoard.appendChild(card);
 });
 
 // Handle card click
