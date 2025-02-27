@@ -15,6 +15,10 @@ const elements = {
   // likeButton: getElement('#memoryMadnessLikeButton'),
 };
 
+const gameState = {
+  flippedCards: [],
+};
+
 // Card data (can be customized)
 const data = JSON.parse(localStorage.getItem('currentSet'));
 const kanjis = [];
@@ -29,7 +33,6 @@ data.map((word) => {
 // let cards = [...kanjis, ...readings];
 let cards = shuffleArray([...kanjis, ...readings]);
 
-let flippedCards = [];
 let matchedPairs = 0;
 
 // Create and display cards
@@ -56,11 +59,11 @@ function handleCardClick(event) {
   // Flip the card
   card.textContent = card.dataset.symbol;
   card.classList.add('flipped');
-  flippedCards.push(card);
+  gameState.flippedCards.push(card);
 
   // Check for a match if two cards are flipped
-  if (flippedCards.length === 2) {
-    const [card1, card2] = flippedCards;
+  if (gameState.flippedCards.length === 2) {
+    const [card1, card2] = gameState.flippedCards;
     checkForMatch(card1, card2);
   }
 }
@@ -124,7 +127,7 @@ function checkForMatch(card1, card2) {
     }, ANIMATION_DURATION);
   }
 
-  flippedCards = [];
+  gameState.flippedCards = [];
 }
 
 // Returns kanji: [hiragana1, hiragana2, hiragana3, ...] Object
