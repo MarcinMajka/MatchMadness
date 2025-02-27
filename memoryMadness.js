@@ -8,6 +8,11 @@ const ANIMATION_DURATION = 1000;
 
 const elements = {
   gameBoard: getElement('#game-board'),
+  // glossary: getElement('#glossary'),
+  // matches: getElement('#matches'),
+  // wrong: getElement('#wrong'),
+  // glossaryWordAndReading: getElement('#leftValueRightValue'),
+  // likeButton: getElement('#memoryMadnessLikeButton'),
 };
 
 // Card data (can be customized)
