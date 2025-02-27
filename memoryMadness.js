@@ -1,12 +1,12 @@
 // script.js
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { highlightElements } from './UI.js';
-import { setTimeoutWrapper } from './wrappers.js';
+import { setTimeoutWrapper, getElement } from './wrappers.js';
 import { shuffleArray } from './utils.js';
 
 const ANIMATION_DURATION = 1000;
 
-const gameBoard = document.getElementById('game-board');
+const gameBoard = getElement('#game-board');
 
 // Card data (can be customized)
 const data = JSON.parse(localStorage.getItem('currentSet'));
