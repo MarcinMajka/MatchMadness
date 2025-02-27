@@ -19,6 +19,7 @@ data.map((word) => {
   kanjis.push(kanji);
   readings.push(reading);
 });
+// let cards = [...kanjis, ...readings];
 let cards = shuffleArray([...kanjis, ...readings]);
 
 let flippedCards = [];
