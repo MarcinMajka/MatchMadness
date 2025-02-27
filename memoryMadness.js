@@ -9,7 +9,7 @@ const ANIMATION_DURATION = 1000;
 const elements = {
   gameBoard: getElement('#game-board'),
   // glossary: getElement('#glossary'),
-  // matches: getElement('#matches'),
+  matches: getElement('#matches'),
   // wrong: getElement('#wrong'),
   // glossaryWordAndReading: getElement('#leftValueRightValue'),
   // likeButton: getElement('#memoryMadnessLikeButton'),
@@ -17,6 +17,7 @@ const elements = {
 
 const gameState = {
   flippedCards: [],
+  matchedPairs: 0,
 };
 
 // Card data (can be customized)
@@ -32,8 +33,6 @@ data.map((word) => {
 });
 // let cards = [...kanjis, ...readings];
 let cards = shuffleArray([...kanjis, ...readings]);
-
-let matchedPairs = 0;
 
 // Create and display cards
 cards.forEach((symbol) => {
@@ -108,10 +107,10 @@ function checkForMatch(card1, card2) {
       card2.classList.add('matched');
     }, ANIMATION_DURATION);
 
-    matchedPairs++;
+    gameState.matchedPairs++;
 
     // Check if the game is won
-    if (matchedPairs === data.length) {
+    if (gameState.matchedPairs === data.length) {
       setTimeoutWrapper(() => alert('You Win!'), 500);
     }
   } else {
