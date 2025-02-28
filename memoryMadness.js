@@ -43,6 +43,8 @@ cards.forEach((symbol) => {
   elements.gameBoard.appendChild(card);
 });
 
+elements.matches.textContent = gameState.matchedPairs;
+
 // Handle card click
 function handleCardClick(event) {
   const card = event.target;
@@ -108,6 +110,7 @@ function checkForMatch(card1, card2) {
     }, ANIMATION_DURATION);
 
     gameState.matchedPairs++;
+    elements.matches.textContent = gameState.matchedPairs;
 
     // Check if the game is won
     if (gameState.matchedPairs === data.length) {
