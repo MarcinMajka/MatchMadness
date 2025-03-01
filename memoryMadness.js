@@ -127,10 +127,7 @@ function checkForMatch(card1, card2) {
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
 
-    if (
-      gameState.checkedCards[card1.dataset.cardId] ||
-      gameState.checkedCards[card2.dataset.cardId]
-    ) {
+    if (isCardMarkedAsVisited(card1) || isCardMarkedAsVisited(card2)) {
       gameState.wrong++;
     }
 
@@ -146,6 +143,10 @@ function checkForMatch(card1, card2) {
 
   gameState.flippedCards = [];
 }
+
+const isCardMarkedAsVisited = (card) => {
+  return gameState.checkedCards[card.dataset.cardId];
+};
 
 const markCardsAsVisited = (card1, card2) => {
   gameState.checkedCards[card1.dataset.cardId] = true;
