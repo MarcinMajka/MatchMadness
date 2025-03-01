@@ -57,10 +57,7 @@ function handleCardClick(event) {
   const card = event.target;
 
   // Ignore already matched or flipped cards
-  if (
-    card.classList.contains('flipped') ||
-    card.classList.contains('matched')
-  ) {
+  if (shouldIgnoreCard(card)) {
     return;
   }
 
@@ -139,6 +136,12 @@ function checkForMatch(card1, card2) {
   }
 
   gameState.flippedCards = [];
+}
+
+function shouldIgnoreCard(card) {
+  return (
+    card.classList.contains('flipped') || card.classList.contains('matched')
+  );
 }
 
 const flipCard = (card) => {
