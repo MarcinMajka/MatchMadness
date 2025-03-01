@@ -134,8 +134,7 @@ function checkForMatch(card1, card2) {
       gameState.wrong++;
     }
 
-    gameState.checkedCards[card1.dataset.cardId] = true;
-    gameState.checkedCards[card2.dataset.cardId] = true;
+    markCardsAsVisited(card1, card2);
 
     // Flip cards back after a delay
     setTimeoutWrapper(() => {
@@ -147,6 +146,11 @@ function checkForMatch(card1, card2) {
 
   gameState.flippedCards = [];
 }
+
+const markCardsAsVisited = (card1, card2) => {
+  gameState.checkedCards[card1.dataset.cardId] = true;
+  gameState.checkedCards[card2.dataset.cardId] = true;
+};
 
 // Returns kanji: [hiragana1, hiragana2, hiragana3, ...] Object
 function generateKanjisToHiraganasMap(currentSet) {
