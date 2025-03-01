@@ -64,10 +64,7 @@ function handleCardClick(event) {
     return;
   }
 
-  // Flip the card
-  card.textContent = card.dataset.symbol;
-  card.classList.add('flipped');
-  gameState.flippedCards.push(card);
+  flipCard(card);
 
   // Check for a match if two cards are flipped
   if (gameState.flippedCards.length === 2) {
@@ -143,6 +140,12 @@ function checkForMatch(card1, card2) {
 
   gameState.flippedCards = [];
 }
+
+const flipCard = (card) => {
+  card.textContent = card.dataset.symbol;
+  card.classList.add('flipped');
+  gameState.flippedCards.push(card);
+};
 
 const isCardMarkedAsVisited = (card) => {
   return gameState.checkedCards[card.dataset.cardId];
