@@ -47,7 +47,6 @@ cards.forEach((symbol) => {
 elements.matches.textContent = gameState.matchedPairs;
 elements.wrong.textContent = gameState.matchedPairs;
 
-// Handle card click
 function handleCardClick(event) {
   const card = event.target;
 
@@ -103,7 +102,6 @@ const isMatch = (card1, card2) => {
 // Check if two flipped cards match
 function checkForMatch(card1, card2) {
   if (isMatch(card1, card2)) {
-    // Match found
     highlightElements([card1, card2], 'correct', ANIMATION_DURATION);
 
     setTimeoutWrapper(() => {
@@ -119,7 +117,6 @@ function checkForMatch(card1, card2) {
       setTimeoutWrapper(() => alert('You Win!'), 500);
     }
   } else {
-    // No match
     card1.classList.remove('flipped');
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
