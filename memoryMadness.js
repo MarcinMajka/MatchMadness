@@ -19,7 +19,7 @@ const gameState = {
   flippedCards: [],
   // 2d matrix for checking if a pair of cards was flipped once,
   // so next time they're wrong it counts as a failed try
-  checkedCards: new Array(100).fill([false]),
+  checkedCards: new Array(100).fill(false),
   matchedPairs: 0,
   wrong: 0,
 };
@@ -127,7 +127,15 @@ function checkForMatch(card1, card2) {
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
 
-    gameState.wrong++;
+    if (
+      gameState.checkedCards[card1.dataset.cardId] ||
+      gameState.checkedCards[card2.dataset.cardId]
+    ) {
+      gameState.wrong++;
+    }
+
+    gameState.checkedCards[card1.dataset.cardId] = true;
+    gameState.checkedCards[card2.dataset.cardId] = true;
 
     // Flip cards back after a delay
     setTimeoutWrapper(() => {
