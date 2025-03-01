@@ -17,6 +17,9 @@ const elements = {
 
 const gameState = {
   flippedCards: [],
+  // 2d matrix for checking if a pair of cards was flipped once,
+  // so next time they're wrong it counts as a failed try
+  checkedCards: new Array(100).fill([false]),
   matchedPairs: 0,
   wrong: 0,
 };
@@ -35,10 +38,13 @@ data.map((word) => {
 // let cards = [...kanjis, ...readings];
 let cards = shuffleArray([...kanjis, ...readings]);
 
+let cardId = 0;
+
 // Create and display cards
 cards.forEach((symbol) => {
   const card = document.createElement('div');
   card.classList.add('card');
+  card.dataset.cardId = cardId++;
   card.dataset.symbol = symbol; // Store symbol as data attribute
   card.addEventListener('click', handleCardClick);
   elements.gameBoard.appendChild(card);
@@ -120,6 +126,7 @@ function checkForMatch(card1, card2) {
     card1.classList.remove('flipped');
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
+
     gameState.wrong++;
 
     // Flip cards back after a delay
