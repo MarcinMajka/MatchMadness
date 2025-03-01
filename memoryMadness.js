@@ -10,7 +10,7 @@ const elements = {
   gameBoard: getElement('#game-board'),
   // glossary: getElement('#glossary'),
   matches: getElement('#matches'),
-  // wrong: getElement('#wrong'),
+  wrong: getElement('#wrong'),
   // glossaryWordAndReading: getElement('#leftValueRightValue'),
   // likeButton: getElement('#memoryMadnessLikeButton'),
 };
@@ -18,6 +18,7 @@ const elements = {
 const gameState = {
   flippedCards: [],
   matchedPairs: 0,
+  wrong: 0,
 };
 
 // Card data (can be customized)
@@ -44,6 +45,7 @@ cards.forEach((symbol) => {
 });
 
 elements.matches.textContent = gameState.matchedPairs;
+elements.wrong.textContent = gameState.matchedPairs;
 
 // Handle card click
 function handleCardClick(event) {
@@ -121,11 +123,13 @@ function checkForMatch(card1, card2) {
     card1.classList.remove('flipped');
     card2.classList.remove('flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
+    gameState.wrong++;
 
     // Flip cards back after a delay
     setTimeoutWrapper(() => {
       card1.textContent = '';
       card2.textContent = '';
+      elements.wrong.textContent = gameState.wrong;
     }, ANIMATION_DURATION);
   }
 
