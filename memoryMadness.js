@@ -2,7 +2,7 @@
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { highlightElements } from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
-import { shuffleArray, containsClass, addClass } from './utils.js';
+import { shuffleArray, containsClass, addClass, removeClass } from './utils.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -117,8 +117,8 @@ function checkForMatch(card1, card2) {
       setTimeoutWrapper(() => alert('You Win!'), 500);
     }
   } else {
-    card1.classList.remove('flipped');
-    card2.classList.remove('flipped');
+    removeClass(card1, 'flipped');
+    removeClass(card2, 'flipped');
     highlightElements([card1, card2], 'wrong', ANIMATION_DURATION);
 
     if (isCardMarkedAsVisited(card1) || isCardMarkedAsVisited(card2)) {
