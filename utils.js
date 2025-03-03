@@ -108,6 +108,10 @@ export const displayHint = (currentInputElement, currentSet, wordIndex) => {
   currentInputElement.placeholder = hint.length > 0 ? hint : word[0];
 };
 
+export const containsClass = (element, className) => {
+  return element.classList.contains(className);
+};
+
 // module.exports = {
 //   shuffleArray,
 // };
