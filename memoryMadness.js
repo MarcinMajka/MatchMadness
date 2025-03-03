@@ -2,7 +2,7 @@
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { highlightElements } from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
-import { shuffleArray } from './utils.js';
+import { shuffleArray, containsClass } from './utils.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -139,9 +139,7 @@ function checkForMatch(card1, card2) {
 }
 
 function shouldIgnoreCard(card) {
-  return (
-    card.classList.contains('flipped') || card.classList.contains('matched')
-  );
+  return containsClass(card, 'flipped') || containsClass(card, 'matched');
 }
 
 const flipCard = (card) => {
