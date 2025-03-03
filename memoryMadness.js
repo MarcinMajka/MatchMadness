@@ -180,4 +180,3 @@ localStorage.setItem('currentSetMap', currentSetMap);
 console.log(localStorage.getItem('currentSetMap'));
 
 // TODO: implement glossary logic
-// TODO: implement stats logic
