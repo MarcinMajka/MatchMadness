@@ -112,6 +112,10 @@ export const containsClass = (element, className) => {
   return element.classList.contains(className);
 };
 
+export const addClass = (element, className) => {
+  element.classList.add(className);
+};
+
 // module.exports = {
 //   shuffleArray,
 // };
