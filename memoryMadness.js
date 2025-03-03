@@ -2,7 +2,7 @@
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import { highlightElements } from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
-import { shuffleArray, containsClass } from './utils.js';
+import { shuffleArray, containsClass, addClass } from './utils.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -43,7 +43,7 @@ let cardId = 0;
 // Create and display cards
 cards.forEach((symbol) => {
   const card = document.createElement('div');
-  card.classList.add('card');
+  addClass(card, 'card');
   card.dataset.cardId = cardId++;
   card.dataset.symbol = symbol; // Store symbol as data attribute
   card.addEventListener('click', handleCardClick);
@@ -105,8 +105,8 @@ function checkForMatch(card1, card2) {
     highlightElements([card1, card2], 'correct', ANIMATION_DURATION);
 
     setTimeoutWrapper(() => {
-      card1.classList.add('matched');
-      card2.classList.add('matched');
+      addClass(card1, 'matched');
+      addClass(card2, 'matched');
     }, ANIMATION_DURATION);
 
     gameState.matchedPairs++;
@@ -144,7 +144,7 @@ function shouldIgnoreCard(card) {
 
 const flipCard = (card) => {
   card.textContent = card.dataset.symbol;
-  card.classList.add('flipped');
+  addClass(card, 'flipped');
   gameState.flippedCards.push(card);
 };
 
