@@ -11,7 +11,7 @@ const elements = {
   // glossary: getElement('#glossary'),
   matches: getElement('#matches'),
   wrong: getElement('#wrong'),
-  // glossaryWordAndReading: getElement('#leftValueRightValue'),
+  glossaryWordAndReading: getElement('#leftValueRightValue'),
   // likeButton: getElement('#memoryMadnessLikeButton'),
 };
 
@@ -108,6 +108,9 @@ function checkForMatch(card1, card2) {
       addClass(card1, 'matched');
       addClass(card2, 'matched');
     }, ANIMATION_DURATION);
+
+    const [kanji, reading] = getKanjiAndReading(card1, card2);
+    elements.glossaryWordAndReading.textContent = `${kanji.dataset.symbol} - ${reading.dataset.symbol}`;
 
     gameState.matchedPairs++;
     elements.matches.textContent = gameState.matchedPairs;
