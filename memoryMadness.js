@@ -40,8 +40,8 @@ data.map((word) => {
   kanjis.push(kanji);
   readings.push(reading);
 });
-let cards = [...kanjis, ...readings];
-// let cards = shuffleArray([...kanjis, ...readings]);
+// let cards = [...kanjis, ...readings];
+let cards = shuffleArray([...kanjis, ...readings]);
 
 let cardId = 0;
 
