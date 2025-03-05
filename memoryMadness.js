@@ -1,9 +1,13 @@
 // script.js
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
-import { highlightElements, handleCompareThreeWordsResult } from './UI.js';
+import {
+  highlightElements,
+  handleCompareThreeWordsResult,
+  toggleLike,
+} from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
 import { shuffleArray, containsClass, addClass, removeClass } from './utils.js';
-import { compareThreeWords } from './favoriteWords.js';
+import { compareThreeWords, addWord, deleteRecord } from './favoriteWords.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -118,13 +122,25 @@ function checkForMatch(card1, card2) {
     const glossary = getGlossary(kanji, reading);
     elements.glossary.textContent = glossary;
 
-    elements.likeButton.style.visibility = 'visible';
+    const lb = elements.likeButton;
+    lb.style.visibility = 'visible';
+
     compareThreeWords(kanji, reading, glossary).then((result) => {
       handleCompareThreeWordsResult(result, elements.likeButton);
     });
 
     gameState.matchedPairs++;
     elements.matches.textContent = gameState.matchedPairs;
+
+    lb.addEventListener('click', (event) => {
+      const wordIsLiked = event.target.classList.contains('liked');
+      if (wordIsLiked) {
+        deleteRecord({ kanji, reading, glossary });
+      } else {
+        addWord(kanji, reading, glossary);
+      }
+      toggleLike(lb);
+    });
 
     // Check if the game is won
     if (gameState.matchedPairs === data.length) {
