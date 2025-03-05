@@ -8,7 +8,7 @@ const ANIMATION_DURATION = 1000;
 
 const elements = {
   gameBoard: getElement('#game-board'),
-  // glossary: getElement('#glossary'),
+  glossary: getElement('#glossary'),
   matches: getElement('#matches'),
   wrong: getElement('#wrong'),
   glossaryWordAndReading: getElement('#leftValueRightValue'),
@@ -112,6 +112,9 @@ function checkForMatch(card1, card2) {
     const [kanji, reading] = getKanjiAndReading(card1, card2);
     elements.glossaryWordAndReading.textContent = `${kanji.dataset.symbol} - ${reading.dataset.symbol}`;
 
+    const glossary = getGlossary(kanji.dataset.symbol, reading.dataset.symbol);
+    elements.glossary.textContent = glossary;
+
     gameState.matchedPairs++;
     elements.matches.textContent = gameState.matchedPairs;
 
@@ -181,5 +184,13 @@ const currentSetMap = JSON.stringify(generateKanjisToHiraganasMap(data));
 localStorage.setItem('currentSetMap', currentSetMap);
 
 console.log(localStorage.getItem('currentSetMap'));
+
+const getGlossary = (kanji, reading) => {
+  for (const triplet of data) {
+    if (triplet.kanji === kanji && triplet.reading === reading) {
+      return triplet.glossary;
+    }
+  }
+};
 
 // TODO: implement glossary logic
