@@ -12,7 +12,7 @@ const elements = {
   matches: getElement('#matches'),
   wrong: getElement('#wrong'),
   glossaryWordAndReading: getElement('#leftValueRightValue'),
-  // likeButton: getElement('#memoryMadnessLikeButton'),
+  likeButton: getElement('#memoryMadnessLikeButton'),
 };
 
 const gameState = {
@@ -114,6 +114,8 @@ function checkForMatch(card1, card2) {
 
     const glossary = getGlossary(kanji.dataset.symbol, reading.dataset.symbol);
     elements.glossary.textContent = glossary;
+
+    elements.likeButton.style.visibility = 'visible';
 
     gameState.matchedPairs++;
     elements.matches.textContent = gameState.matchedPairs;
