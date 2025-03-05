@@ -110,18 +110,16 @@ function checkForMatch(card1, card2) {
       addClass(card2, 'matched');
     }, ANIMATION_DURATION);
 
-    const [kanji, reading] = getKanjiAndReading(card1, card2);
-    elements.glossaryWordAndReading.textContent = `${kanji.dataset.symbol} - ${reading.dataset.symbol}`;
+    let [kanji, reading] = getKanjiAndReading(card1, card2);
+    kanji = kanji.dataset.symbol;
+    reading = reading.dataset.symbol;
+    elements.glossaryWordAndReading.textContent = `${kanji} - ${reading}`;
 
-    const glossary = getGlossary(kanji.dataset.symbol, reading.dataset.symbol);
+    const glossary = getGlossary(kanji, reading);
     elements.glossary.textContent = glossary;
 
     elements.likeButton.style.visibility = 'visible';
-    compareThreeWords(
-      kanji.dataset.symbol,
-      reading.dataset.symbol,
-      glossary
-    ).then((result) => {
+    compareThreeWords(kanji, reading, glossary).then((result) => {
       handleCompareThreeWordsResult(result, elements.likeButton);
     });
 
