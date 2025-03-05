@@ -1,8 +1,9 @@
 // script.js
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
-import { highlightElements } from './UI.js';
+import { highlightElements, handleCompareThreeWordsResult } from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
 import { shuffleArray, containsClass, addClass, removeClass } from './utils.js';
+import { compareThreeWords } from './favoriteWords.js';
 
 const ANIMATION_DURATION = 1000;
 
@@ -35,8 +36,8 @@ data.map((word) => {
   kanjis.push(kanji);
   readings.push(reading);
 });
-// let cards = [...kanjis, ...readings];
-let cards = shuffleArray([...kanjis, ...readings]);
+let cards = [...kanjis, ...readings];
+// let cards = shuffleArray([...kanjis, ...readings]);
 
 let cardId = 0;
 
@@ -116,6 +117,13 @@ function checkForMatch(card1, card2) {
     elements.glossary.textContent = glossary;
 
     elements.likeButton.style.visibility = 'visible';
+    compareThreeWords(
+      kanji.dataset.symbol,
+      reading.dataset.symbol,
+      glossary
+    ).then((result) => {
+      handleCompareThreeWordsResult(result, elements.likeButton);
+    });
 
     gameState.matchedPairs++;
     elements.matches.textContent = gameState.matchedPairs;
