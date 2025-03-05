@@ -216,5 +216,3 @@ const getGlossary = (kanji, reading) => {
     }
   }
 };
-
-// TODO: implement glossary logic
