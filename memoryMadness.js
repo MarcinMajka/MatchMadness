@@ -204,11 +204,6 @@ function generateKanjisToHiraganasMap(currentSet) {
   return kanjiToHiraganas;
 }
 
-const currentSetMap = JSON.stringify(generateKanjisToHiraganasMap(data));
-localStorage.setItem('currentSetMap', currentSetMap);
-
-console.log(localStorage.getItem('currentSetMap'));
-
 const getGlossary = (kanji, reading) => {
   for (const triplet of data) {
     if (triplet.kanji === kanji && triplet.reading === reading) {
