@@ -14,6 +14,10 @@ body {
     border-radius: 25px;
 }
 
+#glossaryContainer {
+    margin: 20px 20px;
+}
+
 #game-board {
     display: grid;
     grid-template-columns: repeat(10, 100px);
