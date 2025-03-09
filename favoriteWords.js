@@ -8,6 +8,12 @@ import {
   getAllAsAnArray,
 } from './indexedDBHandler.js';
 
+// Returns the selected collection value (not text) from the dropdown
+const getCollectionName = () => {
+  const e = getElement('#collection');
+  return e.options[e.selectedIndex].value;
+};
+
 const openFavWordsDatabase = async () => {
   const database = await openDatabase('FavoriteWords', 'favWords', {
     keyPath: 'id',
