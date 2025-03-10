@@ -11,7 +11,9 @@ import {
 // Returns the selected collection value (not text) from the dropdown
 const getCollectionName = () => {
   const e = getElement('#collection');
-  return e.options[e.selectedIndex].value;
+  const collection = e.options[e.selectedIndex].value;
+  console.log('Collection:', collection);
+  return collection;
 };
 
 const openFavWordsDatabase = async () => {
