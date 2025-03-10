@@ -45,7 +45,7 @@ export const getAllWordsByKey = async (key, val) => {
 
 export const getAllWords = async () => {
   const db = await openFavWordsDatabase();
-  return getAllAsAnArray(db, 'favWords');
+  return getAllAsAnArray(db, getCollectionName());
 };
 
 export async function deleteRecord(word) {
@@ -207,6 +207,7 @@ function initializeFavoriteWords() {
   const kanjiSelector = getElement('#favKanji');
   const readingSelector = getElement('#favReading');
   const glossarySelector = getElement('#favGlossary');
+  const collectionSelector = getElement('#collection');
 
   // Safety net for not throwing errors when not on addFavorites.html
   if (kanjiSelector && readingSelector && glossarySelector) {
@@ -216,6 +217,10 @@ function initializeFavoriteWords() {
       glossarySelector
     );
   }
+
+  collectionSelector.addEventListener('change', async () => {
+    await showLikedWordsList();
+  });
 }
 
 initializeFavoriteWords();
