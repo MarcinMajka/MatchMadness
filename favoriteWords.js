@@ -45,9 +45,9 @@ export const getAllWordsByKey = async (key, val) => {
   return getAllWithIndex({ db, storeName: 'favWords', index: key, val });
 };
 
-export const getAllWords = async () => {
+export const getAllWords = async (collection) => {
   const db = await openFavWordsDatabase();
-  return getAllAsAnArray(db, getCollectionName());
+  return getAllAsAnArray(db, collection);
 };
 
 export async function deleteRecord(word) {
@@ -114,7 +114,7 @@ export async function compareThreeWords(
   }
 }
 
-const showLikedWordsList = async () => {
+const showLikedWordsList = async (collection) => {
   const favWordList = getElement('#favWordsList');
   // Safety net for not throwing errors when not on addFavorites.html
   if (!favWordList) {
@@ -122,7 +122,7 @@ const showLikedWordsList = async () => {
   }
 
   try {
-    const likedWords = await getAllWords();
+    const likedWords = await getAllWords(collection);
 
     // Clear the list before adding new items
     favWordList.innerHTML = '';
@@ -149,7 +149,7 @@ const showLikedWordsList = async () => {
         // Prevent triggering wordItem click event
         e.stopPropagation();
         await deleteRecord(word);
-        showLikedWordsList();
+        showLikedWordsList(collection);
       };
 
       glossarySpan.textContent = word.glossary || 'No glossary available';
@@ -198,7 +198,7 @@ export const addClickListenerToLikeButton = (
       glossarySelector
     );
     addWord(kanji, reading, glossary);
-    showLikedWordsList();
+    showLikedWordsList(getCollectionName());
     kanjiSelector.value = '';
     readingSelector.value = '';
     glossarySelector.value = '';
@@ -221,7 +221,8 @@ function initializeFavoriteWords() {
   }
 
   collectionSelector.addEventListener('change', async () => {
-    await showLikedWordsList();
+    const collection = getCollectionName();
+    await showLikedWordsList(collection);
   });
 }
 
