@@ -229,5 +229,5 @@ function initializeFavoriteWords() {
 initializeFavoriteWords();
 
 window.onload = async () => {
-  await showLikedWordsList();
+  await showLikedWordsList('favWords');
 };
