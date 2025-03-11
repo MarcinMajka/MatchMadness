@@ -10,6 +10,7 @@
  */
 export function openDatabase(dbName, storeName, options = {}) {
   return new Promise((resolve, reject) => {
+    // TODO: Add support for upgrading the database version
     const request = indexedDB.open(dbName, 1);
 
     request.onupgradeneeded = (event) => {
