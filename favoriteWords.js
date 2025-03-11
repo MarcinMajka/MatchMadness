@@ -16,6 +16,7 @@ const getCollectionName = () => {
   return collection;
 };
 
+// TODO: refactor to make it generic
 const openFavWordsDatabase = async () => {
   const database = await openDatabase('FavoriteWords', 'favWords', {
     keyPath: 'id',
