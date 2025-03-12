@@ -221,19 +221,23 @@ function initializeFavoriteWords() {
     );
   }
 
-  collectionSelector.addEventListener('change', async () => {
-    const collection = getCollectionName();
+  if (collectionSelector) {
+    collectionSelector.addEventListener('change', async () => {
+      const collection = getCollectionName();
 
-    if (collection === 'makeNew') {
-      const newCollectionName = prompt('Enter the name of the new collection');
-      console.log('New collection name:', newCollectionName);
-      // if (newCollectionName) {
-      //   await openFavWordsDatabase(newCollectionName);
-      // }
-    } else {
-      await showLikedWordsList(collection);
-    }
-  });
+      if (collection === 'makeNew') {
+        const newCollectionName = prompt(
+          'Enter the name of the new collection'
+        );
+        console.log('New collection name:', newCollectionName);
+        // if (newCollectionName) {
+        //   await openFavWordsDatabase(newCollectionName);
+        // }
+      } else {
+        await showLikedWordsList(collection);
+      }
+    });
+  }
 }
 
 initializeFavoriteWords();
