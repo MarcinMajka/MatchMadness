@@ -80,7 +80,9 @@ const handleLikeButton = (state) => {
 };
 
 const startGame = (initialState) => {
-  if (typeof window !== 'undefined') {
+  const page = window.location.pathname.split('/').pop();
+
+  if (typeof window !== 'undefined' && page.includes('match')) {
     window.addEventListener('load', () => {
       let state = {
         ...initialState,
