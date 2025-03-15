@@ -4,6 +4,7 @@ import {
   highlightElements,
   handleCompareThreeWordsResult,
   toggleLike,
+  displayFailedTries,
 } from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
 import { shuffleArray, containsClass, addClass, removeClass } from './utils.js';
@@ -56,7 +57,7 @@ cards.forEach((symbol) => {
 });
 
 elements.matches.textContent = gameState.matchedPairs;
-elements.wrong.textContent = gameState.matchedPairs;
+displayFailedTries(elements.wrong, gameState.wrong);
 
 function handleCardClick(event) {
   const card = event.target;
@@ -161,7 +162,8 @@ function checkForMatch(card1, card2) {
     setTimeoutWrapper(() => {
       card1.textContent = '';
       card2.textContent = '';
-      elements.wrong.textContent = gameState.wrong;
+
+      displayFailedTries(elements.wrong, gameState.wrong);
     }, ANIMATION_DURATION);
   }
 
