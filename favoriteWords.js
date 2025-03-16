@@ -16,6 +16,10 @@ const getCollectionName = () => {
   return collection;
 };
 
+const getNewCollectionName = () => {
+  return getElement('#newCollectionName').value;
+};
+
 // TODO: refactor to make it generic
 const openFavWordsDatabase = async () => {
   const database = await openDatabase('FavoriteWords', 'favWords', {
@@ -193,6 +197,7 @@ export const addClickListenerToLikeButton = (
 ) => {
   const likeButton = getElement('#likeButton');
   likeButton.addEventListener('click', () => {
+    console.log(getNewCollectionName());
     const [kanji, reading, glossary] = getFavoriteWordData(
       kanjiSelector,
       readingSelector,
