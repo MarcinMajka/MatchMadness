@@ -4,6 +4,7 @@ import {
   highlightElements,
   handleCompareThreeWordsResult,
   toggleLike,
+  displayMatches,
   displayFailedTries,
 } from './UI.js';
 import { setTimeoutWrapper, getElement } from './wrappers.js';
@@ -56,7 +57,7 @@ cards.forEach((symbol) => {
   elements.gameBoard.appendChild(card);
 });
 
-elements.matches.textContent = gameState.matchedPairs;
+displayMatches(elements.matches, gameState.matchedPairs);
 displayFailedTries(elements.wrong, gameState.wrong);
 
 function handleCardClick(event) {
@@ -131,7 +132,7 @@ function checkForMatch(card1, card2) {
     });
 
     gameState.matchedPairs++;
-    elements.matches.textContent = gameState.matchedPairs;
+    displayMatches(elements.matches, gameState.matchedPairs);
 
     lb.addEventListener('click', (event) => {
       const wordIsLiked = event.target.classList.contains('liked');
