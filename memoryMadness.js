@@ -1,4 +1,3 @@
-// script.js
 import { isKanji } from 'https://unpkg.com/wanakana@5.3.1/esm/index.js';
 import {
   highlightElements,
