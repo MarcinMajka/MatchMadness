@@ -4,7 +4,8 @@
   "description": "Just like in Duolingo. But better!",
   "main": "matchMadness.js",
   "scripts": {
-    "test": "jest --coverage"
+    "test": "jest --coverage",
+    "pw:test": "cd tests && npx playwright test"
   },
   "keywords": [],
   "author": "",
