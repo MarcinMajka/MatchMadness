@@ -10,3 +10,21 @@ test('Checks for menu buttons number', async ({ page }) => {
   const menuButtons = page.locator('.menuButton');
   await expect(menuButtons).toHaveCount(7);
 });
+
+// Doesn't work on webkit
+test.only('Checks minimum pairs per screen', async ({ page }) => {
+  await page.goto('http://127.0.0.1:5500/');
+  const pairInput = page.locator('#setPairsToRenderInput')
+  const leftColumn = page.locator('.leftColumn');
+  const rightColumn = page.locator('.rightColumn');
+
+  for (let i = 0; i <= 2; i++) {
+    await pairInput.fill(i.toString());
+    await page.click('.menuButton:has-text("Match Madness")');
+    if (i >= 0 && i <= 3) {
+      await expect(leftColumn.locator('.box')).toHaveCount(3);
+      await expect(rightColumn.locator('.box')).toHaveCount(3);
+    }
+    await page.click('a.button.menu');
+  }
+});
