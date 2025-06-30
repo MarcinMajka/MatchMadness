@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 // Doesn't work on webkit
 test('Checks minimum pairs per screen', async ({ page }) => {
-    await page.goto('http://127.0.0.1:5500/');
+    await page.goto('/');
     // Needed for fetching kanjis from dicIn50WordSets.json
     await page.waitForTimeout(100);
     
@@ -23,7 +23,7 @@ test('Checks minimum pairs per screen', async ({ page }) => {
   });
   
   test('Checks maximum pairs per screen', async ({ page }) => {
-    await page.goto('http://127.0.0.1:5500/');
+    await page.goto('/');
     // Needed for fetching kanjis from dicIn50WordSets.json
     await page.waitForTimeout(100);
     
@@ -43,7 +43,7 @@ test('Checks minimum pairs per screen', async ({ page }) => {
   });
   
   test('Checks valid pairs per screen', async ({ page }) => {
-    await page.goto('http://127.0.0.1:5500/');
+    await page.goto('/');
     // Needed for fetching kanjis from dicIn50WordSets.json
     await page.waitForTimeout(100);
     
