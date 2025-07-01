@@ -1,13 +1,14 @@
 import { test, expect } from '@playwright/test';
 
-test.beforeEach(async ({ page }) => {
-  await page.goto('/');
-  // Needed for fetching kanjis from dicIn50WordSets.json
-  await page.waitForTimeout(100);
-});
+test.describe('User selects number of pairs to display per screen', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    // Needed for fetching kanjis from dicIn50WordSets.json
+    await page.waitForTimeout(100);
+  });
 
-// Doesn't work on webkit
-test('Checks minimum pairs per screen', async ({ page }) => {
+  // Doesn't work on webkit
+  test('Minimum pairs', async ({ page }) => {
     const pairInput = page.locator('#setPairsToRenderInput')
     const leftColumn = page.locator('.leftColumn');
     const rightColumn = page.locator('.rightColumn');
@@ -24,7 +25,7 @@ test('Checks minimum pairs per screen', async ({ page }) => {
     }
   });
   
-  test('Checks maximum pairs per screen', async ({ page }) => {
+  test('Maximum pairs', async ({ page }) => {
     const pairInput = page.locator('#setPairsToRenderInput')
     const leftColumn = page.locator('.leftColumn');
     const rightColumn = page.locator('.rightColumn');
@@ -40,7 +41,7 @@ test('Checks minimum pairs per screen', async ({ page }) => {
     }
   });
   
-  test('Checks valid pairs per screen', async ({ page }) => {
+  test('Valid pairs', async ({ page }) => {
     const pairInput = page.locator('#setPairsToRenderInput')
     const leftColumn = page.locator('.leftColumn');
     const rightColumn = page.locator('.rightColumn');
@@ -55,3 +56,4 @@ test('Checks minimum pairs per screen', async ({ page }) => {
       await page.click('a.button.menu');
     }
   });
+});
