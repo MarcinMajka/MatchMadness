@@ -5,6 +5,7 @@ import { IndexPage } from '../../pages/index.page';
 test.describe('User selects number of pairs to display per screen', () => {
   let indexPage: IndexPage;
   let matchMadnessPage: MatchMadness;
+  let currentSet;
 
   test.beforeEach(async ({ page }) => {
     indexPage = new IndexPage(page);
@@ -19,7 +20,9 @@ test.describe('User selects number of pairs to display per screen', () => {
     for (let i = 0; i <= 2; i++) {
       await indexPage.pairInput.fill(i.toString());
       await page.click('.menuButton:has-text("Match Madness")');
-  
+
+      currentSet = await page.evaluate(() => localStorage.getItem('currentSet'));
+
       if (i >= 0 && i <= 3) {
         await expect(matchMadnessPage.leftColumn.locator('.box')).toHaveCount(3);
         await expect(matchMadnessPage.rightColumn.locator('.box')).toHaveCount(3);
