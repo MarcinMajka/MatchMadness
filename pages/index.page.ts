@@ -2,6 +2,8 @@ import { Page, Locator } from '@playwright/test';
 
 export class IndexPage {
     page: Page;
+    pairInput: Locator;
+    setInput: Locator;
     menuButtons: Locator;
     matchMadnessButton: Locator;
     wordMadnessButton: Locator;
@@ -13,6 +15,8 @@ export class IndexPage {
 
     constructor(page: Page) {
         this.page = page;
+        this.pairInput = page.locator('#setPairsToRenderInput');
+        this.setInput = page.locator('#setIndexInput');
         this.menuButtons = page.locator('.menuButton');
         this.matchMadnessButton = this.menuButtons.locator(':has-text("Match Madness")');
         this.wordMadnessButton = this.menuButtons.locator(':has-text("Word Madness")');
