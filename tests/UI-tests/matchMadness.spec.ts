@@ -21,7 +21,7 @@ test.describe('User selects number of pairs to display per screen', () => {
         await expect(matchMadnessPage.leftColumn.locator('.box')).toHaveCount(3);
         await expect(matchMadnessPage.rightColumn.locator('.box')).toHaveCount(3);
       }
-      await page.click('a.button.menu');
+      await matchMadnessPage.menuButton.click();
     }
   });
   
@@ -33,7 +33,7 @@ test.describe('User selects number of pairs to display per screen', () => {
       await expect(matchMadnessPage.leftColumn.locator('.box')).toHaveCount(7);
       await expect(matchMadnessPage.rightColumn.locator('.box')).toHaveCount(7);
   
-      await page.click('a.button.menu');
+      await matchMadnessPage.menuButton.click();
     }
   });
   
@@ -45,7 +45,7 @@ test.describe('User selects number of pairs to display per screen', () => {
       await expect(matchMadnessPage.leftColumn.locator('.box')).toHaveCount(i);
       await expect(matchMadnessPage.rightColumn.locator('.box')).toHaveCount(i);
   
-      await page.click('a.button.menu');
+      await matchMadnessPage.menuButton.click();
     }
   });
 });
