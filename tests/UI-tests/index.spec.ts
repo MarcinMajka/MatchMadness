@@ -1,12 +1,19 @@
 import { test, expect } from '@playwright/test';
+import { IndexPage } from '../../pages/index.page';
 
-test('Checks for buttons', async ({ page }) => {
-  await page.goto('/');
-  await expect(page.locator('.menuButton').first()).toHaveText('Match Madness');
-});
+test.describe('Checks for menu buttons', () => {
+  let indexPage: IndexPage;
 
-test('Checks for menu buttons number', async ({ page }) => {
-  await page.goto('/');
-  const menuButtons = page.locator('.menuButton');
-  await expect(menuButtons).toHaveCount(7);
+  test.beforeEach(async ({ page }) => {
+    indexPage = new IndexPage(page);
+    await page.goto('/');
+  });
+
+  test('Checks for buttons', async ({ page }) => {
+    await expect(indexPage.menuButtons.first()).toHaveText('Match Madness');
+  });
+
+  test('Checks for menu buttons number', async ({ page }) => {
+    await expect(indexPage.menuButtons).toHaveCount(7);
+  });
 });
